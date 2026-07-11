@@ -19,20 +19,25 @@ data class TerminalSessionState(
     val lastStdout: String = "",
     val lastStderr: String = "",
     val lastExitCode: Int = 0,
+    val processes: List<VirtualProcess> = emptyList(),
 )
 
 /**
- * Deterministic terminal simulator. Operates only on the provided virtual filesystem.
+ * Deterministic terminal simulator. Operates only on the provided virtual filesystem
+ * and optional seeded process table.
  */
 class TerminalSimulator(
     private val fileSystem: VirtualFileSystem,
     private val parser: CommandParser = CommandParser(),
     private val registry: CommandRegistry = CommandRegistry.default(),
 ) {
-    fun initialState(initialCwd: String): TerminalSessionState {
+    fun initialState(
+        initialCwd: String,
+        processes: List<VirtualProcess> = emptyList(),
+    ): TerminalSessionState {
         val cwd = VirtualFileSystem.normalize(initialCwd)
         require(fileSystem.isDirectory(cwd)) { "Initial cwd must be a directory: $cwd" }
-        return TerminalSessionState(cwd = cwd)
+        return TerminalSessionState(cwd = cwd, processes = processes)
     }
 
     fun execute(state: TerminalSessionState, line: String): TerminalSessionState {
@@ -46,7 +51,14 @@ class TerminalSimulator(
                 "Command not found: ${parsed.name}. Supported: ${registry.names().sorted().joinToString()}",
             )
         val execution = try {
-            command.execute(fileSystem, state.cwd, parsed.args)
+            command.execute(
+                TerminalCommandContext(
+                    fs = fileSystem,
+                    cwd = state.cwd,
+                    processes = state.processes,
+                ),
+                parsed.args,
+            )
         } catch (error: IllegalArgumentException) {
             return failure(state, line.trim(), error.message ?: "Command failed.")
         }
@@ -59,6 +71,7 @@ class TerminalSimulator(
         )
         return state.copy(
             cwd = execution.cwd,
+            processes = execution.processes ?: state.processes,
             history = state.history + entry,
             lastCommand = line.trim(),
             lastStdout = execution.result.stdout,

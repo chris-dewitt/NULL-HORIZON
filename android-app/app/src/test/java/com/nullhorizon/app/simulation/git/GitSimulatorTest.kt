@@ -36,6 +36,31 @@ class GitSimulatorTest {
     }
 
     @Test
+    fun checkoutCommit_restoresHistoricalTree() {
+        var state = seededRepo(dirty = false)
+        // Advance HEAD with a bad commit, then recover the prior tip.
+        state = state.copy(
+            workingTree = state.workingTree + ("routing.conf" to "thruster_a=override\nthruster_b=standby\n"),
+        )
+        state = simulator.execute(state, "git add routing.conf")
+        state = simulator.execute(state, "git commit -m \"Bad override\"")
+        val badHash = state.headHash
+        assertThat(state.workingTree["routing.conf"]).contains("override")
+
+        state = simulator.execute(state, "git log")
+        assertThat(state.lastStdout).contains("Sign thruster routing")
+
+        // Resolve the safe commit id from the seeded definition tip before the bad commit.
+        val safeHash = state.commits.values.first { it.message == "Sign thruster routing" }.hash
+        state = simulator.execute(state, "git checkout $safeHash")
+        assertThat(state.lastExitCode).isEqualTo(0)
+        assertThat(state.headHash).isEqualTo(safeHash)
+        assertThat(state.headHash).isNotEqualTo(badHash)
+        assertThat(state.workingTree["routing.conf"]).contains("thruster_a=nominal")
+        assertThat(state.workingTree).isEqualTo(state.headTree())
+    }
+
+    @Test
     fun branchSwitchMerge_withoutConflict() {
         var state = seededRepo(dirty = false)
         state = simulator.execute(state, "git branch feature")

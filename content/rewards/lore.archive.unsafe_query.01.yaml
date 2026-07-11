@@ -1,0 +1,5 @@
+schema_version: 1
+reward_id: lore.archive.unsafe_query.01
+kind: lore
+name: Placeholder Lookup
+description: Safe query helper using a callsign placeholder.

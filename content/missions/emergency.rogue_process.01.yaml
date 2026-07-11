@@ -1,0 +1,98 @@
+schema_version: 1
+mission_id: emergency.rogue_process.01
+version: 1.0.0
+chapter_id: emergency_interface
+title: Stop a Bad Process
+summary: Identify and stop a rogue exfiltration process on the maintenance host.
+difficulty: introductory
+
+requirements:
+  app_version: ">=0.1.0"
+  online: false
+  prerequisite_skills: []
+
+skills:
+  primary: linux.processes
+  secondary:
+    - linux.inspection
+
+narrative:
+  briefing_dialogue_id: dialogue.emergency.rogue_process.briefing
+  success_dialogue_id: dialogue.emergency.rogue_process.success
+
+tools:
+  - terminal
+
+environment:
+  schema_version: 1
+  template_id: terminal.vfs.v1
+  seed: 9
+  filesystem:
+    cwd: /home/operator
+    entries:
+      - path: /home/operator
+        type: dir
+      - path: /home/operator/NOTES.txt
+        type: file
+        content: |
+          Maintenance host process policy:
+          Keep life_support_monitor running.
+          Terminate unexpected network writers.
+      - path: /var/run
+        type: dir
+      - path: /var/run/process.policy
+        type: file
+        content: |
+          allow=life_support_monitor
+          deny=rogue_exfil.sh
+    processes:
+      - pid: 101
+        name: life_support_monitor
+        status: running
+        command: life_support_monitor
+      - pid: 204
+        name: rogue_exfil.sh
+        status: running
+        command: rogue_exfil.sh
+
+objectives:
+  - id: list_processes
+    type: command_output
+    description: Run ps and locate the rogue process.
+    visible: true
+    assert:
+      last_command: ps
+      stdout_contains: rogue_exfil.sh
+      exit_code: 0
+  - id: stop_rogue
+    type: process_state
+    description: Stop rogue_exfil.sh without killing life_support_monitor.
+    visible: true
+    assert:
+      running:rogue_exfil.sh: "false"
+      running:life_support_monitor: "true"
+      status:204: stopped
+
+hints:
+  - level: 1
+    text: Use ps to list running processes.
+  - level: 2
+    text: Look for a process name that matches the deny policy.
+  - level: 3
+    text: Stop a process with kill PID using the pid from ps.
+  - level: 4
+    text: kill 204 stops rogue_exfil.sh. Leave pid 101 alone.
+
+rewards:
+  clearance_points: 30
+  mastery:
+    linux.processes: 1
+    linux.inspection: 1
+  unlocks:
+    - lore.emergency.rogue_process.01
+
+completion:
+  mode: all
+  objective_ids:
+    - list_processes
+    - stop_rogue

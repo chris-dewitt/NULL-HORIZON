@@ -1,0 +1,14 @@
+{
+  "dialogue_id": "dialogue.automation.regression_guard.offline",
+  "lines": [
+    {
+      "speaker": "SYSTEM",
+      "text": "Remote execution is unavailable. Local fake fixtures will evaluate this mission offline."
+    },
+    {
+      "speaker": "ORION-A",
+      "text": "The contract is the same. Author the regression, repair the helper, and run tests here."
+    }
+  ],
+  "schema_version": 1
+}

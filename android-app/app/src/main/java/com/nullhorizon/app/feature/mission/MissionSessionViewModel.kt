@@ -29,6 +29,7 @@ data class MissionSessionUiState(
     val mission: MissionDefinition? = null,
     val briefing: DialogueDefinition? = null,
     val success: DialogueDefinition? = null,
+    val offlineFallback: DialogueDefinition? = null,
     val session: MissionSessionState = MissionSessionState(),
     val visibleHintTexts: List<String> = emptyList(),
     val debrief: DebriefSummary? = null,
@@ -57,6 +58,9 @@ class MissionSessionViewModel(
             val mission = contentRepository.mission(missionId)
             val briefing = contentRepository.dialogue(mission.narrative.briefingDialogueId)
             val success = contentRepository.dialogue(mission.narrative.successDialogueId)
+            val offlineFallback = mission.narrative.offlineFallbackDialogueId?.let { id ->
+                contentRepository.dialogue(id)
+            }
             val machine = MissionStateMachine(mission)
             stateMachine = machine
             val restoredJson = savedStateHandle.get<String>(KEY_SESSION_JSON)
@@ -65,7 +69,7 @@ class MissionSessionViewModel(
             } else {
                 machine.initialState()
             }
-            publish(mission, briefing, success, session)
+            publish(mission, briefing, success, offlineFallback, session)
         }.onFailure { error ->
             _uiState.update {
                 it.copy(isLoading = false, errorMessage = error.message ?: "Failed to load mission")
@@ -208,6 +212,7 @@ class MissionSessionViewModel(
             mission = mission,
             briefing = current.briefing,
             success = current.success,
+            offlineFallback = current.offlineFallback,
             session = session,
         )
     }
@@ -216,6 +221,7 @@ class MissionSessionViewModel(
         mission: MissionDefinition?,
         briefing: DialogueDefinition?,
         success: DialogueDefinition?,
+        offlineFallback: DialogueDefinition?,
         session: MissionSessionState,
     ) {
         val hints = if (mission == null) {
@@ -229,6 +235,7 @@ class MissionSessionViewModel(
             mission = mission,
             briefing = briefing,
             success = success,
+            offlineFallback = offlineFallback,
             session = session,
             visibleHintTexts = hints,
             debrief = _uiState.value.debrief,

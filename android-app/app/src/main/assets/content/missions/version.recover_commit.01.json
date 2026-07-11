@@ -1,0 +1,125 @@
+{
+  "chapter_id": "version_vault",
+  "completion": {
+    "mode": "all",
+    "objective_ids": [
+      "inspect_log",
+      "recover_signed"
+    ]
+  },
+  "difficulty": "introductory",
+  "environment": {
+    "git": {
+      "branches": {
+        "main": "c2"
+      },
+      "commits": [
+        {
+          "author": "crew",
+          "files": {
+            "routing.conf": "thruster_a=nominal\nthruster_b=nominal\n"
+          },
+          "id": "c0",
+          "message": "Initial vault seed"
+        },
+        {
+          "author": "orion",
+          "files": {
+            "routing.conf": "thruster_a=nominal\nthruster_b=standby\n"
+          },
+          "id": "c1",
+          "message": "Sign thruster routing",
+          "parent": "c0"
+        },
+        {
+          "author": "unknown",
+          "files": {
+            "routing.conf": "thruster_a=override\nthruster_b=standby\n"
+          },
+          "id": "c2",
+          "message": "Unsigned thruster override",
+          "parent": "c1"
+        }
+      ],
+      "initial_branch": "main"
+    },
+    "schema_version": 1,
+    "seed": 13,
+    "template_id": "git.repo.v1"
+  },
+  "hints": [
+    {
+      "level": 1,
+      "text": "Use git log to review recent commits."
+    },
+    {
+      "level": 2,
+      "text": "The safe commit message is Sign thruster routing."
+    },
+    {
+      "level": 3,
+      "text": "That commit id is c1."
+    },
+    {
+      "level": 4,
+      "text": "Run git checkout c1 to restore the signed tree."
+    }
+  ],
+  "mission_id": "version.recover_commit.01",
+  "narrative": {
+    "briefing_dialogue_id": "dialogue.version.recover_commit.briefing",
+    "success_dialogue_id": "dialogue.version.recover_commit.success"
+  },
+  "objectives": [
+    {
+      "assert": {
+        "last_command": "git log",
+        "stdout_contains": "Sign thruster routing"
+      },
+      "description": "Run git log and find the signed thruster routing commit.",
+      "id": "inspect_log",
+      "type": "git_state",
+      "visible": true
+    },
+    {
+      "assert": {
+        "file_equals:routing.conf": "thruster_a=nominal\nthruster_b=standby\n",
+        "head_hash": "c1",
+        "head_message": "Sign thruster routing",
+        "working_tree_clean": true
+      },
+      "description": "Check out commit c1 to restore the signed routing.conf.",
+      "id": "recover_signed",
+      "type": "git_state",
+      "visible": true
+    }
+  ],
+  "requirements": {
+    "app_version": ">=0.1.0",
+    "online": false,
+    "prerequisite_skills": []
+  },
+  "rewards": {
+    "clearance_points": 35,
+    "mastery": {
+      "git.inspect": 1,
+      "git.recover": 1
+    },
+    "unlocks": [
+      "lore.version.recover_commit.01"
+    ]
+  },
+  "schema_version": 1,
+  "skills": {
+    "primary": "git.recover",
+    "secondary": [
+      "git.inspect"
+    ]
+  },
+  "summary": "Move HEAD back to the last signed thruster routing commit.",
+  "title": "Recover a Safe Commit",
+  "tools": [
+    "git"
+  ],
+  "version": "1.0.0"
+}

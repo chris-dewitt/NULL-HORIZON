@@ -2,6 +2,7 @@ schema_version: 1
 chapter_id: archive_core
 title: Archive Core
 region: Archive Core
-summary: Crew, cargo, and historical records recovered through SQL.
+summary: Query and repair crew registry defects without unsafe lookups.
 mission_ids:
   - archive.missing_crew.01
+  - archive.unsafe_query.01

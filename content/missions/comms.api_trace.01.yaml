@@ -1,0 +1,153 @@
+schema_version: 1
+mission_id: comms.api_trace.01
+version: 1.0.0
+chapter_id: comms_relay
+title: Trace an API Failure
+summary: Follow a failing crew-lookup request across the Comms Relay service map.
+difficulty: practiced
+
+requirements:
+  app_version: ">=0.1.0"
+  online: false
+  prerequisite_skills: []
+
+skills:
+  primary: systems.api_trace
+  secondary:
+    - computational_thinking.observe
+
+narrative:
+  briefing_dialogue_id: dialogue.comms.api_trace.briefing
+  success_dialogue_id: dialogue.comms.api_trace.success
+
+tools:
+  - service_map
+
+environment:
+  schema_version: 1
+  template_id: service_map.v1
+  seed: 31
+  service_map:
+    nodes:
+      - id: client
+        kind: client
+        label: Operator console
+        status: degraded
+        detail: "crew lookup returns 502"
+      - id: gateway
+        kind: gateway
+        label: Comms gateway
+        status: healthy
+        detail: "routing /crew/lookup"
+      - id: auth
+        kind: auth
+        label: Auth broker
+        status: healthy
+        detail: "token ok"
+      - id: registry
+        kind: registry
+        label: Crew registry API
+        status: failed
+        detail: "handler panic on missing pod_id"
+      - id: cache
+        kind: cache
+        label: Lookup cache
+        status: degraded
+        detail: "stale negative entries"
+    edges:
+      - id: c_to_g
+        from: client
+        to: gateway
+        kind: request
+        status: degraded
+      - id: g_to_a
+        from: gateway
+        to: auth
+        kind: auth
+        status: ok
+      - id: g_to_r
+        from: gateway
+        to: registry
+        kind: request
+        status: failed
+      - id: r_to_c
+        from: registry
+        to: cache
+        kind: data
+        status: degraded
+    actions:
+      - id: inspect_gateway
+        label: Inspect gateway logs
+        effects:
+          inspected_gateway: "true"
+          explanation: "Gateway forwards /crew/lookup after auth. Downstream registry returns 502."
+      - id: inspect_registry
+        label: Inspect registry handler
+        requires:
+          inspected_gateway: "true"
+        effects:
+          inspected_registry: "true"
+          node.registry.detail: "null pod_id crashes serializer"
+          explanation: "Registry panics when pod_id is null for ghost records."
+      - id: patch_null_guard
+        label: Deploy null-safe serializer patch
+        requires:
+          inspected_registry: "true"
+        effects:
+          node.registry.status: healthy
+          node.registry.detail: "null pod_id returns 404"
+          node.cache.status: healthy
+          node.cache.detail: "negative cache cleared"
+          node.client.status: healthy
+          node.client.detail: "crew lookup recovers"
+          edge.g_to_r.status: ok
+          edge.r_to_c.status: ok
+          edge.c_to_g.status: ok
+          patch_deployed: "true"
+          explanation: "Null-safe handling stops the 502 and clears stale cache entries."
+
+objectives:
+  - id: trace_gateway
+    type: service_map_state
+    description: Inspect the gateway hop on the failing path.
+    visible: true
+    assert:
+      inspected_gateway: "true"
+  - id: locate_registry_fault
+    type: service_map_state
+    description: Confirm the registry handler is the failing hop.
+    visible: true
+    assert:
+      inspected_registry: "true"
+  - id: restore_path
+    type: service_map_state
+    description: Deploy the null-safe patch and restore the request path.
+    visible: true
+    assert:
+      patch_deployed: "true"
+      node.registry.status: healthy
+      node.client.status: healthy
+
+hints:
+  - level: 1
+    text: Start at the gateway. It sits between the console and downstream services.
+  - level: 2
+    text: Auth looks healthy. Follow the failed edge into the registry.
+  - level: 3
+    text: The registry panics on null pod_id for ghost records.
+  - level: 4
+    text: Deploy the null-safe serializer patch after inspecting the registry.
+
+rewards:
+  clearance_points: 40
+  mastery:
+    systems.api_trace: 1
+  unlocks:
+    - lore.comms.api_trace.01
+
+completion:
+  mode: all
+  objective_ids:
+    - trace_gateway
+    - locate_registry_fault
+    - restore_path

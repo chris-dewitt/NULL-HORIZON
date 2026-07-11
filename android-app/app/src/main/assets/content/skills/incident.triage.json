@@ -1,0 +1,8 @@
+{
+  "description": "Combine terminal, SQL, and Git evidence to close a multi-tool incident.",
+  "domain": "systems",
+  "name": "Incident Triage",
+  "prerequisites": [],
+  "schema_version": 1,
+  "skill_id": "incident.triage"
+}

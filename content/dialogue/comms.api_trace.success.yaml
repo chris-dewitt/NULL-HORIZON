@@ -1,0 +1,5 @@
+schema_version: 1
+dialogue_id: dialogue.comms.api_trace.success
+lines:
+  - speaker: ORION-A
+    text: Lookup path restored. Ghost records no longer crash the registry serializer.

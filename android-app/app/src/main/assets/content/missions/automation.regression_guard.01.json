@@ -1,0 +1,187 @@
+{
+  "chapter_id": "automation_lab",
+  "completion": {
+    "mode": "all",
+    "objective_ids": [
+      "author_regression",
+      "fix_clamp",
+      "tests_pass"
+    ]
+  },
+  "difficulty": "practiced",
+  "environment": {
+    "schema_version": 1,
+    "seed": 21,
+    "template_id": "python.editor.fake.v1",
+    "workspace": {
+      "execution": {
+        "fixtures": [
+          {
+            "id": "fixed",
+            "match": {
+              "file_contains": {
+                "/workspace/clamp.py": "return 100",
+                "/workspace/test_clamp.py": "clamp_psi(150) == 100"
+              }
+            },
+            "result": {
+              "status": "completed",
+              "tests": [
+                {
+                  "id": "test_passthrough",
+                  "status": "passed"
+                },
+                {
+                  "id": "test_upper_bound",
+                  "status": "passed"
+                }
+              ]
+            }
+          },
+          {
+            "id": "regression_fails_on_bug",
+            "match": {
+              "file_contains": {
+                "/workspace/clamp.py": "return 99",
+                "/workspace/test_clamp.py": "clamp_psi(150) == 100"
+              }
+            },
+            "result": {
+              "status": "completed",
+              "tests": [
+                {
+                  "id": "test_passthrough",
+                  "status": "passed"
+                },
+                {
+                  "actual": "99",
+                  "expected": "100",
+                  "id": "test_upper_bound",
+                  "message": "Expected 100 for over-range pressure",
+                  "status": "failed"
+                }
+              ]
+            }
+          },
+          {
+            "id": "default_fail",
+            "result": {
+              "status": "completed",
+              "tests": [
+                {
+                  "id": "test_passthrough",
+                  "status": "passed"
+                },
+                {
+                  "actual": "missing",
+                  "expected": "100",
+                  "id": "test_upper_bound",
+                  "message": "Add assert clamp_psi(150) == 100 then fix the upper bound",
+                  "status": "failed"
+                }
+              ]
+            }
+          }
+        ],
+        "provider": "fake"
+      },
+      "files": [
+        {
+          "content": "def clamp_psi(psi: int) -> int:\n    \"\"\"Clamp valve pressure into the inclusive 0..100 band.\"\"\"\n    if psi < 0:\n        return 0\n    if psi > 100:\n        return 99\n    return psi\n",
+          "editable": true,
+          "path": "/workspace/clamp.py"
+        },
+        {
+          "content": "from clamp import clamp_psi\n\n\ndef test_passthrough():\n    assert clamp_psi(40) == 40\n",
+          "editable": true,
+          "path": "/workspace/test_clamp.py"
+        }
+      ]
+    }
+  },
+  "hints": [
+    {
+      "level": 1,
+      "text": "Open test_clamp.py and add a test for the upper bound."
+    },
+    {
+      "level": 2,
+      "text": "Assert clamp_psi(150) == 100."
+    },
+    {
+      "level": 3,
+      "text": "The bug returns 99 for values above 100. Change that return to 100."
+    },
+    {
+      "level": 4,
+      "text": "Run tests after both edits. Both tests should pass."
+    }
+  ],
+  "mission_id": "automation.regression_guard.01",
+  "narrative": {
+    "briefing_dialogue_id": "dialogue.automation.regression_guard.briefing",
+    "offline_fallback_dialogue_id": "dialogue.automation.regression_guard.offline",
+    "success_dialogue_id": "dialogue.automation.regression_guard.success"
+  },
+  "objectives": [
+    {
+      "assert": {
+        "file_contains:/workspace/test_clamp.py": "clamp_psi(150) == 100"
+      },
+      "description": "Add a regression assertion for clamp_psi(150) == 100.",
+      "id": "author_regression",
+      "type": "file_assertion",
+      "visible": true
+    },
+    {
+      "assert": {
+        "file_contains:/workspace/clamp.py": "return 100",
+        "file_not_contains:/workspace/clamp.py": "return 99"
+      },
+      "description": "Fix clamp_psi so over-range values return 100.",
+      "id": "fix_clamp",
+      "type": "file_assertion",
+      "visible": true
+    },
+    {
+      "assert": {
+        "all_passed": "true",
+        "test_count": "2"
+      },
+      "description": "Run tests and make the full suite pass.",
+      "id": "tests_pass",
+      "type": "execution_tests",
+      "visible": true
+    }
+  ],
+  "requirements": {
+    "app_version": ">=0.1.0",
+    "online": true,
+    "prerequisite_skills": []
+  },
+  "rewards": {
+    "clearance_points": 45,
+    "mastery": {
+      "python.functions": 1,
+      "python.testing": 1
+    },
+    "unlocks": [
+      "lore.automation.regression_guard.01"
+    ]
+  },
+  "schema_version": 1,
+  "skills": {
+    "primary": "python.testing",
+    "secondary": [
+      "python.functions",
+      "python.conditionals"
+    ]
+  },
+  "summary": "Author a regression test for the valve clamp helper, then repair the bug so the suite passes.",
+  "title": "Write a Regression Test",
+  "tools": [
+    "python_editor",
+    "test_console"
+  ],
+  "version": "1.0.0"
+}

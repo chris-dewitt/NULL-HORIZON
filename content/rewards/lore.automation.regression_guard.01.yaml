@@ -1,0 +1,5 @@
+schema_version: 1
+reward_id: lore.automation.regression_guard.01
+kind: lore
+name: Regression Guard
+description: A failing upper-bound test that forced the clamp repair.

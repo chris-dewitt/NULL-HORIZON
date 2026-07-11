@@ -315,6 +315,7 @@ class GitSimulator {
         // Supports:
         // git checkout -- <path>
         // git checkout --ours|--theirs <path>
+        // git checkout <commit>
         return when {
             args.size == 2 && args[0] == "--" -> {
                 val path = args[1]
@@ -340,10 +341,31 @@ class GitSimulator {
                     stdout = "Updated 1 path from the index",
                 )
             }
+            args.size == 1 && !args[0].startsWith("-") -> {
+                val commitHash = resolveCommitRef(state.commits, args[0])
+                val commit = state.commits.getValue(commitHash)
+                GitCommandResult(
+                    state = state.copy(
+                        branches = state.branches + (state.currentBranch to commitHash),
+                        workingTree = commit.tree,
+                        index = commit.tree,
+                        conflicts = emptyMap(),
+                        mergeParentHash = null,
+                    ),
+                    stdout = "HEAD is now at $commitHash ${commit.message}",
+                )
+            }
             else -> throw IllegalArgumentException(
-                "git checkout: supported forms are 'git checkout -- <path>' and 'git checkout --ours|--theirs <path>'",
+                "git checkout: supported forms are 'git checkout -- <path>', " +
+                    "'git checkout --ours|--theirs <path>', and 'git checkout <commit>'",
             )
         }
+    }
+
+    private fun resolveCommitRef(commits: Map<String, GitCommit>, ref: String): String {
+        commits[ref]?.let { return it.hash }
+        commits.values.firstOrNull { it.hash.startsWith(ref) }?.let { return it.hash }
+        throw IllegalArgumentException("git checkout: pathspec '$ref' did not match any file(s) known to git")
     }
 
     private fun findMergeBaseTree(

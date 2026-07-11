@@ -1,0 +1,5 @@
+schema_version: 1
+dialogue_id: dialogue.emergency.wake_sequence.success
+lines:
+  - speaker: ORION-A
+    text: Wake acknowledged. Deck systems remain fractured. Begin local repairs.

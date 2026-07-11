@@ -58,6 +58,7 @@ data class MissionNarrative(
     @SerialName("briefing_dialogue_id") val briefingDialogueId: String,
     @SerialName("success_dialogue_id") val successDialogueId: String,
     @SerialName("failure_consequence_id") val failureConsequenceId: String? = null,
+    @SerialName("offline_fallback_dialogue_id") val offlineFallbackDialogueId: String? = null,
 )
 
 @Serializable
@@ -81,6 +82,7 @@ data class EnvironmentDefinition(
 data class VirtualFilesystemDefinition(
     val cwd: String,
     val entries: List<VirtualFilesystemEntry>,
+    val processes: List<VirtualProcessDefinition> = emptyList(),
 )
 
 @Serializable
@@ -88,6 +90,14 @@ data class VirtualFilesystemEntry(
     val path: String,
     val type: String,
     val content: String? = null,
+)
+
+@Serializable
+data class VirtualProcessDefinition(
+    val pid: Int,
+    val name: String,
+    val status: String = "running",
+    val command: String? = null,
 )
 
 @Serializable

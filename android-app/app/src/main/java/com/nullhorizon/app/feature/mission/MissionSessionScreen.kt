@@ -79,6 +79,24 @@ fun MissionSessionScreen(
                     )
                 }
 
+                if (mission.requirements.online &&
+                    state.offlineFallback != null &&
+                    state.session.phase != MissionPhase.Completed
+                ) {
+                    Text(
+                        text = stringResource(R.string.mission_offline_fallback),
+                        style = MaterialTheme.typography.labelLarge,
+                        color = MaterialTheme.colorScheme.tertiary,
+                    )
+                    state.offlineFallback?.lines?.forEach { line ->
+                        Text(
+                            text = "${line.speaker}: ${line.text}",
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = MaterialTheme.colorScheme.tertiary,
+                        )
+                    }
+                }
+
                 Text(
                     text = stringResource(R.string.mission_phase, state.session.phase.name),
                     style = MaterialTheme.typography.labelLarge,

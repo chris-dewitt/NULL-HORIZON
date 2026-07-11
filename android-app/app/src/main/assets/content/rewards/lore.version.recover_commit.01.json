@@ -1,0 +1,7 @@
+{
+  "description": "Confirmation that HEAD returned to the signed thruster routing commit.",
+  "kind": "lore",
+  "name": "Signed Checkout",
+  "reward_id": "lore.version.recover_commit.01",
+  "schema_version": 1
+}

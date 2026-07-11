@@ -18,6 +18,7 @@ class ObjectiveEngine {
                         "state_assertion" -> matches(state.worldState, expected)
                         "filesystem_state" -> matchesFilesystem(state, expected)
                         "command_output" -> matchesCommandOutput(state, expected)
+                        "process_state" -> matchesProcessState(state, expected)
                         "git_state" -> matchesGitState(state, expected)
                         "sql_result" -> matchesSqlResult(state, expected)
                         "database_assertion" -> matchesDatabaseAssertion(state, expected)
@@ -81,6 +82,30 @@ class ObjectiveEngine {
         }
     }
 
+    private fun matchesProcessState(
+        state: MissionSessionState,
+        expected: Map<String, String>,
+    ): Boolean {
+        val processes = state.terminal?.processes ?: return false
+        return expected.all { (key, value) ->
+            when {
+                key == "running_count" -> {
+                    processes.count { it.status == "running" }.toString() == value
+                }
+                key.startsWith("running:") -> {
+                    val name = key.removePrefix("running:")
+                    val running = processes.any { it.name == name && it.status == "running" }
+                    running.toString() == value
+                }
+                key.startsWith("status:") -> {
+                    val pid = key.removePrefix("status:").toIntOrNull() ?: return@all false
+                    processes.firstOrNull { it.pid == pid }?.status == value
+                }
+                else -> false
+            }
+        }
+    }
+
     private fun matchesGitState(
         state: MissionSessionState,
         expected: Map<String, String>,
@@ -99,6 +124,8 @@ class ObjectiveEngine {
                 key == "head_author" -> git.headCommit.author == value
                 key == "head_message" -> git.headCommit.message == value
                 key == "head_message_contains" -> git.headCommit.message.contains(value)
+                key == "head_hash" -> git.headHash == value
+                key == "head_hash_prefix" -> git.headHash.startsWith(value)
                 key == "last_command" -> git.lastCommand == value
                 key == "stdout_contains" -> git.lastStdout.contains(value)
                 key.startsWith("file_contains:") -> {

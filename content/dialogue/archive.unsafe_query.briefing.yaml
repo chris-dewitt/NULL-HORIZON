@@ -1,0 +1,7 @@
+schema_version: 1
+dialogue_id: dialogue.archive.unsafe_query.briefing
+lines:
+  - speaker: ORION-A
+    text: Archive lookup builds SQL by concatenating callsigns.
+  - speaker: SYSTEM
+    text: Replace the concat with a placeholder query before the next registry sync.

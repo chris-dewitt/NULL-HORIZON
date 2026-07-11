@@ -114,6 +114,10 @@
         },
         "failure_consequence_id": {
           "type": "string"
+        },
+        "offline_fallback_dialogue_id": {
+          "type": "string",
+          "minLength": 1
         }
       }
     },

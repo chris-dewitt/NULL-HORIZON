@@ -4,5 +4,7 @@ title: Emergency Interface
 region: Emergency Interface
 summary: Wake sequence and power routing for the damaged colony ship.
 mission_ids:
+  - emergency.wake_sequence.01
   - emergency.lighting.01
   - emergency.fault_log.01
+  - emergency.rogue_process.01

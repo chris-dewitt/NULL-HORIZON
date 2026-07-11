@@ -29,6 +29,7 @@
     <string name="mission_status_completed">Completed</string>
     <string name="mission_back">Back to missions</string>
     <string name="mission_begin">Begin repair</string>
+    <string name="mission_offline_fallback">Offline fallback</string>
     <string name="mission_systems_panel">Systems panel</string>
     <string name="mission_terminal">Terminal</string>
     <string name="mission_terminal_cwd">cwd: %1$s</string>

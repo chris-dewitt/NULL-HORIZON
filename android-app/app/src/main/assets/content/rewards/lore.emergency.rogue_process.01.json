@@ -1,0 +1,7 @@
+{
+  "description": "Evidence that a rogue writer was terminated on the maintenance host.",
+  "kind": "lore",
+  "name": "Stopped Exfil",
+  "reward_id": "lore.emergency.rogue_process.01",
+  "schema_version": 1
+}

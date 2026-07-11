@@ -1,0 +1,96 @@
+schema_version: 1
+mission_id: version.inspect_status.01
+version: 1.0.0
+chapter_id: version_vault
+title: Inspect Git Status
+summary: Use git status and git diff to identify an unsigned thruster routing edit.
+difficulty: introductory
+
+requirements:
+  app_version: ">=0.1.0"
+  online: false
+  prerequisite_skills: []
+
+skills:
+  primary: git.inspect
+  secondary: []
+
+narrative:
+  briefing_dialogue_id: dialogue.version.inspect_status.briefing
+  success_dialogue_id: dialogue.version.inspect_status.success
+
+tools:
+  - git
+
+environment:
+  schema_version: 1
+  template_id: git.repo.v1
+  seed: 12
+  git:
+    initial_branch: main
+    branches:
+      main: c1
+    commits:
+      - id: c0
+        message: Initial vault seed
+        author: crew
+        files:
+          routing.conf: |
+            thruster_a=nominal
+            thruster_b=nominal
+          README.md: |
+            Version Vault signed configs.
+      - id: c1
+        message: Sign thruster routing
+        author: orion
+        parent: c0
+        files:
+          routing.conf: |
+            thruster_a=nominal
+            thruster_b=standby
+          README.md: |
+            Version Vault signed configs.
+    working_tree:
+      routing.conf: |
+        thruster_a=override
+        thruster_b=standby
+
+objectives:
+  - id: inspect_status
+    type: git_state
+    description: Run git status and confirm routing.conf is modified.
+    visible: true
+    assert:
+      last_command: git status
+      working_tree_clean: false
+      stdout_contains: routing.conf
+  - id: inspect_diff
+    type: git_state
+    description: Run git diff and confirm the thruster_a override.
+    visible: true
+    assert:
+      last_command: git diff
+      stdout_contains: thruster_a=override
+
+hints:
+  - level: 1
+    text: Start with git status.
+  - level: 2
+    text: Status should mention routing.conf.
+  - level: 3
+    text: Use git diff to read the unauthorized content.
+  - level: 4
+    text: Confirm the diff shows thruster_a=override.
+
+rewards:
+  clearance_points: 25
+  mastery:
+    git.inspect: 1
+  unlocks:
+    - lore.version.inspect_status.01
+
+completion:
+  mode: all
+  objective_ids:
+    - inspect_status
+    - inspect_diff

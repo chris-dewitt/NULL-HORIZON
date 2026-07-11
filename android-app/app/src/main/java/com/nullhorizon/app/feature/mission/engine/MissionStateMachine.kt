@@ -13,6 +13,7 @@ import com.nullhorizon.app.simulation.sql.SqlSimulator
 import com.nullhorizon.app.simulation.terminal.TerminalSimulator
 import com.nullhorizon.app.simulation.terminal.VirtualFileSystem
 import com.nullhorizon.app.simulation.terminal.VirtualFsEntry
+import com.nullhorizon.app.simulation.terminal.VirtualProcess
 
 /**
  * Deterministic mission lifecycle. Reset always restores environment.seed initial state.
@@ -54,8 +55,18 @@ class MissionStateMachine(
     private val initialMlops = mlopsDefinition?.let { MlOpsSimulator.fromDefinition(it) }
 
     fun initialState(): MissionSessionState {
+        val filesystem = mission.environment.filesystem
+        val processes = filesystem?.processes.orEmpty().map { process ->
+            VirtualProcess(
+                pid = process.pid,
+                name = process.name,
+                status = process.status,
+                command = process.command ?: process.name,
+            )
+        }
         val terminal = terminalSimulator?.initialState(
-            mission.environment.filesystem?.cwd ?: "/",
+            initialCwd = filesystem?.cwd ?: "/",
+            processes = processes,
         )
         val sql = sqlSimulator?.reset()
         return MissionSessionState(

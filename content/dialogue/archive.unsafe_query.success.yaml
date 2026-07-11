@@ -1,0 +1,5 @@
+schema_version: 1
+dialogue_id: dialogue.archive.unsafe_query.success
+lines:
+  - speaker: ORION-A
+    text: Placeholder lookup accepted. String-built queries are blocked from this helper.

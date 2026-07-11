@@ -1,0 +1,5 @@
+schema_version: 1
+reward_id: lore.version.inspect_status.01
+kind: lore
+name: Unsigned Diff
+description: Diff evidence of an unauthorized thruster_a override.
