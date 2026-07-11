@@ -1,11 +1,11 @@
 # NULL HORIZON backend
 
-Minimal FastAPI shell for Epic 0. Learner-authored code must never execute in this process.
+FastAPI foundation for Epic 7. Learner-authored code must never execute in this process.
 
 ## Layout
 
 ```text
-api/       Public HTTP API
+api/       Public HTTP API, models, Alembic
 runner/    Execution contracts and future workers
 shared/    Shared schemas and observability helpers
 ```
@@ -20,6 +20,12 @@ pytest
 uvicorn api.app.main:app --reload
 ```
 
+Trusted development services:
+
+```bash
+docker compose -f ../infra/compose/dev.yml up --build
+```
+
 ## Security boundary
 
-`EXECUTION_PROVIDER` defaults to `fake`. Real execution belongs in isolated runners (Epic 8), not in `api/`.
+`EXECUTION_PROVIDER` defaults to `fake`. The fake provider returns deterministic fixtures and never imports learner source. Real execution belongs in isolated runners (Epic 8), not in `api/`.

@@ -52,6 +52,7 @@ Operating rules for human and agentic contributors working in this monorepo.
 - Epic 4 delivers the simulated Git repository: status/diff/add/commit/log/branch/switch/merge, conflict UI, and git_state objectives.
 - Epic 5 delivers the SQL console: isolated mission SQLite, select-only policy, schema browser, result table, and sql_result/database assertions.
 - Epic 6 delivers the mobile code editor, test console, and client-side fake execution fixtures for offline Python missions.
+- Epic 7 delivers the FastAPI backend foundation: Postgres models, Alembic, Redis adapter, content/profile/progress APIs, and fake execution jobs.
 - Do not begin the production execution sandbox, production infrastructure, or full mission curriculum until their epics begin.
 - Learner-authored code must remain completely separated from the API process at every stage.
 
