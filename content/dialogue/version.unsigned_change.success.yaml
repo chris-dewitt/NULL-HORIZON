@@ -1,0 +1,7 @@
+schema_version: 1
+dialogue_id: dialogue.version.unsigned_change.success
+lines:
+  - speaker: ORION
+    text: Working tree clean. Signed routing configuration restored.
+  - speaker: MICA
+    text: Good. Unauthorized edits leave fingerprints. Status and diff are your first sensors.

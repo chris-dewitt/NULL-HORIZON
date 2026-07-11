@@ -154,6 +154,14 @@
             "then": {
               "required": ["assert"]
             }
+          },
+          {
+            "if": {
+              "properties": { "type": { "const": "git_state" } }
+            },
+            "then": {
+              "required": ["assert"]
+            }
           }
         ]
       }

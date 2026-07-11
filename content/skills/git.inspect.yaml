@@ -1,0 +1,6 @@
+schema_version: 1
+skill_id: git.inspect
+name: Inspect repository state
+domain: git
+description: Use git status and git diff to understand working-tree and staged changes.
+prerequisites: []

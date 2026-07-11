@@ -1,0 +1,8 @@
+schema_version: 1
+chapter_id: version_vault
+title: Version Vault
+region: Version Vault
+summary: Source history, unauthorized changes, and merge discipline for the colony ship.
+mission_ids:
+  - version.unsigned_change.01
+  - version.merge_conflict.01

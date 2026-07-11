@@ -68,6 +68,7 @@ data class EnvironmentDefinition(
     @SerialName("initial_state") val initialState: Map<String, JsonElement> = emptyMap(),
     val actions: List<MissionActionDefinition> = emptyList(),
     val filesystem: VirtualFilesystemDefinition? = null,
+    val git: com.nullhorizon.app.simulation.git.GitRepositoryDefinition? = null,
 )
 
 @Serializable

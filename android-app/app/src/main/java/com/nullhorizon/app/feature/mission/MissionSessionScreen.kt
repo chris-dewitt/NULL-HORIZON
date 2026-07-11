@@ -29,6 +29,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.nullhorizon.app.R
 import com.nullhorizon.app.feature.mission.engine.MissionPhase
+import com.nullhorizon.app.simulation.git.GitRepositoryState
 import com.nullhorizon.app.simulation.terminal.TerminalSessionState
 
 @OptIn(ExperimentalLayoutApi::class)
@@ -104,6 +105,15 @@ fun MissionSessionScreen(
                             terminal = state.session.terminal!!,
                             enabled = state.session.phase == MissionPhase.InProgress,
                             onSubmit = viewModel::runCommand,
+                        )
+                    }
+
+                    if (mission.tools.contains("git") && state.session.git != null) {
+                        GitPanel(
+                            git = state.session.git!!,
+                            enabled = state.session.phase == MissionPhase.InProgress,
+                            onSubmit = viewModel::runGitCommand,
+                            onResolveConflict = viewModel::resolveConflict,
                         )
                     }
 
@@ -275,4 +285,167 @@ private fun TerminalPanel(
             Text(stringResource(R.string.mission_terminal_run))
         }
     }
+}
+
+@OptIn(ExperimentalLayoutApi::class)
+@Composable
+private fun GitPanel(
+    git: GitRepositoryState,
+    enabled: Boolean,
+    onSubmit: (String) -> Unit,
+    onResolveConflict: (path: String, side: String) -> Unit,
+) {
+    var input by rememberSaveable { mutableStateOf("") }
+
+    Text(
+        text = stringResource(R.string.mission_git),
+        style = MaterialTheme.typography.titleMedium,
+    )
+    Text(
+        text = stringResource(R.string.mission_git_branch, git.currentBranch),
+        style = MaterialTheme.typography.labelLarge,
+        fontFamily = FontFamily.Monospace,
+        modifier = Modifier.semantics { contentDescription = "Git branch ${git.currentBranch}" },
+    )
+
+    Text(
+        text = stringResource(R.string.mission_git_log),
+        style = MaterialTheme.typography.titleSmall,
+    )
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .border(1.dp, MaterialTheme.colorScheme.outline)
+            .padding(12.dp)
+            .semantics { contentDescription = "Git commit graph" },
+        verticalArrangement = Arrangement.spacedBy(4.dp),
+    ) {
+        commitGraphLines(git).forEach { line ->
+            Text(
+                text = line,
+                fontFamily = FontFamily.Monospace,
+                style = MaterialTheme.typography.bodySmall,
+            )
+        }
+    }
+
+    if (git.conflicts.isNotEmpty()) {
+        Text(
+            text = stringResource(R.string.mission_git_conflicts),
+            style = MaterialTheme.typography.titleSmall,
+            color = MaterialTheme.colorScheme.error,
+        )
+        git.conflicts.keys.sorted().forEach { path ->
+            Text(
+                text = path,
+                fontFamily = FontFamily.Monospace,
+                style = MaterialTheme.typography.bodyMedium,
+            )
+            if (enabled) {
+                FlowRow(
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    verticalArrangement = Arrangement.spacedBy(8.dp),
+                ) {
+                    OutlinedButton(
+                        onClick = { onResolveConflict(path, "ours") },
+                        modifier = Modifier.semantics {
+                            contentDescription = "Resolve $path with ours"
+                        },
+                    ) {
+                        Text(stringResource(R.string.mission_git_use_ours))
+                    }
+                    OutlinedButton(
+                        onClick = { onResolveConflict(path, "theirs") },
+                        modifier = Modifier.semantics {
+                            contentDescription = "Resolve $path with theirs"
+                        },
+                    ) {
+                        Text(stringResource(R.string.mission_git_use_theirs))
+                    }
+                }
+            }
+        }
+    }
+
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .border(1.dp, MaterialTheme.colorScheme.outline)
+            .padding(12.dp)
+            .semantics { contentDescription = "Git history" },
+        verticalArrangement = Arrangement.spacedBy(8.dp),
+    ) {
+        if (git.history.isEmpty()) {
+            Text(
+                text = stringResource(R.string.mission_git_empty),
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+            )
+        } else {
+            git.history.takeLast(12).forEach { entry ->
+                Text(
+                    text = "$ ${entry.command}",
+                    fontFamily = FontFamily.Monospace,
+                    style = MaterialTheme.typography.bodyMedium,
+                )
+                if (entry.stdout.isNotBlank()) {
+                    Text(
+                        text = entry.stdout,
+                        fontFamily = FontFamily.Monospace,
+                        style = MaterialTheme.typography.bodySmall,
+                    )
+                }
+                if (entry.stderr.isNotBlank()) {
+                    Text(
+                        text = entry.stderr,
+                        fontFamily = FontFamily.Monospace,
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.error,
+                    )
+                }
+            }
+        }
+    }
+    if (enabled) {
+        OutlinedTextField(
+            value = input,
+            onValueChange = { input = it },
+            modifier = Modifier
+                .fillMaxWidth()
+                .semantics { contentDescription = "Git input" },
+            singleLine = true,
+            label = { Text(stringResource(R.string.mission_git_input)) },
+        )
+        Button(
+            onClick = {
+                val command = input.trim()
+                if (command.isNotEmpty()) {
+                    onSubmit(command)
+                    input = ""
+                }
+            },
+            modifier = Modifier.semantics { contentDescription = "Run git command" },
+        ) {
+            Text(stringResource(R.string.mission_git_run))
+        }
+    }
+}
+
+private fun commitGraphLines(git: GitRepositoryState): List<String> {
+    val tipLabels = git.branches.entries
+        .groupBy({ it.value }, { it.key })
+    val lines = mutableListOf<String>()
+    var current: String? = git.headHash
+    val seen = mutableSetOf<String>()
+    while (current != null && current !in seen) {
+        seen += current
+        val commit = git.commits[current] ?: break
+        val labels = tipLabels[commit.hash].orEmpty()
+            .sorted()
+            .joinToString(prefix = if (tipLabels[commit.hash].isNullOrEmpty()) "" else " (", postfix = if (tipLabels[commit.hash].isNullOrEmpty()) "" else ")")
+        val marker = if (commit.hash == git.headHash) "*" else "o"
+        lines += "$marker ${commit.hash.take(7)}$labels ${commit.message}"
+        current = commit.parents.firstOrNull()
+    }
+    return lines
 }
