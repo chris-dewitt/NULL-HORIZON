@@ -44,7 +44,7 @@ run_android() {
   fi
   (
     cd "$ROOT_DIR/android-app"
-    ./gradlew --no-daemon test assembleDebug
+    ./gradlew --no-daemon lintDebug test assembleDebug
   )
   RAN_ANY=1
 }

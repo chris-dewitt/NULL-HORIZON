@@ -54,8 +54,8 @@ jobs:
         run: |
           yes | sdkmanager --licenses >/dev/null || true
           sdkmanager "platforms;android-35" "build-tools;35.0.0"
-      - name: Unit tests and debug assemble
-        run: ./gradlew --no-daemon test assembleDebug
+      - name: Lint, unit tests, and debug assemble
+        run: ./gradlew --no-daemon lintDebug test assembleDebug
 
   repo-guards:
     name: Repository guards
