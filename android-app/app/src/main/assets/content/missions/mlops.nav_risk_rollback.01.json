@@ -1,0 +1,258 @@
+{
+  "chapter_id": "prediction_observatory",
+  "completion": {
+    "mode": "all",
+    "objective_ids": [
+      "ack_monitor",
+      "inspect_report",
+      "rollback_model",
+      "healthy_path"
+    ]
+  },
+  "difficulty": "practiced",
+  "environment": {
+    "mlops": {
+      "actions": [
+        {
+          "effects": {
+            "explanation": "bearing_rate distribution shifted after v7; v3 remains within bounds.",
+            "inspected_skew": "true"
+          },
+          "id": "inspect_skew",
+          "label": "Inspect skew report"
+        },
+        {
+          "effects": {
+            "artifact.deploy_live.status": "healthy",
+            "artifact.deploy_live.version": "3",
+            "artifact.drift_alert.stage": "cleared",
+            "artifact.drift_alert.status": "healthy",
+            "artifact.model_v3.stage": "production",
+            "artifact.model_v3.status": "healthy",
+            "artifact.model_v7.stage": "archived",
+            "artifact.model_v7.status": "quarantined",
+            "explanation": "Registry Production now points at v3. Ready to retarget inference.",
+            "rollback_ready": "true"
+          },
+          "id": "rollback_registry",
+          "label": "Roll registry Production to v3",
+          "requires": {
+            "alert_acked": "true",
+            "inspected_skew": "true"
+          }
+        }
+      ],
+      "artifacts": [
+        {
+          "id": "dataset_nav",
+          "kind": "dataset",
+          "label": "Nav features",
+          "stage": "production",
+          "status": "healthy",
+          "version": "12"
+        },
+        {
+          "detail": "ungated promotion",
+          "id": "model_v7",
+          "kind": "model",
+          "label": "Risk model v7",
+          "stage": "production",
+          "status": "failing",
+          "version": "7"
+        },
+        {
+          "detail": "last known good",
+          "id": "model_v3",
+          "kind": "model",
+          "label": "Risk model v3",
+          "stage": "staging",
+          "status": "healthy",
+          "version": "3"
+        },
+        {
+          "id": "deploy_live",
+          "kind": "deployment",
+          "label": "Live inference deploy",
+          "stage": "production",
+          "status": "failing",
+          "version": "7"
+        },
+        {
+          "detail": "bearing_rate",
+          "id": "drift_alert",
+          "kind": "monitoring",
+          "label": "Feature skew alert",
+          "stage": "active",
+          "status": "alert"
+        }
+      ]
+    },
+    "schema_version": 1,
+    "seed": 202,
+    "service_map": {
+      "actions": [
+        {
+          "effects": {
+            "alert_acked": "true",
+            "explanation": "Monitoring confirms bearing_rate skew after the ungated v7 promotion.",
+            "node.monitoring.detail": "alert acknowledged; rollback required",
+            "node.monitoring.status": "degraded"
+          },
+          "id": "acknowledge_alert",
+          "label": "Acknowledge drift alert"
+        },
+        {
+          "effects": {
+            "edge.c_to_i.status": "ok",
+            "edge.i_to_m.status": "ok",
+            "explanation": "Traffic now hits registry stage Production on v3.",
+            "node.client.detail": "risk scores stable",
+            "node.client.status": "healthy",
+            "node.inference.detail": "serving model v3",
+            "node.inference.status": "healthy",
+            "node.monitoring.detail": "skew cleared",
+            "node.monitoring.status": "healthy"
+          },
+          "id": "route_stable",
+          "label": "Point inference at stable model",
+          "requires": {
+            "rollback_ready": "true"
+          }
+        }
+      ],
+      "edges": [
+        {
+          "from": "client",
+          "id": "c_to_i",
+          "kind": "request",
+          "status": "degraded",
+          "to": "inference"
+        },
+        {
+          "from": "inference",
+          "id": "i_to_m",
+          "kind": "metrics",
+          "status": "alert",
+          "to": "monitoring"
+        }
+      ],
+      "nodes": [
+        {
+          "detail": "risk scores oscillating",
+          "id": "client",
+          "kind": "client",
+          "label": "Nav console",
+          "status": "degraded"
+        },
+        {
+          "detail": "serving model v7",
+          "id": "inference",
+          "kind": "inference",
+          "label": "Risk inference",
+          "status": "degraded"
+        },
+        {
+          "detail": "feature skew on bearing_rate",
+          "id": "monitoring",
+          "kind": "monitoring",
+          "label": "Drift monitor",
+          "status": "alert"
+        },
+        {
+          "id": "registry",
+          "kind": "model_registry",
+          "label": "Model registry",
+          "status": "healthy"
+        }
+      ]
+    },
+    "template_id": "mlops.lifecycle.v1"
+  },
+  "hints": [
+    {
+      "level": 1,
+      "text": "Acknowledge the monitoring alert, then read the skew report."
+    },
+    {
+      "level": 2,
+      "text": "Roll the registry Production stage to the last known good model before retargeting traffic."
+    },
+    {
+      "level": 3,
+      "text": "After rollback_ready is set, point inference at the stable model on the service map."
+    }
+  ],
+  "mission_id": "mlops.nav_risk_rollback.01",
+  "narrative": {
+    "briefing_dialogue_id": "dialogue.mlops.nav_risk_rollback.briefing",
+    "success_dialogue_id": "dialogue.mlops.nav_risk_rollback.success"
+  },
+  "objectives": [
+    {
+      "assert": {
+        "alert_acked": "true"
+      },
+      "description": "Acknowledge the drift alert on the service map.",
+      "id": "ack_monitor",
+      "type": "service_map_state",
+      "visible": true
+    },
+    {
+      "assert": {
+        "inspected_skew": "true"
+      },
+      "description": "Inspect the skew report before changing registry state.",
+      "id": "inspect_report",
+      "type": "mlops_state",
+      "visible": true
+    },
+    {
+      "assert": {
+        "artifact.deploy_live.version": "3",
+        "artifact.drift_alert.status": "healthy",
+        "artifact.model_v3.stage": "production"
+      },
+      "description": "Move Production registry stage back to model v3.",
+      "id": "rollback_model",
+      "type": "mlops_state",
+      "visible": true
+    },
+    {
+      "assert": {
+        "node.client.status": "healthy",
+        "node.inference.status": "healthy",
+        "node.monitoring.status": "healthy"
+      },
+      "description": "Retarget inference so the client path is healthy.",
+      "id": "healthy_path",
+      "type": "service_map_state",
+      "visible": true
+    }
+  ],
+  "requirements": {
+    "app_version": ">=0.1.0",
+    "online": false,
+    "prerequisite_skills": []
+  },
+  "rewards": {
+    "clearance_points": 45,
+    "mastery": {
+      "mlops.rollback": 1
+    },
+    "unlocks": [
+      "lore.mlops.nav_risk_rollback.01"
+    ]
+  },
+  "schema_version": 1,
+  "skills": {
+    "primary": "mlops.rollback",
+    "secondary": []
+  },
+  "summary": "Roll back a skewed navigation-risk model and restore the stable registry stage.",
+  "title": "Navigation Risk Rollback",
+  "tools": [
+    "service_map",
+    "mlops"
+  ],
+  "version": "1.0.0"
+}

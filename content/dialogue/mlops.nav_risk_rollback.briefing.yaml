@@ -1,0 +1,7 @@
+schema_version: 1
+dialogue_id: dialogue.mlops.nav_risk_rollback.briefing
+lines:
+  - speaker: Auditor
+    text: Navigation-risk inference is alerting on feature skew. The live model was promoted without a canary.
+  - speaker: Player
+    text: Freeze the bad deployment and roll back to the last stable registry stage.

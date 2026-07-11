@@ -1,0 +1,10 @@
+{
+  "chapter_id": "data_foundry",
+  "mission_ids": [
+    "pipeline.telemetry_drop.01"
+  ],
+  "region": "Data Foundry",
+  "schema_version": 1,
+  "summary": "Batch telemetry pipelines that keep reactor forecasts honest.",
+  "title": "Data Foundry"
+}

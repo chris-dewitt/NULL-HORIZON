@@ -1,0 +1,7 @@
+schema_version: 1
+chapter_id: data_foundry
+title: Data Foundry
+region: Data Foundry
+summary: Batch telemetry pipelines that keep reactor forecasts honest.
+mission_ids:
+  - pipeline.telemetry_drop.01

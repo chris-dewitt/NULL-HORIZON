@@ -23,6 +23,9 @@ class ObjectiveEngine {
                         "database_assertion" -> matchesDatabaseAssertion(state, expected)
                         "file_assertion" -> matchesFileAssertion(state, expected)
                         "execution_tests" -> matchesExecutionTests(state, expected)
+                        "service_map_state" -> matchesServiceMapState(state, expected)
+                        "pipeline_state" -> matchesPipelineState(state, expected)
+                        "mlops_state" -> matchesMlOpsState(state, expected)
                         else -> false
                     }
                 }
@@ -194,6 +197,30 @@ class ObjectiveEngine {
                 else -> false
             }
         }
+    }
+
+    private fun matchesServiceMapState(
+        state: MissionSessionState,
+        expected: Map<String, String>,
+    ): Boolean {
+        val snapshot = state.serviceMap?.snapshot() ?: return false
+        return expected.all { (key, value) -> snapshot[key] == value }
+    }
+
+    private fun matchesPipelineState(
+        state: MissionSessionState,
+        expected: Map<String, String>,
+    ): Boolean {
+        val snapshot = state.pipeline?.snapshot() ?: return false
+        return expected.all { (key, value) -> snapshot[key] == value }
+    }
+
+    private fun matchesMlOpsState(
+        state: MissionSessionState,
+        expected: Map<String, String>,
+    ): Boolean {
+        val snapshot = state.mlops?.snapshot() ?: return false
+        return expected.all { (key, value) -> snapshot[key] == value }
     }
 
     private fun matchesRows(

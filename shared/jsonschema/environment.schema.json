@@ -237,6 +237,122 @@
           "seed_file": { "type": "string", "minLength": 1 }
         }
       }
+    },
+    "service_map": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["nodes"],
+      "properties": {
+        "nodes": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/$defs/graph_node" }
+        },
+        "edges": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/graph_edge" }
+        },
+        "actions": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/graph_action" }
+        }
+      }
+    },
+    "pipeline": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["nodes"],
+      "properties": {
+        "run_id": { "type": "string", "minLength": 1 },
+        "nodes": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/$defs/graph_node" }
+        },
+        "edges": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/graph_edge" }
+        },
+        "actions": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/graph_action" }
+        }
+      }
+    },
+    "mlops": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["artifacts"],
+      "properties": {
+        "artifacts": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["id", "kind", "label"],
+            "properties": {
+              "id": { "type": "string", "minLength": 1 },
+              "kind": { "type": "string", "minLength": 1 },
+              "label": { "type": "string", "minLength": 1 },
+              "stage": { "type": "string" },
+              "status": { "type": "string" },
+              "version": { "type": "string" },
+              "detail": { "type": "string" }
+            }
+          }
+        },
+        "actions": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/graph_action" }
+        }
+      }
+    }
+  },
+  "$defs": {
+    "graph_node": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "kind", "label"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "kind": { "type": "string", "minLength": 1 },
+        "label": { "type": "string", "minLength": 1 },
+        "status": { "type": "string" },
+        "detail": { "type": "string" }
+      }
+    },
+    "graph_edge": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "from", "to"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "from": { "type": "string", "minLength": 1 },
+        "to": { "type": "string", "minLength": 1 },
+        "kind": { "type": "string" },
+        "status": { "type": "string" },
+        "detail": { "type": "string" }
+      }
+    },
+    "graph_action": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "label", "effects"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "label": { "type": "string", "minLength": 1 },
+        "description": { "type": "string" },
+        "requires": {
+          "type": "object",
+          "additionalProperties": { "type": ["string", "number", "boolean"] }
+        },
+        "effects": {
+          "type": "object",
+          "minProperties": 1,
+          "additionalProperties": { "type": ["string", "number", "boolean"] }
+        }
+      }
     }
   }
 }

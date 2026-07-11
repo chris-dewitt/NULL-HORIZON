@@ -1,0 +1,7 @@
+{
+  "description": "Monitoring caught feature skew after an ungated model promotion.",
+  "kind": "lore",
+  "name": "Skew Alert Transcript",
+  "reward_id": "lore.mlops.nav_risk_rollback.01",
+  "schema_version": 1
+}
