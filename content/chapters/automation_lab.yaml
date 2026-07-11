@@ -1,0 +1,7 @@
+schema_version: 1
+chapter_id: automation_lab
+title: Automation Lab
+region: Automation Lab
+summary: Life-support and maintenance automation through Python.
+mission_ids:
+  - automation.pressure_threshold.01

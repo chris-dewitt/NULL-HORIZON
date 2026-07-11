@@ -1,0 +1,10 @@
+{
+  "description": "Choose the correct comparison and threshold in a safety check.",
+  "domain": "python",
+  "name": "Use comparisons",
+  "prerequisites": [
+    "python.functions"
+  ],
+  "schema_version": 1,
+  "skill_id": "python.conditionals"
+}

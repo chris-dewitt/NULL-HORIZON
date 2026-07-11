@@ -1,0 +1,7 @@
+{
+  "description": "A maintenance note that life-support valves must treat pressures under 50 psi as safe.",
+  "kind": "lore",
+  "name": "Pressure Threshold Note",
+  "reward_id": "lore.automation.pressure_threshold.01",
+  "schema_version": 1
+}

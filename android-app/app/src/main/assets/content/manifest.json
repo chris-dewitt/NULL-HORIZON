@@ -3,6 +3,7 @@
   "channel": "dev",
   "chapters": [
     "archive_core",
+    "automation_lab",
     "emergency_interface",
     "version_vault"
   ],
@@ -10,6 +11,8 @@
   "dialogues": [
     "dialogue.archive.missing_crew.briefing",
     "dialogue.archive.missing_crew.success",
+    "dialogue.automation.pressure_threshold.briefing",
+    "dialogue.automation.pressure_threshold.success",
     "dialogue.emergency.fault_log.briefing",
     "dialogue.emergency.fault_log.success",
     "dialogue.emergency.lighting.briefing",
@@ -23,6 +26,7 @@
   "min_app_version": "0.1.0",
   "missions": [
     "archive.missing_crew.01",
+    "automation.pressure_threshold.01",
     "emergency.fault_log.01",
     "emergency.lighting.01",
     "version.merge_conflict.01",
@@ -30,6 +34,7 @@
   ],
   "rewards": [
     "lore.archive.missing_crew.01",
+    "lore.automation.pressure_threshold.01",
     "lore.emergency.fault_log.01",
     "lore.emergency.lighting.01",
     "lore.version.merge_conflict.01",
@@ -44,6 +49,8 @@
     "git.recover",
     "linux.inspection",
     "linux.navigation",
+    "python.conditionals",
+    "python.functions",
     "sql.filter",
     "sql.select"
   ],
