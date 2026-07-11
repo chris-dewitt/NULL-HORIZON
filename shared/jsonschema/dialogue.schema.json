@@ -1,0 +1,28 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://nullhorizon.local/schema/dialogue.schema.json",
+  "title": "Dialogue",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "dialogue_id", "lines"],
+  "properties": {
+    "schema_version": { "type": "integer", "const": 1 },
+    "dialogue_id": {
+      "type": "string",
+      "pattern": "^dialogue\\.[a-z0-9._]+$"
+    },
+    "lines": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["speaker", "text"],
+        "properties": {
+          "speaker": { "type": "string", "minLength": 1 },
+          "text": { "type": "string", "minLength": 1 }
+        }
+      }
+    }
+  }
+}

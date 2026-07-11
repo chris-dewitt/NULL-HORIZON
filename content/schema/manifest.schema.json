@@ -1,0 +1,54 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://nullhorizon.local/schema/manifest.schema.json",
+  "title": "ContentManifest",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "bundle_id",
+    "version",
+    "min_app_version",
+    "content_schema_version",
+    "locale",
+    "channel",
+    "chapters",
+    "missions",
+    "skills",
+    "dialogues"
+  ],
+  "properties": {
+    "schema_version": { "type": "integer", "const": 1 },
+    "bundle_id": { "type": "string", "minLength": 1 },
+    "version": { "type": "string", "minLength": 1 },
+    "min_app_version": { "type": "string", "minLength": 1 },
+    "content_schema_version": { "type": "integer", "minimum": 1 },
+    "locale": { "type": "string", "minLength": 2 },
+    "channel": { "type": "string", "enum": ["dev", "staging", "prod"] },
+    "chapters": {
+      "type": "array",
+      "items": { "type": "string" },
+      "uniqueItems": true
+    },
+    "missions": {
+      "type": "array",
+      "items": { "type": "string" },
+      "uniqueItems": true
+    },
+    "skills": {
+      "type": "array",
+      "items": { "type": "string" },
+      "uniqueItems": true
+    },
+    "dialogues": {
+      "type": "array",
+      "items": { "type": "string" },
+      "uniqueItems": true
+    },
+    "rewards": {
+      "type": "array",
+      "items": { "type": "string" },
+      "uniqueItems": true
+    }
+  }
+}

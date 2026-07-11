@@ -1,0 +1,7 @@
+schema_version: 1
+dialogue_id: dialogue.emergency.lighting.success
+lines:
+  - speaker: ORION
+    text: Deck A lighting restored. Clearance granted for further emergency diagnostics.
+  - speaker: MICA
+    text: Reserve power remains within policy. Good. I like policies.
