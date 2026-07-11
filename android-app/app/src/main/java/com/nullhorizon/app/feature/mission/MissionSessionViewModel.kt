@@ -126,6 +126,48 @@ class MissionSessionViewModel(
         persistAndMaybeComplete(next, mission)
     }
 
+    fun selectEditorFile(path: String) {
+        val machine = stateMachine ?: return
+        val mission = _uiState.value.mission ?: return
+        updateSession(machine.selectEditorFile(_uiState.value.session, path), mission)
+    }
+
+    fun updateEditorContent(path: String, content: String) {
+        val machine = stateMachine ?: return
+        val mission = _uiState.value.mission ?: return
+        persistAndMaybeComplete(machine.updateEditorContent(_uiState.value.session, path, content), mission)
+    }
+
+    fun undoEditor() {
+        val machine = stateMachine ?: return
+        val mission = _uiState.value.mission ?: return
+        persistAndMaybeComplete(machine.undoEditor(_uiState.value.session), mission)
+    }
+
+    fun redoEditor() {
+        val machine = stateMachine ?: return
+        val mission = _uiState.value.mission ?: return
+        persistAndMaybeComplete(machine.redoEditor(_uiState.value.session), mission)
+    }
+
+    fun insertEditorSymbol(symbol: String) {
+        val machine = stateMachine ?: return
+        val mission = _uiState.value.mission ?: return
+        persistAndMaybeComplete(machine.insertEditorSymbol(_uiState.value.session, symbol), mission)
+    }
+
+    fun toggleEditorDiff() {
+        val machine = stateMachine ?: return
+        val mission = _uiState.value.mission ?: return
+        updateSession(machine.toggleEditorDiff(_uiState.value.session), mission)
+    }
+
+    fun runTests() {
+        val machine = stateMachine ?: return
+        val mission = _uiState.value.mission ?: return
+        persistAndMaybeComplete(machine.runTests(_uiState.value.session), mission)
+    }
+
     private fun persistAndMaybeComplete(next: MissionSessionState, mission: MissionDefinition) {
         updateSession(next, mission)
         if (next.phase == MissionPhase.Completed) {

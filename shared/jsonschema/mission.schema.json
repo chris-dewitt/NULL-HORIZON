@@ -274,6 +274,34 @@
                 "assert"
               ]
             }
+          },
+          {
+            "if": {
+              "properties": {
+                "type": {
+                  "const": "file_assertion"
+                }
+              }
+            },
+            "then": {
+              "required": [
+                "assert"
+              ]
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "type": {
+                  "const": "execution_tests"
+                }
+              }
+            },
+            "then": {
+              "required": [
+                "assert"
+              ]
+            }
           }
         ]
       }

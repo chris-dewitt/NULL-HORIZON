@@ -1,0 +1,7 @@
+schema_version: 1
+dialogue_id: dialogue.automation.pressure_threshold.success
+lines:
+  - speaker: ORION
+    text: Threshold restored. Safe valves open below 50 psi.
+  - speaker: MICA
+    text: Good. Diff the starter when you are unsure what changed.

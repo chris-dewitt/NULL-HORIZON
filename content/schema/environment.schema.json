@@ -54,6 +54,93 @@
         }
       }
     },
+    "workspace": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["files"],
+      "properties": {
+        "files": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["path", "editable", "content"],
+            "properties": {
+              "path": { "type": "string", "minLength": 1 },
+              "editable": { "type": "boolean" },
+              "content": { "type": "string" },
+              "source": { "type": "string" }
+            }
+          }
+        },
+        "execution": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["provider", "fixtures"],
+          "properties": {
+            "provider": {
+              "type": "string",
+              "enum": ["fake"]
+            },
+            "fixtures": {
+              "type": "array",
+              "minItems": 1,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": ["id", "result"],
+                "properties": {
+                  "id": { "type": "string", "minLength": 1 },
+                  "match": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "properties": {
+                      "file_contains": {
+                        "type": "object",
+                        "additionalProperties": { "type": "string" }
+                      },
+                      "file_equals": {
+                        "type": "object",
+                        "additionalProperties": { "type": "string" }
+                      }
+                    }
+                  },
+                  "result": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "required": ["status", "tests"],
+                    "properties": {
+                      "status": { "type": "string" },
+                      "stdout": { "type": "string" },
+                      "stderr": { "type": "string" },
+                      "tests": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "additionalProperties": false,
+                          "required": ["id", "status"],
+                          "properties": {
+                            "id": { "type": "string" },
+                            "status": {
+                              "type": "string",
+                              "enum": ["passed", "failed", "skipped", "error"]
+                            },
+                            "message": { "type": "string" },
+                            "expected": { "type": "string" },
+                            "actual": { "type": "string" }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "filesystem": {
       "type": "object",
       "additionalProperties": false,

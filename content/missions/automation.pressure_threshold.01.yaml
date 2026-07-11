@@ -1,0 +1,134 @@
+schema_version: 1
+mission_id: automation.pressure_threshold.01
+version: 1.0.0
+chapter_id: automation_lab
+title: Pressure Threshold
+summary: Fix the valve safety check so pressures under 50 psi are treated as safe.
+difficulty: introductory
+
+requirements:
+  app_version: ">=0.1.0"
+  online: false
+  prerequisite_skills: []
+
+skills:
+  primary: python.functions
+  secondary:
+    - python.conditionals
+
+narrative:
+  briefing_dialogue_id: dialogue.automation.pressure_threshold.briefing
+  success_dialogue_id: dialogue.automation.pressure_threshold.success
+
+tools:
+  - python_editor
+  - test_console
+
+environment:
+  schema_version: 1
+  template_id: python.editor.fake.v1
+  seed: 19
+  workspace:
+    files:
+      - path: /workspace/pressure.py
+        editable: true
+        content: |
+          THRESHOLD = 30
+
+
+          def is_safe(psi: int) -> bool:
+              """Return True when valve pressure is below the safe threshold."""
+              return psi < THRESHOLD
+      - path: /workspace/test_pressure.py
+        editable: false
+        content: |
+          from pressure import is_safe
+
+
+          def test_safe_valves():
+              assert is_safe(40) is True
+
+
+          def test_critical_pressure():
+              assert is_safe(50) is False
+    execution:
+      provider: fake
+      fixtures:
+        - id: still_broken
+          match:
+            file_contains:
+              /workspace/pressure.py: "THRESHOLD = 30"
+          result:
+            status: completed
+            tests:
+              - id: test_safe_valves
+                status: failed
+                message: Expected True for 40 psi
+                expected: "True"
+                actual: "False"
+              - id: test_critical_pressure
+                status: passed
+        - id: fixed_threshold
+          match:
+            file_contains:
+              /workspace/pressure.py: "THRESHOLD = 50"
+          result:
+            status: completed
+            tests:
+              - id: test_safe_valves
+                status: passed
+              - id: test_critical_pressure
+                status: passed
+        - id: default_fail
+          result:
+            status: completed
+            tests:
+              - id: test_safe_valves
+                status: failed
+                message: Threshold still incorrect
+                expected: "True"
+                actual: "False"
+              - id: test_critical_pressure
+                status: failed
+                message: Critical boundary incorrect
+                expected: "False"
+                actual: "True"
+
+objectives:
+  - id: set_threshold
+    type: file_assertion
+    description: Set THRESHOLD to 50 in pressure.py.
+    visible: true
+    assert:
+      file_contains:/workspace/pressure.py: "THRESHOLD = 50"
+  - id: tests_pass
+    type: execution_tests
+    description: Run the mission tests and make them all pass.
+    visible: true
+    assert:
+      all_passed: "true"
+      test_count: "2"
+
+hints:
+  - level: 1
+    text: Open pressure.py. THRESHOLD is too low.
+  - level: 2
+    text: Change THRESHOLD from 30 to 50.
+  - level: 3
+    text: Use Show diff to compare against the starter file.
+  - level: 4
+    text: Run tests after the edit. Both test_safe_valves and test_critical_pressure should pass.
+
+rewards:
+  clearance_points: 40
+  mastery:
+    python.functions: 1
+    python.conditionals: 1
+  unlocks:
+    - lore.automation.pressure_threshold.01
+
+completion:
+  mode: all
+  objective_ids:
+    - set_threshold
+    - tests_pass

@@ -1,0 +1,10 @@
+{
+  "chapter_id": "automation_lab",
+  "mission_ids": [
+    "automation.pressure_threshold.01"
+  ],
+  "region": "Automation Lab",
+  "schema_version": 1,
+  "summary": "Life-support and maintenance automation through Python.",
+  "title": "Automation Lab"
+}

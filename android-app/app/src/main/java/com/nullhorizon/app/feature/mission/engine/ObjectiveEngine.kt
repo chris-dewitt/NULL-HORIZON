@@ -21,6 +21,8 @@ class ObjectiveEngine {
                         "git_state" -> matchesGitState(state, expected)
                         "sql_result" -> matchesSqlResult(state, expected)
                         "database_assertion" -> matchesDatabaseAssertion(state, expected)
+                        "file_assertion" -> matchesFileAssertion(state, expected)
+                        "execution_tests" -> matchesExecutionTests(state, expected)
                         else -> false
                     }
                 }
@@ -148,6 +150,47 @@ class ObjectiveEngine {
                     val exists = sql.schema.any { it.name == table }
                     exists.toString() == value
                 }
+                else -> false
+            }
+        }
+    }
+
+    private fun matchesFileAssertion(
+        state: MissionSessionState,
+        expected: Map<String, String>,
+    ): Boolean {
+        val editor = state.editor ?: return false
+        return expected.all { (key, value) ->
+            when {
+                key.startsWith("file_contains:") -> {
+                    val path = key.removePrefix("file_contains:")
+                    editor.file(path)?.content?.contains(value) == true
+                }
+                key.startsWith("file_equals:") -> {
+                    val path = key.removePrefix("file_equals:")
+                    editor.file(path)?.content?.trim() == value.trim()
+                }
+                key.startsWith("file_not_contains:") -> {
+                    val path = key.removePrefix("file_not_contains:")
+                    editor.file(path)?.content?.contains(value) == false
+                }
+                else -> false
+            }
+        }
+    }
+
+    private fun matchesExecutionTests(
+        state: MissionSessionState,
+        expected: Map<String, String>,
+    ): Boolean {
+        val result = state.editor?.lastResult ?: return false
+        return expected.all { (key, value) ->
+            when (key) {
+                "all_passed" -> result.allPassed.toString() == value
+                "status" -> result.status == value
+                "passed_count" -> result.passedCount.toString() == value
+                "failed_count" -> result.failedCount.toString() == value
+                "test_count" -> result.tests.size.toString() == value
                 else -> false
             }
         }

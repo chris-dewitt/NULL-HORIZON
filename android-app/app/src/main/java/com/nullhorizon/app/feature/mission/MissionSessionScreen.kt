@@ -29,6 +29,9 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.nullhorizon.app.R
 import com.nullhorizon.app.feature.mission.engine.MissionPhase
+import com.nullhorizon.app.simulation.execution.EditorSessionState
+import com.nullhorizon.app.simulation.execution.EditorWorkspace
+import com.nullhorizon.app.simulation.execution.TestStatus
 import com.nullhorizon.app.simulation.git.GitRepositoryState
 import com.nullhorizon.app.simulation.sql.SqlSessionState
 import com.nullhorizon.app.simulation.terminal.TerminalSessionState
@@ -123,6 +126,23 @@ fun MissionSessionScreen(
                             sql = state.session.sql!!,
                             enabled = state.session.phase == MissionPhase.InProgress,
                             onSubmit = viewModel::runSqlQuery,
+                        )
+                    }
+
+                    if ((mission.tools.contains("python_editor") || mission.tools.contains("test_console")) &&
+                        state.session.editor != null
+                    ) {
+                        EditorPanel(
+                            editor = state.session.editor!!,
+                            enabled = state.session.phase == MissionPhase.InProgress,
+                            showTestConsole = mission.tools.contains("test_console"),
+                            onSelectFile = viewModel::selectEditorFile,
+                            onContentChange = viewModel::updateEditorContent,
+                            onInsertSymbol = viewModel::insertEditorSymbol,
+                            onUndo = viewModel::undoEditor,
+                            onRedo = viewModel::redoEditor,
+                            onToggleDiff = viewModel::toggleEditorDiff,
+                            onRunTests = viewModel::runTests,
                         )
                     }
 
@@ -600,6 +620,223 @@ private fun SqlPanel(
             modifier = Modifier.semantics { contentDescription = "Run SQL query" },
         ) {
             Text(stringResource(R.string.mission_sql_run))
+        }
+    }
+}
+
+private val editorSymbols = listOf(
+    "(", ")", "[", "]", "{", "}",
+    "\"", "'", ":", "_", "|", "/",
+    "<", ">", "=", "==", "!=",
+    "    ", "->",
+)
+
+@OptIn(ExperimentalLayoutApi::class)
+@Composable
+private fun EditorPanel(
+    editor: EditorSessionState,
+    enabled: Boolean,
+    showTestConsole: Boolean,
+    onSelectFile: (String) -> Unit,
+    onContentChange: (path: String, content: String) -> Unit,
+    onInsertSymbol: (String) -> Unit,
+    onUndo: () -> Unit,
+    onRedo: () -> Unit,
+    onToggleDiff: () -> Unit,
+    onRunTests: () -> Unit,
+) {
+    val active = editor.activeFile()
+
+    Text(
+        text = stringResource(R.string.mission_editor),
+        style = MaterialTheme.typography.titleMedium,
+    )
+
+    FlowRow(
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
+        verticalArrangement = Arrangement.spacedBy(8.dp),
+    ) {
+        editor.files.forEach { file ->
+            val selected = file.path == active?.path
+            val label = file.path.substringAfterLast('/')
+            if (selected) {
+                Button(
+                    onClick = { onSelectFile(file.path) },
+                    modifier = Modifier.semantics { contentDescription = "File tab $label" },
+                ) {
+                    Text(label + if (!file.editable) " (ro)" else "")
+                }
+            } else {
+                OutlinedButton(
+                    onClick = { onSelectFile(file.path) },
+                    modifier = Modifier.semantics { contentDescription = "File tab $label" },
+                ) {
+                    Text(label + if (!file.editable) " (ro)" else "")
+                }
+            }
+        }
+    }
+
+    if (active != null) {
+        FlowRow(
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp),
+        ) {
+            OutlinedButton(
+                onClick = onUndo,
+                enabled = enabled && active.editable && active.undoStack.isNotEmpty(),
+            ) {
+                Text(stringResource(R.string.mission_editor_undo))
+            }
+            OutlinedButton(
+                onClick = onRedo,
+                enabled = enabled && active.editable && active.redoStack.isNotEmpty(),
+            ) {
+                Text(stringResource(R.string.mission_editor_redo))
+            }
+            OutlinedButton(onClick = onToggleDiff) {
+                Text(
+                    if (editor.showDiff) {
+                        stringResource(R.string.mission_editor_hide_diff)
+                    } else {
+                        stringResource(R.string.mission_editor_show_diff)
+                    },
+                )
+            }
+        }
+
+        if (editor.showDiff) {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .border(1.dp, MaterialTheme.colorScheme.outline)
+                    .padding(12.dp)
+                    .semantics { contentDescription = "Editor diff" },
+                verticalArrangement = Arrangement.spacedBy(2.dp),
+            ) {
+                EditorWorkspace.diffLines(active.starterContent, active.content).forEach { line ->
+                    Text(
+                        text = line,
+                        fontFamily = FontFamily.Monospace,
+                        style = MaterialTheme.typography.bodySmall,
+                        color = when {
+                            line.startsWith("+") -> MaterialTheme.colorScheme.primary
+                            line.startsWith("-") -> MaterialTheme.colorScheme.error
+                            else -> MaterialTheme.colorScheme.onSurface
+                        },
+                    )
+                }
+            }
+        }
+
+        val lineNumbers = active.content.lines().indices.joinToString("\n") { (it + 1).toString() }
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .border(1.dp, MaterialTheme.colorScheme.outline)
+                .padding(8.dp),
+        ) {
+            Text(
+                text = lineNumbers.ifBlank { "1" },
+                fontFamily = FontFamily.Monospace,
+                style = MaterialTheme.typography.labelSmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+            )
+            OutlinedTextField(
+                value = active.content,
+                onValueChange = { if (enabled && active.editable) onContentChange(active.path, it) },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .semantics { contentDescription = "Editor content ${active.path}" },
+                enabled = enabled && active.editable,
+                textStyle = MaterialTheme.typography.bodyMedium.copy(fontFamily = FontFamily.Monospace),
+                minLines = 8,
+                maxLines = 16,
+            )
+        }
+
+        if (enabled && active.editable) {
+            Text(
+                text = stringResource(R.string.mission_editor_symbols),
+                style = MaterialTheme.typography.labelLarge,
+            )
+            FlowRow(
+                horizontalArrangement = Arrangement.spacedBy(4.dp),
+                verticalArrangement = Arrangement.spacedBy(4.dp),
+            ) {
+                editorSymbols.forEach { symbol ->
+                    OutlinedButton(
+                        onClick = { onInsertSymbol(symbol) },
+                        modifier = Modifier.semantics { contentDescription = "Insert symbol $symbol" },
+                    ) {
+                        Text(if (symbol.isBlank()) "tab" else symbol)
+                    }
+                }
+            }
+        }
+    }
+
+    if (showTestConsole) {
+        Text(
+            text = stringResource(R.string.mission_test_console),
+            style = MaterialTheme.typography.titleMedium,
+        )
+        if (enabled) {
+            Button(
+                onClick = onRunTests,
+                modifier = Modifier.semantics { contentDescription = "Run tests" },
+            ) {
+                Text(stringResource(R.string.mission_run_tests))
+            }
+        }
+        editor.lastRunMessage?.let { message ->
+            Text(message, color = MaterialTheme.colorScheme.primary)
+        }
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .border(1.dp, MaterialTheme.colorScheme.outline)
+                .padding(12.dp)
+                .semantics { contentDescription = "Test results" },
+            verticalArrangement = Arrangement.spacedBy(8.dp),
+        ) {
+            val result = editor.lastResult
+            if (result == null) {
+                Text(
+                    text = stringResource(R.string.mission_test_console_empty),
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                )
+            } else {
+                result.tests.forEach { test ->
+                    val statusLabel = when (test.status) {
+                        TestStatus.Passed -> "PASS"
+                        TestStatus.Failed -> "FAIL"
+                        TestStatus.Skipped -> "SKIP"
+                        TestStatus.Error -> "ERROR"
+                    }
+                    Text(
+                        text = "[$statusLabel] ${test.id}",
+                        fontFamily = FontFamily.Monospace,
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = when (test.status) {
+                            TestStatus.Passed -> MaterialTheme.colorScheme.primary
+                            TestStatus.Skipped -> MaterialTheme.colorScheme.onSurfaceVariant
+                            else -> MaterialTheme.colorScheme.error
+                        },
+                    )
+                    test.message?.let { msg ->
+                        Text(msg, style = MaterialTheme.typography.bodySmall)
+                    }
+                    if (test.expected != null || test.actual != null) {
+                        Text(
+                            text = "expected=${test.expected} actual=${test.actual}",
+                            fontFamily = FontFamily.Monospace,
+                            style = MaterialTheme.typography.bodySmall,
+                        )
+                    }
+                }
+            }
         }
     }
 }

@@ -1,0 +1,14 @@
+{
+  "dialogue_id": "dialogue.automation.pressure_threshold.briefing",
+  "lines": [
+    {
+      "speaker": "ORION",
+      "text": "Valve automation rejects safe pressures. The threshold in pressure.py looks wrong."
+    },
+    {
+      "speaker": "MICA",
+      "text": "Edit the function, then run the mission tests. This console uses deterministic fixtures \u2014 not a live interpreter."
+    }
+  ],
+  "schema_version": 1
+}

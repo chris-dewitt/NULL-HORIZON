@@ -2,6 +2,9 @@ package com.nullhorizon.app.feature.mission.engine
 
 import com.nullhorizon.app.content.model.MissionDefinition
 import com.nullhorizon.app.content.toStateMap
+import com.nullhorizon.app.simulation.execution.EditorWorkspace
+import com.nullhorizon.app.simulation.execution.ExecutionProvider
+import com.nullhorizon.app.simulation.execution.FakeExecutionProvider
 import com.nullhorizon.app.simulation.git.GitSimulator
 import com.nullhorizon.app.simulation.sql.SqlSimulator
 import com.nullhorizon.app.simulation.terminal.TerminalSimulator
@@ -33,6 +36,11 @@ class MissionStateMachine(
     private val sqlSimulator: SqlSimulator? =
         mission.environment.databases.firstOrNull()?.let { SqlSimulator(it) }
 
+    private val initialEditorState = mission.environment.workspace?.let { EditorWorkspace.fromDefinition(it) }
+
+    private val executionProvider: ExecutionProvider? =
+        mission.environment.workspace?.execution?.let { FakeExecutionProvider(it.fixtures) }
+
     fun initialState(): MissionSessionState {
         val terminal = terminalSimulator?.initialState(
             mission.environment.filesystem?.cwd ?: "/",
@@ -44,6 +52,7 @@ class MissionStateMachine(
             terminal = terminal,
             git = initialGitState,
             sql = sql,
+            editor = initialEditorState,
             completedObjectiveIds = emptySet(),
             hintLevel = 0,
             lastActionMessage = null,
@@ -138,6 +147,69 @@ class MissionStateMachine(
             state.copy(
                 sql = nextSql,
                 lastActionMessage = null,
+            ),
+        )
+    }
+
+    fun selectEditorFile(state: MissionSessionState, path: String): MissionSessionState {
+        val editor = state.editor ?: return state
+        if (editor.files.none { it.path == path }) return state
+        return state.copy(editor = editor.copy(activePath = path))
+    }
+
+    fun updateEditorContent(state: MissionSessionState, path: String, content: String): MissionSessionState {
+        if (state.phase != MissionPhase.InProgress) {
+            return state.copy(lastActionMessage = "Start the mission before editing files.")
+        }
+        val editor = state.editor ?: return state.copy(lastActionMessage = "No editor workspace.")
+        val next = EditorWorkspace.updateContent(editor, path, content)
+        return evaluate(state.copy(editor = next, lastActionMessage = null))
+    }
+
+    fun undoEditor(state: MissionSessionState): MissionSessionState {
+        val editor = state.editor ?: return state
+        val path = editor.activePath ?: return state
+        return evaluate(state.copy(editor = EditorWorkspace.undo(editor, path)))
+    }
+
+    fun redoEditor(state: MissionSessionState): MissionSessionState {
+        val editor = state.editor ?: return state
+        val path = editor.activePath ?: return state
+        return evaluate(state.copy(editor = EditorWorkspace.redo(editor, path)))
+    }
+
+    fun insertEditorSymbol(state: MissionSessionState, symbol: String): MissionSessionState {
+        if (state.phase != MissionPhase.InProgress) return state
+        val editor = state.editor ?: return state
+        val path = editor.activePath ?: return state
+        return evaluate(
+            state.copy(editor = EditorWorkspace.insertSymbol(editor, path, symbol)),
+        )
+    }
+
+    fun toggleEditorDiff(state: MissionSessionState): MissionSessionState {
+        val editor = state.editor ?: return state
+        return state.copy(editor = editor.copy(showDiff = !editor.showDiff))
+    }
+
+    fun runTests(state: MissionSessionState): MissionSessionState {
+        if (state.phase != MissionPhase.InProgress) {
+            return state.copy(lastActionMessage = "Start the mission before running tests.")
+        }
+        val provider = executionProvider
+            ?: return state.copy(lastActionMessage = "This mission has no execution provider.")
+        val editor = state.editor
+            ?: return state.copy(lastActionMessage = "Editor workspace is not initialized.")
+        val result = provider.execute(editor.contentsByPath())
+        val message = if (result.allPassed) {
+            "All ${result.tests.size} tests passed."
+        } else {
+            "${result.failedCount} test(s) failed."
+        }
+        return evaluate(
+            state.copy(
+                editor = editor.copy(lastResult = result, lastRunMessage = message),
+                lastActionMessage = message,
             ),
         )
     }

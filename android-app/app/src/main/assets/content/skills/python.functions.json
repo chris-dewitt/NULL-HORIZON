@@ -1,0 +1,8 @@
+{
+  "description": "Define and edit a small function that returns a boolean decision.",
+  "domain": "python",
+  "name": "Write a Python function",
+  "prerequisites": [],
+  "schema_version": 1,
+  "skill_id": "python.functions"
+}
