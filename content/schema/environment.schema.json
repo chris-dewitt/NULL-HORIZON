@@ -133,6 +133,23 @@
           }
         }
       }
+    },
+    "databases": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "seed_sql"],
+        "properties": {
+          "id": { "type": "string", "minLength": 1 },
+          "policy": {
+            "type": "string",
+            "enum": ["select_only"]
+          },
+          "seed_sql": { "type": "string", "minLength": 1 },
+          "seed_file": { "type": "string", "minLength": 1 }
+        }
+      }
     }
   }
 }
