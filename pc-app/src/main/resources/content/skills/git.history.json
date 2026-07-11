@@ -1,0 +1,10 @@
+{
+  "description": "Curriculum skill for History.",
+  "domain": "git",
+  "name": "History",
+  "prerequisites": [
+    "git.stage"
+  ],
+  "schema_version": 1,
+  "skill_id": "git.history"
+}

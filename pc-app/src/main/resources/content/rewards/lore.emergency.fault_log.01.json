@@ -1,0 +1,7 @@
+{
+  "description": "A recovered note identifying valve-3 pressure instability.",
+  "kind": "lore",
+  "name": "Fault Log Excerpt",
+  "reward_id": "lore.emergency.fault_log.01",
+  "schema_version": 1
+}

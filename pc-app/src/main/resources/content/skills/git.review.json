@@ -1,0 +1,10 @@
+{
+  "description": "Curriculum skill for Code Review Concepts.",
+  "domain": "git",
+  "name": "Code Review Concepts",
+  "prerequisites": [
+    "git.merge"
+  ],
+  "schema_version": 1,
+  "skill_id": "git.review"
+}

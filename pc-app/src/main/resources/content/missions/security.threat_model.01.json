@@ -1,0 +1,131 @@
+{
+  "chapter_id": "black_vault",
+  "completion": {
+    "mode": "all",
+    "objective_ids": [
+      "a",
+      "b",
+      "c"
+    ]
+  },
+  "difficulty": "introductory",
+  "environment": {
+    "actions": [
+      {
+        "effects": {
+          "assets": "listed"
+        },
+        "id": "list_assets",
+        "label": "List sensitive assets"
+      },
+      {
+        "effects": {
+          "actors": "listed"
+        },
+        "id": "list_actors",
+        "label": "List trust boundaries",
+        "requires": {
+          "assets": "listed"
+        }
+      },
+      {
+        "effects": {
+          "entrypoints": "listed",
+          "modeled": true
+        },
+        "id": "list_entry",
+        "label": "List entry points",
+        "requires": {
+          "actors": "listed"
+        }
+      }
+    ],
+    "initial_state": {
+      "actors": "unknown",
+      "assets": "unknown",
+      "entrypoints": "unknown",
+      "modeled": false
+    },
+    "schema_version": 1,
+    "seed": 131,
+    "template_id": "local.state.v1"
+  },
+  "hints": [
+    {
+      "level": 1,
+      "text": "Start with assets."
+    },
+    {
+      "level": 2,
+      "text": "Then trust boundaries."
+    },
+    {
+      "level": 3,
+      "text": "Then entry points."
+    },
+    {
+      "level": 4,
+      "text": "No offensive steps."
+    }
+  ],
+  "mission_id": "security.threat_model.01",
+  "narrative": {
+    "briefing_dialogue_id": "dialogue.security.threat_model.01.briefing",
+    "success_dialogue_id": "dialogue.security.threat_model.01.success"
+  },
+  "objectives": [
+    {
+      "assert": {
+        "assets": "listed"
+      },
+      "description": "List assets.",
+      "id": "a",
+      "type": "state_assertion",
+      "visible": true
+    },
+    {
+      "assert": {
+        "actors": "listed"
+      },
+      "description": "List actors/trust boundaries.",
+      "id": "b",
+      "type": "state_assertion",
+      "visible": true
+    },
+    {
+      "assert": {
+        "entrypoints": "listed",
+        "modeled": true
+      },
+      "description": "List entry points.",
+      "id": "c",
+      "type": "state_assertion",
+      "visible": true
+    }
+  ],
+  "requirements": {
+    "app_version": ">=0.1.0",
+    "online": false,
+    "prerequisite_skills": []
+  },
+  "rewards": {
+    "clearance_points": 25,
+    "mastery": {
+      "security.threat_model": 1
+    },
+    "unlocks": [
+      "lore.security.threat_model.01"
+    ]
+  },
+  "schema_version": 1,
+  "skills": {
+    "primary": "security.threat_model",
+    "secondary": []
+  },
+  "summary": "Identify assets, actors, and entry points for a fictional vault service.",
+  "title": "Threat Model Pass",
+  "tools": [
+    "systems_panel"
+  ],
+  "version": "1.0.0"
+}

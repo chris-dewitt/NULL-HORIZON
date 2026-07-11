@@ -1,0 +1,7 @@
+{
+  "description": "A short maintenance note confirming emergency lighting can be restored without an account sync.",
+  "kind": "lore",
+  "name": "Deck A Lighting Log",
+  "reward_id": "lore.emergency.lighting.01",
+  "schema_version": 1
+}

@@ -1,0 +1,14 @@
+{
+  "dialogue_id": "dialogue.pipeline.telemetry_drop.briefing",
+  "lines": [
+    {
+      "speaker": "ORION",
+      "text": "Reactor forecast drift is climbing. The telemetry batch pipeline is finishing green while dropping half the sensor frames."
+    },
+    {
+      "speaker": "Player",
+      "text": "Show me the DAG. Something in validate or transform is lying about success."
+    }
+  ],
+  "schema_version": 1
+}

@@ -1,0 +1,7 @@
+{
+  "description": "Multi-tool evidence closing the NYX-0 ghost registry incident.",
+  "kind": "lore",
+  "name": "Ghost Incident Log",
+  "reward_id": "lore.incident.ghost_registry.01",
+  "schema_version": 1
+}

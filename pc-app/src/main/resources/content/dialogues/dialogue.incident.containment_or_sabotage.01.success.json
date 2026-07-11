@@ -1,0 +1,14 @@
+{
+  "dialogue_id": "dialogue.incident.containment_or_sabotage.01.success",
+  "lines": [
+    {
+      "speaker": "ORION-A",
+      "text": "Mission incident.containment_or_sabotage.01 complete."
+    },
+    {
+      "speaker": "SYSTEM",
+      "text": "Progress recorded."
+    }
+  ],
+  "schema_version": 1
+}

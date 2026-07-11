@@ -1,0 +1,10 @@
+{
+  "description": "Curriculum skill for Regression Testing.",
+  "domain": "python",
+  "name": "Regression Testing",
+  "prerequisites": [
+    "python.functions"
+  ],
+  "schema_version": 1,
+  "skill_id": "python.testing"
+}

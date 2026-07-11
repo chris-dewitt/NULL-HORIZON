@@ -1,0 +1,10 @@
+{
+  "description": "Curriculum skill for Form Hypotheses.",
+  "domain": "computational_thinking",
+  "name": "Form Hypotheses",
+  "prerequisites": [
+    "computational_thinking.observe"
+  ],
+  "schema_version": 1,
+  "skill_id": "computational_thinking.hypothesis"
+}

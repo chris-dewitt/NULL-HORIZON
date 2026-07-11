@@ -1,0 +1,167 @@
+{
+  "chapter_id": "horizon_core",
+  "completion": {
+    "mode": "all",
+    "objective_ids": [
+      "read_alert",
+      "query_ghost",
+      "restore_policy"
+    ]
+  },
+  "difficulty": "practiced",
+  "environment": {
+    "databases": [
+      {
+        "id": "crew_registry",
+        "policy": "select_only",
+        "seed_sql": "CREATE TABLE crew (\n  crew_id INTEGER PRIMARY KEY,\n  callsign TEXT NOT NULL,\n  role TEXT NOT NULL,\n  status TEXT NOT NULL\n);\nINSERT INTO crew (crew_id, callsign, role, status) VALUES\n  (1, 'ORION', 'navigator', 'active'),\n  (2, 'VEGA', 'engineer', 'missing'),\n  (3, 'NYX-0', 'unknown', 'ghost');\n"
+      }
+    ],
+    "filesystem": {
+      "cwd": "/home/operator",
+      "entries": [
+        {
+          "path": "/home/operator",
+          "type": "dir"
+        },
+        {
+          "content": "Ghost registry alert.\nSuspect callsign: NYX-0\nCheck crew SQL status, then restore signed registry.conf.\n",
+          "path": "/home/operator/incident.note",
+          "type": "file"
+        },
+        {
+          "path": "/var/log",
+          "type": "dir"
+        },
+        {
+          "content": "WARN unsigned patch on registry.conf\nWARN ghost callsign NYX-0 present\n",
+          "path": "/var/log/registry.alert",
+          "type": "file"
+        }
+      ]
+    },
+    "git": {
+      "branches": {
+        "main": "c1"
+      },
+      "commits": [
+        {
+          "author": "orion",
+          "files": {
+            "registry.conf": "allow_ghosts=false\nsource=signed\n"
+          },
+          "id": "c0",
+          "message": "Seed signed registry"
+        },
+        {
+          "author": "orion",
+          "files": {
+            "registry.conf": "allow_ghosts=false\nsource=signed\n"
+          },
+          "id": "c1",
+          "message": "Sign registry policy",
+          "parent": "c0"
+        }
+      ],
+      "initial_branch": "main",
+      "working_tree": {
+        "registry.conf": "allow_ghosts=true\nsource=unsigned\n"
+      }
+    },
+    "schema_version": 1,
+    "seed": 77,
+    "template_id": "incident.multi.v1"
+  },
+  "hints": [
+    {
+      "level": 1,
+      "text": "Start in the terminal. The alert log is under /var/log."
+    },
+    {
+      "level": 2,
+      "text": "Query crew for callsign NYX-0 and select callsign plus status."
+    },
+    {
+      "level": 3,
+      "text": "Git status should show registry.conf as modified."
+    },
+    {
+      "level": 4,
+      "text": "Restore the signed file with git checkout -- registry.conf."
+    }
+  ],
+  "mission_id": "incident.ghost_registry.01",
+  "narrative": {
+    "briefing_dialogue_id": "dialogue.incident.ghost_registry.briefing",
+    "success_dialogue_id": "dialogue.incident.ghost_registry.success"
+  },
+  "objectives": [
+    {
+      "assert": {
+        "exit_code": 0,
+        "last_command": "cat /var/log/registry.alert",
+        "stdout_contains": "NYX-0"
+      },
+      "description": "Read the registry alert and confirm the ghost callsign.",
+      "id": "read_alert",
+      "type": "command_output",
+      "visible": true
+    },
+    {
+      "assert": {
+        "columns": "callsign,status",
+        "query_contains": "NYX-0",
+        "row_count": "1",
+        "rows": "NYX-0|ghost"
+      },
+      "description": "Query the ghost crew row for NYX-0.",
+      "id": "query_ghost",
+      "type": "sql_result",
+      "visible": true
+    },
+    {
+      "assert": {
+        "file_equals:registry.conf": "allow_ghosts=false\nsource=signed\n",
+        "working_tree_clean": true
+      },
+      "description": "Discard the unsigned registry.conf change.",
+      "id": "restore_policy",
+      "type": "git_state",
+      "visible": true
+    }
+  ],
+  "requirements": {
+    "app_version": ">=0.1.0",
+    "online": false,
+    "prerequisite_skills": []
+  },
+  "rewards": {
+    "clearance_points": 60,
+    "mastery": {
+      "git.recover": 1,
+      "incident.triage": 1,
+      "linux.inspection": 1,
+      "sql.filter": 1
+    },
+    "unlocks": [
+      "lore.incident.ghost_registry.01"
+    ]
+  },
+  "schema_version": 1,
+  "skills": {
+    "primary": "incident.triage",
+    "secondary": [
+      "linux.inspection",
+      "sql.filter",
+      "git.recover"
+    ]
+  },
+  "summary": "Combine terminal, SQL, and Git evidence to remove an unauthorized ghost crew patch.",
+  "title": "Ghost Registry Incident",
+  "tools": [
+    "terminal",
+    "sql",
+    "git"
+  ],
+  "version": "1.0.0"
+}

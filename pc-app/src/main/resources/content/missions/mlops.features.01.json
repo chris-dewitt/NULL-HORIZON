@@ -1,0 +1,137 @@
+{
+  "chapter_id": "prediction_observatory",
+  "completion": {
+    "mode": "all",
+    "objective_ids": [
+      "inspect",
+      "rollback"
+    ]
+  },
+  "difficulty": "introductory",
+  "environment": {
+    "mlops": {
+      "actions": [
+        {
+          "effects": {
+            "explanation": "Production v2 shows feature skew.",
+            "inspected": "true"
+          },
+          "id": "inspect_drift",
+          "label": "Inspect production drift"
+        },
+        {
+          "effects": {
+            "artifact.model_current.stage": "production",
+            "artifact.model_current.status": "healthy",
+            "artifact.model_current.version": "v1",
+            "explanation": "Stable v1 restored to production.",
+            "rolled_back": "true"
+          },
+          "id": "rollback_stable",
+          "label": "Roll back to stable model",
+          "requires": {
+            "inspected": "true"
+          }
+        }
+      ],
+      "artifacts": [
+        {
+          "id": "model_current",
+          "kind": "model",
+          "label": "Risk model",
+          "stage": "production",
+          "status": "degraded",
+          "version": "v2"
+        },
+        {
+          "id": "model_stable",
+          "kind": "model",
+          "label": "Stable risk model",
+          "stage": "staging",
+          "status": "healthy",
+          "version": "v1"
+        },
+        {
+          "id": "dataset",
+          "kind": "dataset",
+          "label": "Feature set",
+          "stage": "training",
+          "status": "healthy",
+          "version": "2026.07"
+        }
+      ]
+    },
+    "schema_version": 1,
+    "seed": 161,
+    "template_id": "mlops.lifecycle.v1"
+  },
+  "hints": [
+    {
+      "level": 1,
+      "text": "Inspect drift."
+    },
+    {
+      "level": 2,
+      "text": "Roll back to stable."
+    },
+    {
+      "level": 3,
+      "text": "Confirm version v1."
+    },
+    {
+      "level": 4,
+      "text": "Follow actions in order."
+    }
+  ],
+  "mission_id": "mlops.features.01",
+  "narrative": {
+    "briefing_dialogue_id": "dialogue.mlops.features.01.briefing",
+    "success_dialogue_id": "dialogue.mlops.features.01.success"
+  },
+  "objectives": [
+    {
+      "assert": {
+        "inspected": "true"
+      },
+      "description": "Inspect production drift.",
+      "id": "inspect",
+      "type": "mlops_state",
+      "visible": true
+    },
+    {
+      "assert": {
+        "artifact.model_current.version": "v1",
+        "rolled_back": "true"
+      },
+      "description": "Roll back to the stable model.",
+      "id": "rollback",
+      "type": "mlops_state",
+      "visible": true
+    }
+  ],
+  "requirements": {
+    "app_version": ">=0.1.0",
+    "online": false,
+    "prerequisite_skills": []
+  },
+  "rewards": {
+    "clearance_points": 40,
+    "mastery": {
+      "mlops.features": 1
+    },
+    "unlocks": [
+      "lore.mlops.features.01"
+    ]
+  },
+  "schema_version": 1,
+  "skills": {
+    "primary": "mlops.features",
+    "secondary": []
+  },
+  "summary": "Inspect drift and roll back after feature skew.",
+  "title": "Feature Skew Check",
+  "tools": [
+    "mlops"
+  ],
+  "version": "1.0.0"
+}

@@ -1,0 +1,10 @@
+{
+  "description": "Curriculum skill for Late-Arriving Data.",
+  "domain": "data",
+  "name": "Late-Arriving Data",
+  "prerequisites": [
+    "data.quality"
+  ],
+  "schema_version": 1,
+  "skill_id": "data.late"
+}

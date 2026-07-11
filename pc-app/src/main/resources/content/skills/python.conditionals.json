@@ -1,0 +1,10 @@
+{
+  "description": "Curriculum skill for Conditions.",
+  "domain": "python",
+  "name": "Conditions",
+  "prerequisites": [
+    "python.types"
+  ],
+  "schema_version": 1,
+  "skill_id": "python.conditionals"
+}

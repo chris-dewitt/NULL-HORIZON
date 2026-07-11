@@ -1,0 +1,132 @@
+{
+  "chapter_id": "communications_spire",
+  "completion": {
+    "mode": "all",
+    "objective_ids": [
+      "tok",
+      "ver",
+      "rel"
+    ]
+  },
+  "difficulty": "practiced",
+  "environment": {
+    "actions": [
+      {
+        "effects": {
+          "token": "present"
+        },
+        "id": "present_token",
+        "label": "Attach operator token"
+      },
+      {
+        "effects": {
+          "token": "verified"
+        },
+        "id": "verify",
+        "label": "Verify token signature",
+        "requires": {
+          "token": "present"
+        }
+      },
+      {
+        "effects": {
+          "coords_released": true
+        },
+        "id": "release",
+        "label": "Release restricted coordinates",
+        "requires": {
+          "token": "verified"
+        }
+      }
+    ],
+    "initial_state": {
+      "coords_released": false,
+      "token": "missing"
+    },
+    "schema_version": 1,
+    "seed": 113,
+    "template_id": "local.state.v1"
+  },
+  "hints": [
+    {
+      "level": 1,
+      "text": "Attach a token first."
+    },
+    {
+      "level": 2,
+      "text": "Verify before release."
+    },
+    {
+      "level": 3,
+      "text": "Never release on missing token."
+    },
+    {
+      "level": 4,
+      "text": "Complete verify then release."
+    }
+  ],
+  "mission_id": "comms.auth_concept.01",
+  "narrative": {
+    "briefing_dialogue_id": "dialogue.comms.auth_concept.01.briefing",
+    "success_dialogue_id": "dialogue.comms.auth_concept.01.success"
+  },
+  "objectives": [
+    {
+      "assert": {
+        "token": "present"
+      },
+      "description": "Attach a token.",
+      "id": "tok",
+      "type": "state_assertion",
+      "visible": true
+    },
+    {
+      "assert": {
+        "token": "verified"
+      },
+      "description": "Verify the token.",
+      "id": "ver",
+      "type": "state_assertion",
+      "visible": true
+    },
+    {
+      "assert": {
+        "coords_released": true
+      },
+      "description": "Release coordinates only after verify.",
+      "id": "rel",
+      "type": "state_assertion",
+      "visible": true
+    }
+  ],
+  "requirements": {
+    "app_version": ">=0.1.0",
+    "online": false,
+    "prerequisite_skills": [
+      "api.http"
+    ]
+  },
+  "rewards": {
+    "clearance_points": 25,
+    "mastery": {
+      "api.auth": 1,
+      "api.http": 1
+    },
+    "unlocks": [
+      "lore.comms.auth_concept.01"
+    ]
+  },
+  "schema_version": 1,
+  "skills": {
+    "primary": "api.auth",
+    "secondary": [
+      "api.http"
+    ]
+  },
+  "summary": "Require a verified token before releasing coordinates.",
+  "title": "Auth Token Check",
+  "tools": [
+    "systems_panel"
+  ],
+  "version": "1.0.0"
+}

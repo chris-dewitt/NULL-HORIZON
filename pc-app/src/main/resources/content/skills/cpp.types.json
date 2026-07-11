@@ -1,0 +1,8 @@
+{
+  "description": "Curriculum skill for C++ Types and Functions.",
+  "domain": "cpp",
+  "name": "C++ Types and Functions",
+  "prerequisites": [],
+  "schema_version": 1,
+  "skill_id": "cpp.types"
+}

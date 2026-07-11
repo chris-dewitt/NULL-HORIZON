@@ -1,0 +1,14 @@
+{
+  "dialogue_id": "dialogue.automation.types.01.success",
+  "lines": [
+    {
+      "speaker": "ORION-A",
+      "text": "Mission automation.types.01 complete."
+    },
+    {
+      "speaker": "SYSTEM",
+      "text": "Progress recorded."
+    }
+  ],
+  "schema_version": 1
+}

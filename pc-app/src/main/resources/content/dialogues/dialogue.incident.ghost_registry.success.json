@@ -1,0 +1,14 @@
+{
+  "dialogue_id": "dialogue.incident.ghost_registry.success",
+  "lines": [
+    {
+      "speaker": "ORION-A",
+      "text": "Unsigned policy discarded. The Auditor's warning is logged for later."
+    },
+    {
+      "speaker": "THE AUDITOR",
+      "text": "Persistence noted. Do not continue."
+    }
+  ],
+  "schema_version": 1
+}

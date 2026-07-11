@@ -1,0 +1,10 @@
+{
+  "description": "Curriculum skill for Collections.",
+  "domain": "python",
+  "name": "Collections",
+  "prerequisites": [
+    "python.functions"
+  ],
+  "schema_version": 1,
+  "skill_id": "python.collections"
+}

@@ -1,0 +1,10 @@
+{
+  "description": "Curriculum skill for Composition.",
+  "domain": "oop",
+  "name": "Composition",
+  "prerequisites": [
+    "oop.classes"
+  ],
+  "schema_version": 1,
+  "skill_id": "oop.composition"
+}

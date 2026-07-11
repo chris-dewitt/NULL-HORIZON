@@ -1,0 +1,146 @@
+{
+  "chapter_id": "emergency_interface",
+  "completion": {
+    "mode": "all",
+    "objective_ids": [
+      "reach_log_dir",
+      "read_fault_log",
+      "confirm_with_grep"
+    ]
+  },
+  "difficulty": "introductory",
+  "environment": {
+    "filesystem": {
+      "cwd": "/home/operator",
+      "entries": [
+        {
+          "path": "/home/operator",
+          "type": "dir"
+        },
+        {
+          "content": "Emergency operator notes.\nCheck /var/log for subsystem diagnostics.\n",
+          "path": "/home/operator/README.txt",
+          "type": "file"
+        },
+        {
+          "path": "/var",
+          "type": "dir"
+        },
+        {
+          "path": "/var/log",
+          "type": "dir"
+        },
+        {
+          "path": "/var/log/comms",
+          "type": "dir"
+        },
+        {
+          "content": "uplink=degraded\nretries=3\n",
+          "path": "/var/log/comms/link.status",
+          "type": "file"
+        },
+        {
+          "path": "/var/log/life_support",
+          "type": "dir"
+        },
+        {
+          "content": "INFO valve-1 nominal\nERROR valve-3 pressure unstable\nINFO pump-a cycling\n",
+          "path": "/var/log/life_support/fault.log",
+          "type": "file"
+        },
+        {
+          "content": "ok\nok\nok\n",
+          "path": "/var/log/life_support/heartbeat.log",
+          "type": "file"
+        }
+      ]
+    },
+    "schema_version": 1,
+    "seed": 7,
+    "template_id": "terminal.vfs.v1"
+  },
+  "hints": [
+    {
+      "level": 1,
+      "text": "Start with pwd and ls to orient yourself."
+    },
+    {
+      "level": 2,
+      "text": "The briefing points at /var/log. Use cd to move there."
+    },
+    {
+      "level": 3,
+      "text": "Life-support logs are under /var/log/life_support."
+    },
+    {
+      "level": 4,
+      "text": "Use cat fault.log, then grep valve-3 fault.log."
+    }
+  ],
+  "mission_id": "emergency.fault_log.01",
+  "narrative": {
+    "briefing_dialogue_id": "dialogue.emergency.fault_log.briefing",
+    "success_dialogue_id": "dialogue.emergency.fault_log.success"
+  },
+  "objectives": [
+    {
+      "assert": {
+        "cwd": "/var/log/life_support"
+      },
+      "description": "Navigate to /var/log/life_support.",
+      "id": "reach_log_dir",
+      "type": "filesystem_state",
+      "visible": true
+    },
+    {
+      "assert": {
+        "exit_code": 0,
+        "last_command": "cat fault.log",
+        "stdout_contains": "valve-3 pressure unstable"
+      },
+      "description": "Read fault.log and confirm the valve-3 error.",
+      "id": "read_fault_log",
+      "type": "command_output",
+      "visible": true
+    },
+    {
+      "assert": {
+        "exit_code": 0,
+        "last_command": "grep valve-3 fault.log",
+        "stdout_contains": "valve-3 pressure unstable"
+      },
+      "description": "Search the fault log for valve-3.",
+      "id": "confirm_with_grep",
+      "type": "command_output",
+      "visible": true
+    }
+  ],
+  "requirements": {
+    "app_version": ">=0.1.0",
+    "online": false,
+    "prerequisite_skills": []
+  },
+  "rewards": {
+    "clearance_points": 30,
+    "mastery": {
+      "linux.inspection": 1,
+      "linux.navigation": 1
+    },
+    "unlocks": [
+      "lore.emergency.fault_log.01"
+    ]
+  },
+  "schema_version": 1,
+  "skills": {
+    "primary": "linux.navigation",
+    "secondary": [
+      "linux.inspection"
+    ]
+  },
+  "summary": "Use the simulated terminal to find and inspect the life-support fault log.",
+  "title": "Locate the Fault Log",
+  "tools": [
+    "terminal"
+  ],
+  "version": "1.0.0"
+}

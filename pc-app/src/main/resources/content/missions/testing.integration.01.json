@@ -1,0 +1,136 @@
+{
+  "chapter_id": "verification_chamber",
+  "completion": {
+    "mode": "all",
+    "objective_ids": [
+      "u",
+      "c",
+      "i"
+    ]
+  },
+  "difficulty": "practiced",
+  "environment": {
+    "actions": [
+      {
+        "effects": {
+          "unit": "pass"
+        },
+        "id": "run_unit",
+        "label": "Run unit suite"
+      },
+      {
+        "effects": {
+          "contract": "pass"
+        },
+        "id": "run_contract",
+        "label": "Run contract checks",
+        "requires": {
+          "unit": "pass"
+        }
+      },
+      {
+        "effects": {
+          "certified": true,
+          "integration": "pass"
+        },
+        "id": "run_integration",
+        "label": "Run integration harness",
+        "requires": {
+          "contract": "pass"
+        }
+      }
+    ],
+    "initial_state": {
+      "certified": false,
+      "contract": "pending",
+      "integration": "pending",
+      "unit": "pending"
+    },
+    "schema_version": 1,
+    "seed": 123,
+    "template_id": "local.state.v1"
+  },
+  "hints": [
+    {
+      "level": 1,
+      "text": "Start with unit tests."
+    },
+    {
+      "level": 2,
+      "text": "Then contracts."
+    },
+    {
+      "level": 3,
+      "text": "Integration last."
+    },
+    {
+      "level": 4,
+      "text": "Certification requires all three."
+    }
+  ],
+  "mission_id": "testing.integration.01",
+  "narrative": {
+    "briefing_dialogue_id": "dialogue.testing.integration.01.briefing",
+    "success_dialogue_id": "dialogue.testing.integration.01.success"
+  },
+  "objectives": [
+    {
+      "assert": {
+        "unit": "pass"
+      },
+      "description": "Pass unit tests.",
+      "id": "u",
+      "type": "state_assertion",
+      "visible": true
+    },
+    {
+      "assert": {
+        "contract": "pass"
+      },
+      "description": "Pass contract checks.",
+      "id": "c",
+      "type": "state_assertion",
+      "visible": true
+    },
+    {
+      "assert": {
+        "certified": true,
+        "integration": "pass"
+      },
+      "description": "Pass integration and certify.",
+      "id": "i",
+      "type": "state_assertion",
+      "visible": true
+    }
+  ],
+  "requirements": {
+    "app_version": ">=0.1.0",
+    "online": false,
+    "prerequisite_skills": [
+      "testing.aaa"
+    ]
+  },
+  "rewards": {
+    "clearance_points": 25,
+    "mastery": {
+      "testing.aaa": 1,
+      "testing.integration": 1
+    },
+    "unlocks": [
+      "lore.testing.integration.01"
+    ]
+  },
+  "schema_version": 1,
+  "skills": {
+    "primary": "testing.integration",
+    "secondary": [
+      "testing.aaa"
+    ]
+  },
+  "summary": "Wire unit, contract, and integration checks before certifying a patch.",
+  "title": "Integration Harness",
+  "tools": [
+    "systems_panel"
+  ],
+  "version": "1.0.0"
+}

@@ -1,0 +1,7 @@
+{
+  "description": "Diff evidence of an unauthorized thruster_a override.",
+  "kind": "lore",
+  "name": "Unsigned Diff",
+  "reward_id": "lore.version.inspect_status.01",
+  "schema_version": 1
+}

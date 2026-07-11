@@ -1,0 +1,7 @@
+{
+  "description": "Safe query helper using a callsign placeholder.",
+  "kind": "lore",
+  "name": "Placeholder Lookup",
+  "reward_id": "lore.archive.unsafe_query.01",
+  "schema_version": 1
+}

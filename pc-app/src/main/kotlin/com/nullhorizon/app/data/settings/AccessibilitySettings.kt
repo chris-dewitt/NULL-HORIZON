@@ -1,0 +1,13 @@
+package com.nullhorizon.app.data.settings
+
+import kotlinx.serialization.Serializable
+
+/**
+ * Device-local accessibility preferences (not synced by default).
+ */
+@Serializable
+data class AccessibilitySettings(
+    val highContrast: Boolean = false,
+    val reducedMotion: Boolean = false,
+    val largerText: Boolean = false,
+)

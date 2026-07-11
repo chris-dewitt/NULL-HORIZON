@@ -1,0 +1,8 @@
+{
+  "description": "Curriculum skill for Pipeline Validation.",
+  "domain": "data",
+  "name": "Pipeline Validation",
+  "prerequisites": [],
+  "schema_version": 1,
+  "skill_id": "data.pipeline.validate"
+}

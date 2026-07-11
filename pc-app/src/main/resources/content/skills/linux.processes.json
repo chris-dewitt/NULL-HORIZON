@@ -1,0 +1,10 @@
+{
+  "description": "Curriculum skill for Process Control.",
+  "domain": "linux",
+  "name": "Process Control",
+  "prerequisites": [
+    "linux.navigation"
+  ],
+  "schema_version": 1,
+  "skill_id": "linux.processes"
+}
