@@ -8,7 +8,7 @@ from collections import defaultdict
 from datetime import UTC, datetime
 from typing import Annotated
 
-from fastapi import APIRouter, Depends, Header
+from fastapi import APIRouter, Depends, Header, Response, status
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
@@ -277,3 +277,27 @@ def sync_progress(
     )
     idem.put("progress_sync", profile.id, key, response.model_dump())
     return response
+
+
+@router.delete("/v1/progress", status_code=status.HTTP_204_NO_CONTENT)
+def delete_progress(
+    session: Annotated[Session, Depends(get_db)],
+    profile: Annotated[Profile, Depends(get_current_profile)],
+) -> Response:
+    """Delete cloud progress for the authenticated profile; keep the profile."""
+    from sqlalchemy import delete
+
+    from api.app.db.models import ProgressSnapshot, RewardUnlock, SkillEvidence
+
+    session.execute(
+        delete(MissionProgress).where(MissionProgress.profile_id == profile.id)
+    )
+    session.execute(delete(SkillEvidence).where(SkillEvidence.profile_id == profile.id))
+    session.execute(delete(RewardUnlock).where(RewardUnlock.profile_id == profile.id))
+    session.execute(
+        delete(ProgressSnapshot).where(ProgressSnapshot.profile_id == profile.id)
+    )
+    profile.clearance_points = 0
+    profile.rank = "Emergency Operator"
+    session.flush()
+    return Response(status_code=status.HTTP_204_NO_CONTENT)

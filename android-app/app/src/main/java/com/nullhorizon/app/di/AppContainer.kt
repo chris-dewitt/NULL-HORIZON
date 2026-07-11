@@ -8,10 +8,14 @@ import com.nullhorizon.app.content.AssetContentRepository
 import com.nullhorizon.app.content.ContentRepository
 import com.nullhorizon.app.content.MissionProgressRepository
 import com.nullhorizon.app.content.ProgressionBackedMissionProgressRepository
+import com.nullhorizon.app.data.privacy.DefaultPlayerDataRepository
+import com.nullhorizon.app.data.privacy.PlayerDataRepository
 import com.nullhorizon.app.data.profile.DataStoreLocalProfileRepository
 import com.nullhorizon.app.data.profile.LocalProfileRepository
 import com.nullhorizon.app.data.settings.DataStoreSettingsRepository
 import com.nullhorizon.app.data.settings.SettingsRepository
+import com.nullhorizon.app.diagnostics.CrashReporter
+import com.nullhorizon.app.diagnostics.LocalNoOpCrashReporter
 import com.nullhorizon.app.progression.DataStoreProgressionRepository
 import com.nullhorizon.app.progression.ProgressionRepository
 
@@ -40,4 +44,13 @@ class AppContainer(context: Context) {
 
     val missionProgressRepository: MissionProgressRepository =
         ProgressionBackedMissionProgressRepository(progressionRepository)
+
+    val playerDataRepository: PlayerDataRepository =
+        DefaultPlayerDataRepository(
+            profileRepository = localProfileRepository,
+            progressionRepository = progressionRepository,
+            settingsRepository = settingsRepository,
+        )
+
+    val crashReporter: CrashReporter = LocalNoOpCrashReporter()
 }

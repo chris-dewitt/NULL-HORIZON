@@ -23,6 +23,8 @@ interface ProgressionRepository {
         hintLevelUsed: Int,
         completedAtEpochMs: Long = System.currentTimeMillis(),
     ): DebriefSummary
+
+    suspend fun clear()
 }
 
 class DataStoreProgressionRepository(
@@ -68,6 +70,13 @@ class DataStoreProgressionRepository(
             debrief = result.debrief
         }
         return requireNotNull(debrief)
+    }
+
+    override suspend fun clear() {
+        dataStore.edit { prefs ->
+            prefs.remove(Keys.Snapshot)
+            prefs.remove(Keys.Completed)
+        }
     }
 
     private fun decode(raw: String?): ProgressionSnapshot {

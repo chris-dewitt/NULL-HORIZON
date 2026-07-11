@@ -181,6 +181,8 @@ private fun MainShell(
                     factory = SettingsViewModel.factory(
                         profileRepository = appContainer.localProfileRepository,
                         settingsRepository = appContainer.settingsRepository,
+                        playerDataRepository = appContainer.playerDataRepository,
+                        crashReporter = appContainer.crashReporter,
                     ),
                 )
                 SettingsScreen(viewModel = viewModel)
