@@ -1,39 +1,38 @@
-"""Health endpoint tests for the Epic 0 API shell."""
+"""Health and OpenAPI surface tests."""
 
 from __future__ import annotations
 
-from api.app.core.config import Settings
-from api.app.main import create_app
-from fastapi.testclient import TestClient
+import json
+from pathlib import Path
+
+from api.tests.conftest import make_client
 
 
 def test_health_returns_ok() -> None:
-    client = TestClient(create_app(Settings(execution_provider="fake")))
-
+    client = make_client()
     response = client.get("/v1/health")
-
     assert response.status_code == 200
     payload = response.json()
     assert payload["status"] == "ok"
     assert payload["service"] == "NULL HORIZON API"
-    assert payload["version"] == "0.0.1"
+    assert payload["version"] == "0.1.0"
     assert payload["execution_provider"] == "fake"
+    assert payload["database"] == "ok"
+    assert payload["redis"] == "memory"
 
 
-def test_health_reflects_configured_provider() -> None:
-    client = TestClient(create_app(Settings(execution_provider="fake")))
-
-    payload = client.get("/v1/health").json()
-
-    assert payload["execution_provider"] == "fake"
-
-
-def test_api_process_does_not_expose_execution_run_route() -> None:
-    """Epic 0 must not imply in-process learner execution."""
-
-    client = TestClient(create_app())
+def test_openapi_includes_epic7_routes() -> None:
+    client = make_client()
     openapi = client.get("/openapi.json").json()
     paths = set(openapi["paths"])
-
     assert "/v1/health" in paths
-    assert "/v1/executions" not in paths
+    assert "/v1/content/manifest" in paths
+    assert "/v1/profiles/anonymous" in paths
+    assert "/v1/progress" in paths
+    assert "/v1/progress/sync" in paths
+    assert "/v1/executions" in paths
+    assert "/v1/executions/{execution_id}" in paths
+
+    out = Path(__file__).resolve().parents[3] / "shared" / "openapi" / "openapi.json"
+    out.parent.mkdir(parents=True, exist_ok=True)
+    out.write_text(json.dumps(openapi, indent=2) + "\n", encoding="utf-8")

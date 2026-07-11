@@ -1,0 +1,1042 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "NULL HORIZON API",
+    "version": "0.1.0"
+  },
+  "paths": {
+    "/v1/health": {
+      "get": {
+        "tags": [
+          "health"
+        ],
+        "summary": "Health",
+        "operationId": "health_v1_health_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HealthResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/content/manifest": {
+      "get": {
+        "tags": [
+          "content"
+        ],
+        "summary": "Get Manifest",
+        "operationId": "get_manifest_v1_content_manifest_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ContentManifestResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/content/bundles/{bundle_id}": {
+      "get": {
+        "tags": [
+          "content"
+        ],
+        "summary": "Get Bundle",
+        "operationId": "get_bundle_v1_content_bundles__bundle_id__get",
+        "parameters": [
+          {
+            "name": "bundle_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Bundle Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true,
+                  "title": "Response Get Bundle V1 Content Bundles  Bundle Id  Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/profiles/anonymous": {
+      "post": {
+        "tags": [
+          "profiles"
+        ],
+        "summary": "Create Anonymous Profile",
+        "operationId": "create_anonymous_profile_v1_profiles_anonymous_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AnonymousProfileRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AnonymousProfileResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/progress": {
+      "get": {
+        "tags": [
+          "progress"
+        ],
+        "summary": "Get Progress",
+        "operationId": "get_progress_v1_progress_get",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Authorization"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProgressResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/progress/missions/{mission_id}": {
+      "put": {
+        "tags": [
+          "progress"
+        ],
+        "summary": "Put Mission Progress",
+        "operationId": "put_mission_progress_v1_progress_missions__mission_id__put",
+        "parameters": [
+          {
+            "name": "mission_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Mission Id"
+            }
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Authorization"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpsertMissionProgressRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MissionProgressItem"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/progress/sync": {
+      "post": {
+        "tags": [
+          "progress"
+        ],
+        "summary": "Sync Progress",
+        "operationId": "sync_progress_v1_progress_sync_post",
+        "parameters": [
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Idempotency-Key"
+            }
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Authorization"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ProgressSyncRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProgressSyncResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/executions": {
+      "post": {
+        "tags": [
+          "executions"
+        ],
+        "summary": "Submit Execution",
+        "operationId": "submit_execution_v1_executions_post",
+        "parameters": [
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Idempotency-Key"
+            }
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Authorization"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ExecutionSubmitRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExecutionReceipt"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/executions/{execution_id}": {
+      "get": {
+        "tags": [
+          "executions"
+        ],
+        "summary": "Get Execution",
+        "operationId": "get_execution_v1_executions__execution_id__get",
+        "parameters": [
+          {
+            "name": "execution_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Execution Id"
+            }
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Authorization"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExecutionResultResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "executions"
+        ],
+        "summary": "Cancel Execution",
+        "operationId": "cancel_execution_v1_executions__execution_id__delete",
+        "parameters": [
+          {
+            "name": "execution_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Execution Id"
+            }
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Authorization"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "AnonymousProfileRequest": {
+        "properties": {
+          "display_name": {
+            "type": "string",
+            "maxLength": 64,
+            "minLength": 1,
+            "title": "Display Name"
+          }
+        },
+        "type": "object",
+        "required": [
+          "display_name"
+        ],
+        "title": "AnonymousProfileRequest"
+      },
+      "AnonymousProfileResponse": {
+        "properties": {
+          "profile_id": {
+            "type": "string",
+            "title": "Profile Id"
+          },
+          "display_name": {
+            "type": "string",
+            "title": "Display Name"
+          },
+          "access_token": {
+            "type": "string",
+            "title": "Access Token"
+          }
+        },
+        "type": "object",
+        "required": [
+          "profile_id",
+          "display_name",
+          "access_token"
+        ],
+        "title": "AnonymousProfileResponse"
+      },
+      "ContentManifestResponse": {
+        "properties": {
+          "schema_version": {
+            "type": "integer",
+            "title": "Schema Version"
+          },
+          "bundle_id": {
+            "type": "string",
+            "title": "Bundle Id"
+          },
+          "version": {
+            "type": "string",
+            "title": "Version"
+          },
+          "min_app_version": {
+            "type": "string",
+            "title": "Min App Version"
+          },
+          "content_schema_version": {
+            "type": "integer",
+            "title": "Content Schema Version"
+          },
+          "locale": {
+            "type": "string",
+            "title": "Locale"
+          },
+          "channel": {
+            "type": "string",
+            "title": "Channel"
+          },
+          "chapters": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Chapters",
+            "default": []
+          },
+          "missions": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Missions",
+            "default": []
+          },
+          "skills": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Skills",
+            "default": []
+          },
+          "dialogues": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Dialogues",
+            "default": []
+          },
+          "rewards": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Rewards",
+            "default": []
+          }
+        },
+        "type": "object",
+        "required": [
+          "schema_version",
+          "bundle_id",
+          "version",
+          "min_app_version",
+          "content_schema_version",
+          "locale",
+          "channel"
+        ],
+        "title": "ContentManifestResponse"
+      },
+      "ExecutionFile": {
+        "properties": {
+          "path": {
+            "type": "string",
+            "title": "Path"
+          },
+          "content": {
+            "type": "string",
+            "title": "Content"
+          }
+        },
+        "type": "object",
+        "required": [
+          "path",
+          "content"
+        ],
+        "title": "ExecutionFile"
+      },
+      "ExecutionReceipt": {
+        "properties": {
+          "execution_id": {
+            "type": "string",
+            "title": "Execution Id"
+          },
+          "status": {
+            "type": "string",
+            "title": "Status"
+          },
+          "poll_after_ms": {
+            "type": "integer",
+            "title": "Poll After Ms",
+            "default": 0
+          }
+        },
+        "type": "object",
+        "required": [
+          "execution_id",
+          "status"
+        ],
+        "title": "ExecutionReceipt"
+      },
+      "ExecutionResultResponse": {
+        "properties": {
+          "execution_id": {
+            "type": "string",
+            "title": "Execution Id"
+          },
+          "status": {
+            "type": "string",
+            "title": "Status"
+          },
+          "outcome": {
+            "type": "string",
+            "title": "Outcome"
+          },
+          "stdout": {
+            "type": "string",
+            "title": "Stdout",
+            "default": ""
+          },
+          "stderr": {
+            "type": "string",
+            "title": "Stderr",
+            "default": ""
+          },
+          "diagnostics": {
+            "items": {
+              "additionalProperties": true,
+              "type": "object"
+            },
+            "type": "array",
+            "title": "Diagnostics",
+            "default": []
+          },
+          "tests": {
+            "items": {
+              "$ref": "#/components/schemas/ExecutionTestResult"
+            },
+            "type": "array",
+            "title": "Tests",
+            "default": []
+          },
+          "metrics": {
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Metrics",
+            "default": {}
+          },
+          "truncated": {
+            "type": "boolean",
+            "title": "Truncated",
+            "default": false
+          }
+        },
+        "type": "object",
+        "required": [
+          "execution_id",
+          "status",
+          "outcome"
+        ],
+        "title": "ExecutionResultResponse"
+      },
+      "ExecutionSubmitRequest": {
+        "properties": {
+          "idempotency_key": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Idempotency Key"
+          },
+          "mission_id": {
+            "type": "string",
+            "title": "Mission Id"
+          },
+          "mission_version": {
+            "type": "string",
+            "title": "Mission Version"
+          },
+          "runtime": {
+            "type": "string",
+            "enum": [
+              "python",
+              "cpp"
+            ],
+            "title": "Runtime",
+            "default": "python"
+          },
+          "environment_id": {
+            "type": "string",
+            "title": "Environment Id"
+          },
+          "files": {
+            "items": {
+              "$ref": "#/components/schemas/ExecutionFile"
+            },
+            "type": "array",
+            "title": "Files"
+          }
+        },
+        "type": "object",
+        "required": [
+          "mission_id",
+          "mission_version",
+          "environment_id",
+          "files"
+        ],
+        "title": "ExecutionSubmitRequest"
+      },
+      "ExecutionTestResult": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "visibility": {
+            "type": "string",
+            "enum": [
+              "visible",
+              "hidden"
+            ],
+            "title": "Visibility",
+            "default": "visible"
+          },
+          "status": {
+            "type": "string",
+            "title": "Status"
+          },
+          "message": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Message"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "status"
+        ],
+        "title": "ExecutionTestResult"
+      },
+      "HTTPValidationError": {
+        "properties": {
+          "detail": {
+            "items": {
+              "$ref": "#/components/schemas/ValidationError"
+            },
+            "type": "array",
+            "title": "Detail"
+          }
+        },
+        "type": "object",
+        "title": "HTTPValidationError"
+      },
+      "HealthResponse": {
+        "properties": {
+          "status": {
+            "type": "string",
+            "const": "ok",
+            "title": "Status",
+            "default": "ok"
+          },
+          "service": {
+            "type": "string",
+            "title": "Service"
+          },
+          "version": {
+            "type": "string",
+            "title": "Version"
+          },
+          "execution_provider": {
+            "type": "string",
+            "title": "Execution Provider"
+          },
+          "database": {
+            "type": "string",
+            "enum": [
+              "ok",
+              "error"
+            ],
+            "title": "Database",
+            "default": "ok"
+          },
+          "redis": {
+            "type": "string",
+            "enum": [
+              "ok",
+              "error",
+              "memory"
+            ],
+            "title": "Redis",
+            "default": "memory"
+          }
+        },
+        "type": "object",
+        "required": [
+          "service",
+          "version",
+          "execution_provider"
+        ],
+        "title": "HealthResponse"
+      },
+      "MissionProgressItem": {
+        "properties": {
+          "mission_id": {
+            "type": "string",
+            "title": "Mission Id"
+          },
+          "status": {
+            "type": "string",
+            "title": "Status"
+          },
+          "best_hint_level": {
+            "type": "integer",
+            "title": "Best Hint Level",
+            "default": 0
+          }
+        },
+        "type": "object",
+        "required": [
+          "mission_id",
+          "status"
+        ],
+        "title": "MissionProgressItem"
+      },
+      "ProgressResponse": {
+        "properties": {
+          "profile_id": {
+            "type": "string",
+            "title": "Profile Id"
+          },
+          "missions": {
+            "items": {
+              "$ref": "#/components/schemas/MissionProgressItem"
+            },
+            "type": "array",
+            "title": "Missions"
+          }
+        },
+        "type": "object",
+        "required": [
+          "profile_id",
+          "missions"
+        ],
+        "title": "ProgressResponse"
+      },
+      "ProgressSyncRequest": {
+        "properties": {
+          "idempotency_key": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Idempotency Key"
+          },
+          "missions": {
+            "items": {
+              "$ref": "#/components/schemas/MissionProgressItem"
+            },
+            "type": "array",
+            "title": "Missions"
+          }
+        },
+        "type": "object",
+        "required": [
+          "missions"
+        ],
+        "title": "ProgressSyncRequest"
+      },
+      "ProgressSyncResponse": {
+        "properties": {
+          "profile_id": {
+            "type": "string",
+            "title": "Profile Id"
+          },
+          "accepted": {
+            "type": "integer",
+            "title": "Accepted"
+          },
+          "missions": {
+            "items": {
+              "$ref": "#/components/schemas/MissionProgressItem"
+            },
+            "type": "array",
+            "title": "Missions"
+          }
+        },
+        "type": "object",
+        "required": [
+          "profile_id",
+          "accepted",
+          "missions"
+        ],
+        "title": "ProgressSyncResponse"
+      },
+      "UpsertMissionProgressRequest": {
+        "properties": {
+          "status": {
+            "type": "string",
+            "const": "completed",
+            "title": "Status",
+            "default": "completed"
+          },
+          "best_hint_level": {
+            "type": "integer",
+            "minimum": 0.0,
+            "title": "Best Hint Level",
+            "default": 0
+          }
+        },
+        "type": "object",
+        "title": "UpsertMissionProgressRequest"
+      },
+      "ValidationError": {
+        "properties": {
+          "loc": {
+            "items": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                }
+              ]
+            },
+            "type": "array",
+            "title": "Location"
+          },
+          "msg": {
+            "type": "string",
+            "title": "Message"
+          },
+          "type": {
+            "type": "string",
+            "title": "Error Type"
+          },
+          "input": {
+            "title": "Input"
+          },
+          "ctx": {
+            "type": "object",
+            "title": "Context"
+          }
+        },
+        "type": "object",
+        "required": [
+          "loc",
+          "msg",
+          "type"
+        ],
+        "title": "ValidationError"
+      }
+    }
+  }
+}

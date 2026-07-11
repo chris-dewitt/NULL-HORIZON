@@ -73,6 +73,8 @@ run_structure_checks() {
     backend/api/app/main.py
     android-app/app/src/main/java/com/nullhorizon/app/MainActivity.kt
     .github/workflows/ci.yml
+    infra/compose/dev.yml
+    shared/openapi/openapi.json
   )
   for path in "${required_paths[@]}"; do
     if [[ ! -e "$ROOT_DIR/$path" ]]; then

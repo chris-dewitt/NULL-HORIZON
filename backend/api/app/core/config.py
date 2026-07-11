@@ -5,14 +5,24 @@ Secrets must come from the environment or a secret manager, never from the repos
 
 from __future__ import annotations
 
-from pydantic import BaseModel, Field
+from functools import lru_cache
+from pathlib import Path
+
+from pydantic import Field
+from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
-class Settings(BaseModel):
+class Settings(BaseSettings):
     """Runtime settings for the API process."""
 
+    model_config = SettingsConfigDict(
+        env_file=".env",
+        extra="ignore",
+        populate_by_name=True,
+    )
+
     app_name: str = "NULL HORIZON API"
-    api_version: str = "0.0.1"
+    api_version: str = "0.1.0"
     execution_provider: str = Field(
         default="fake",
         description=(
@@ -20,16 +30,31 @@ class Settings(BaseModel):
             "providers are adapters to isolated runners."
         ),
     )
-
-
-def get_settings() -> Settings:
-    """Return process settings.
-
-    Environment overrides are intentionally minimal in Epic 0.
-    """
-
-    import os
-
-    return Settings(
-        execution_provider=os.getenv("EXECUTION_PROVIDER", "fake"),
+    database_url: str = Field(
+        default="sqlite+pysqlite:///:memory:",
+        validation_alias="DATABASE_URL",
     )
+    redis_url: str = Field(default="", validation_alias="REDIS_URL")
+    content_bundle_dir: str = Field(
+        default="",
+        validation_alias="CONTENT_BUNDLE_DIR",
+        description="Directory containing compiled content manifest.json",
+    )
+    idempotency_ttl_seconds: int = 86_400
+
+    def resolved_content_dir(self) -> Path:
+        if self.content_bundle_dir:
+            return Path(self.content_bundle_dir)
+        # Monorepo default: content/build/bundles/dev relative to backend/
+        return (
+            Path(__file__).resolve().parents[4]
+            / "content"
+            / "build"
+            / "bundles"
+            / "dev"
+        )
+
+
+@lru_cache
+def get_settings() -> Settings:
+    return Settings()
