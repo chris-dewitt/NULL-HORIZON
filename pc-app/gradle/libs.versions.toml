@@ -1,8 +1,9 @@
 [versions]
-kotlin = "2.0.21"
-composeMultiplatform = "1.7.3"
-coroutines = "1.9.0"
-serialization = "1.7.3"
+# 2.1.20+ required to run the Kotlin compiler daemon on JDK 25 (JavaVersion.parse).
+kotlin = "2.1.21"
+composeMultiplatform = "1.8.2"
+coroutines = "1.10.2"
+serialization = "1.8.1"
 sqliteJdbc = "3.45.3.0"
 junit = "4.13.2"
 truth = "1.4.4"

@@ -14,9 +14,9 @@ cd pc-app
 ./gradlew run
 ```
 
-Requires a JDK on `PATH` / `JAVA_HOME` (17+ is fine). The project compiles with
-**JDK 17**; if you only have a newer JDK installed (for example Temurin 25),
-Gradle will auto-download a JDK 17 toolchain on first run.
+Requires a JDK on `PATH` / `JAVA_HOME` (**17 through 25**). Temurin 25 works.
+The project still compiles against **JDK 17** bytecode; if needed, Gradle auto-downloads
+a JDK 17 toolchain on first run.
 
 Optional native installers:
 
