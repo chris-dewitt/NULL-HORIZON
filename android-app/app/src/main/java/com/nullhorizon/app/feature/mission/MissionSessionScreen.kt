@@ -192,7 +192,78 @@ fun MissionSessionScreen(
                         style = MaterialTheme.typography.titleLarge,
                         color = MaterialTheme.colorScheme.primary,
                     )
+                    state.debrief?.let { debrief ->
+                        MissionDebriefPanel(debrief = debrief)
+                    }
                 }
+            }
+        }
+    }
+}
+
+@Composable
+private fun MissionDebriefPanel(debrief: com.nullhorizon.app.progression.DebriefSummary) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .semantics { contentDescription = "Mission debrief" },
+        verticalArrangement = Arrangement.spacedBy(6.dp),
+    ) {
+        Text(
+            text = stringResource(R.string.debrief_title),
+            style = MaterialTheme.typography.titleMedium,
+        )
+        Text(
+            text = stringResource(
+                if (debrief.assisted) R.string.debrief_assisted else R.string.debrief_unassisted,
+                debrief.hintLevelUsed,
+            ),
+            style = MaterialTheme.typography.bodyMedium,
+        )
+        if (debrief.newlyAwardedClearance > 0) {
+            Text(
+                text = stringResource(
+                    R.string.debrief_clearance,
+                    debrief.newlyAwardedClearance,
+                ),
+                style = MaterialTheme.typography.bodyMedium,
+            )
+        }
+        Text(
+            text = stringResource(R.string.debrief_rank, debrief.rank),
+            style = MaterialTheme.typography.bodyMedium,
+        )
+        if (debrief.masteryUpdates.isNotEmpty()) {
+            Text(
+                text = stringResource(R.string.debrief_mastery),
+                style = MaterialTheme.typography.labelLarge,
+            )
+            debrief.masteryUpdates.forEach { skill ->
+                Text(
+                    text = "${skill.skillId}: ${skill.masteryLevel.name.lowercase()}",
+                    style = MaterialTheme.typography.bodySmall,
+                )
+            }
+        }
+        if (debrief.unlockedRewards.isNotEmpty()) {
+            Text(
+                text = stringResource(
+                    R.string.debrief_rewards,
+                    debrief.unlockedRewards.joinToString(),
+                ),
+                style = MaterialTheme.typography.bodyMedium,
+            )
+        }
+        if (debrief.reviewRecommendations.isNotEmpty()) {
+            Text(
+                text = stringResource(R.string.debrief_review),
+                style = MaterialTheme.typography.labelLarge,
+            )
+            debrief.reviewRecommendations.forEach { rec ->
+                Text(
+                    text = "${rec.skillId} — ${rec.reason}",
+                    style = MaterialTheme.typography.bodySmall,
+                )
             }
         }
     }

@@ -1,33 +1,31 @@
 package com.nullhorizon.app.content
 
-import androidx.datastore.core.DataStore
-import androidx.datastore.preferences.core.Preferences
-import androidx.datastore.preferences.core.edit
-import androidx.datastore.preferences.core.stringSetPreferencesKey
+import com.nullhorizon.app.progression.DebriefSummary
+import com.nullhorizon.app.progression.ProgressionRepository
+import com.nullhorizon.app.content.model.MissionDefinition
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.map
 
+/**
+ * Compatibility facade used by mission screens. Completions flow through the
+ * progression engine so mastery, rewards, and assistance are recorded.
+ */
 interface MissionProgressRepository {
     val completedMissionIds: Flow<Set<String>>
 
-    suspend fun markCompleted(missionId: String)
+    suspend fun recordCompletion(
+        mission: MissionDefinition,
+        hintLevelUsed: Int,
+    ): DebriefSummary
 }
 
-class DataStoreMissionProgressRepository(
-    private val dataStore: DataStore<Preferences>,
+class ProgressionBackedMissionProgressRepository(
+    private val progressionRepository: ProgressionRepository,
 ) : MissionProgressRepository {
-    override val completedMissionIds: Flow<Set<String>> = dataStore.data.map { prefs ->
-        prefs[Keys.Completed].orEmpty()
-    }
+    override val completedMissionIds: Flow<Set<String>> =
+        progressionRepository.completedMissionIds
 
-    override suspend fun markCompleted(missionId: String) {
-        dataStore.edit { prefs ->
-            val current = prefs[Keys.Completed].orEmpty()
-            prefs[Keys.Completed] = current + missionId
-        }
-    }
-
-    private object Keys {
-        val Completed = stringSetPreferencesKey("completed_mission_ids")
-    }
+    override suspend fun recordCompletion(
+        mission: MissionDefinition,
+        hintLevelUsed: Int,
+    ): DebriefSummary = progressionRepository.recordCompletion(mission, hintLevelUsed)
 }

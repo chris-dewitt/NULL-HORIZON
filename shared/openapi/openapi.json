@@ -896,6 +896,21 @@
             "type": "integer",
             "title": "Best Hint Level",
             "default": 0
+          },
+          "clearance_awarded": {
+            "type": "integer",
+            "title": "Clearance Awarded",
+            "default": 0
+          },
+          "attempt_count": {
+            "type": "integer",
+            "title": "Attempt Count",
+            "default": 1
+          },
+          "mission_version": {
+            "type": "string",
+            "title": "Mission Version",
+            "default": "1.0.0"
           }
         },
         "type": "object",
@@ -911,18 +926,52 @@
             "type": "string",
             "title": "Profile Id"
           },
+          "rank": {
+            "type": "string",
+            "title": "Rank",
+            "default": "Emergency Operator"
+          },
+          "clearance_points": {
+            "type": "integer",
+            "title": "Clearance Points",
+            "default": 0
+          },
           "missions": {
             "items": {
               "$ref": "#/components/schemas/MissionProgressItem"
             },
             "type": "array",
-            "title": "Missions"
+            "title": "Missions",
+            "default": []
+          },
+          "skills": {
+            "items": {
+              "$ref": "#/components/schemas/SkillMasteryItem"
+            },
+            "type": "array",
+            "title": "Skills",
+            "default": []
+          },
+          "rewards": {
+            "items": {
+              "$ref": "#/components/schemas/RewardItem"
+            },
+            "type": "array",
+            "title": "Rewards",
+            "default": []
+          },
+          "review_recommendations": {
+            "items": {
+              "$ref": "#/components/schemas/ReviewRecommendationItem"
+            },
+            "type": "array",
+            "title": "Review Recommendations",
+            "default": []
           }
         },
         "type": "object",
         "required": [
-          "profile_id",
-          "missions"
+          "profile_id"
         ],
         "title": "ProgressResponse"
       },
@@ -944,13 +993,27 @@
               "$ref": "#/components/schemas/MissionProgressItem"
             },
             "type": "array",
-            "title": "Missions"
+            "title": "Missions",
+            "default": []
+          },
+          "skill_evidence": {
+            "items": {
+              "$ref": "#/components/schemas/SkillEvidenceItem"
+            },
+            "type": "array",
+            "title": "Skill Evidence",
+            "default": []
+          },
+          "rewards": {
+            "items": {
+              "$ref": "#/components/schemas/RewardItem"
+            },
+            "type": "array",
+            "title": "Rewards",
+            "default": []
           }
         },
         "type": "object",
-        "required": [
-          "missions"
-        ],
         "title": "ProgressSyncRequest"
       },
       "ProgressSyncResponse": {
@@ -963,21 +1026,158 @@
             "type": "integer",
             "title": "Accepted"
           },
+          "rank": {
+            "type": "string",
+            "title": "Rank"
+          },
+          "clearance_points": {
+            "type": "integer",
+            "title": "Clearance Points"
+          },
           "missions": {
             "items": {
               "$ref": "#/components/schemas/MissionProgressItem"
             },
             "type": "array",
             "title": "Missions"
+          },
+          "skills": {
+            "items": {
+              "$ref": "#/components/schemas/SkillMasteryItem"
+            },
+            "type": "array",
+            "title": "Skills"
+          },
+          "rewards": {
+            "items": {
+              "$ref": "#/components/schemas/RewardItem"
+            },
+            "type": "array",
+            "title": "Rewards"
+          },
+          "review_recommendations": {
+            "items": {
+              "$ref": "#/components/schemas/ReviewRecommendationItem"
+            },
+            "type": "array",
+            "title": "Review Recommendations",
+            "default": []
           }
         },
         "type": "object",
         "required": [
           "profile_id",
           "accepted",
-          "missions"
+          "rank",
+          "clearance_points",
+          "missions",
+          "skills",
+          "rewards"
         ],
         "title": "ProgressSyncResponse"
+      },
+      "ReviewRecommendationItem": {
+        "properties": {
+          "skill_id": {
+            "type": "string",
+            "title": "Skill Id"
+          },
+          "reason": {
+            "type": "string",
+            "title": "Reason"
+          }
+        },
+        "type": "object",
+        "required": [
+          "skill_id",
+          "reason"
+        ],
+        "title": "ReviewRecommendationItem"
+      },
+      "RewardItem": {
+        "properties": {
+          "reward_id": {
+            "type": "string",
+            "title": "Reward Id"
+          },
+          "equipped": {
+            "type": "boolean",
+            "title": "Equipped",
+            "default": false
+          }
+        },
+        "type": "object",
+        "required": [
+          "reward_id"
+        ],
+        "title": "RewardItem"
+      },
+      "SkillEvidenceItem": {
+        "properties": {
+          "event_id": {
+            "type": "string",
+            "title": "Event Id"
+          },
+          "skill_id": {
+            "type": "string",
+            "title": "Skill Id"
+          },
+          "mission_id": {
+            "type": "string",
+            "title": "Mission Id"
+          },
+          "assisted": {
+            "type": "boolean",
+            "title": "Assisted",
+            "default": false
+          },
+          "delta": {
+            "type": "integer",
+            "minimum": 1.0,
+            "title": "Delta",
+            "default": 1
+          }
+        },
+        "type": "object",
+        "required": [
+          "event_id",
+          "skill_id",
+          "mission_id"
+        ],
+        "title": "SkillEvidenceItem"
+      },
+      "SkillMasteryItem": {
+        "properties": {
+          "skill_id": {
+            "type": "string",
+            "title": "Skill Id"
+          },
+          "mastery_level": {
+            "type": "string",
+            "title": "Mastery Level"
+          },
+          "evidence_count": {
+            "type": "integer",
+            "title": "Evidence Count"
+          },
+          "unassisted_evidence_count": {
+            "type": "integer",
+            "title": "Unassisted Evidence Count"
+          },
+          "last_practiced_at_epoch_ms": {
+            "type": "integer",
+            "title": "Last Practiced At Epoch Ms",
+            "default": 0
+          }
+        },
+        "type": "object",
+        "required": [
+          "skill_id",
+          "mastery_level",
+          "evidence_count",
+          "unassisted_evidence_count"
+        ],
+        "title": "SkillMasteryItem"
       },
       "UpsertMissionProgressRequest": {
         "properties": {
@@ -992,6 +1192,23 @@
             "minimum": 0.0,
             "title": "Best Hint Level",
             "default": 0
+          },
+          "clearance_awarded": {
+            "type": "integer",
+            "minimum": 0.0,
+            "title": "Clearance Awarded",
+            "default": 0
+          },
+          "attempt_count": {
+            "type": "integer",
+            "minimum": 1.0,
+            "title": "Attempt Count",
+            "default": 1
+          },
+          "mission_version": {
+            "type": "string",
+            "title": "Mission Version",
+            "default": "1.0.0"
           }
         },
         "type": "object",

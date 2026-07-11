@@ -3,6 +3,7 @@ package com.nullhorizon.app.navigation
 import androidx.annotation.StringRes
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.List
+import androidx.compose.material.icons.filled.AccountTree
 import androidx.compose.material.icons.filled.Place
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -25,6 +26,12 @@ enum class TopLevelDestination(
         labelRes = R.string.nav_missions,
         contentDescriptionRes = R.string.nav_missions_a11y,
         icon = Icons.AutoMirrored.Filled.List,
+    ),
+    Skills(
+        route = "skills",
+        labelRes = R.string.nav_skills,
+        contentDescriptionRes = R.string.nav_skills_a11y,
+        icon = Icons.Filled.AccountTree,
     ),
     Settings(
         route = "settings",

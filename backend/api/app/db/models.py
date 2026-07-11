@@ -1,4 +1,4 @@
-"""PostgreSQL / SQLite ORM models for Epic 7."""
+"""PostgreSQL / SQLite ORM models for Epic 7–9."""
 
 from __future__ import annotations
 
@@ -7,6 +7,7 @@ from typing import Any
 
 from sqlalchemy import (
     JSON,
+    Boolean,
     DateTime,
     ForeignKey,
     Integer,
@@ -34,10 +35,16 @@ class Profile(Base):
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), default=utcnow
     )
+    rank: Mapped[str] = mapped_column(
+        String(64), default="Emergency Operator", nullable=False
+    )
+    clearance_points: Mapped[int] = mapped_column(Integer, default=0, nullable=False)
 
     mission_progress: Mapped[list[MissionProgress]] = relationship(
         back_populates="profile"
     )
+    skill_evidence: Mapped[list[SkillEvidence]] = relationship(back_populates="profile")
+    reward_unlocks: Mapped[list[RewardUnlock]] = relationship(back_populates="profile")
     execution_jobs: Mapped[list[ExecutionJob]] = relationship(back_populates="profile")
 
 
@@ -52,6 +59,9 @@ class MissionProgress(Base):
     mission_id: Mapped[str] = mapped_column(String(128), nullable=False)
     status: Mapped[str] = mapped_column(String(32), default="completed")
     best_hint_level: Mapped[int] = mapped_column(Integer, default=0)
+    clearance_awarded: Mapped[int] = mapped_column(Integer, default=0)
+    attempt_count: Mapped[int] = mapped_column(Integer, default=1)
+    mission_version: Mapped[str] = mapped_column(String(32), default="1.0.0")
     completed_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), default=utcnow
     )
@@ -60,6 +70,43 @@ class MissionProgress(Base):
     )
 
     profile: Mapped[Profile] = relationship(back_populates="mission_progress")
+
+
+class SkillEvidence(Base):
+    __tablename__ = "skill_evidence"
+    __table_args__ = (
+        UniqueConstraint("profile_id", "event_id", name="uq_profile_evidence_event"),
+    )
+
+    id: Mapped[str] = mapped_column(String(64), primary_key=True)
+    profile_id: Mapped[str] = mapped_column(ForeignKey("profiles.id"), nullable=False)
+    event_id: Mapped[str] = mapped_column(String(128), nullable=False)
+    skill_id: Mapped[str] = mapped_column(String(128), nullable=False)
+    mission_id: Mapped[str] = mapped_column(String(128), nullable=False)
+    assisted: Mapped[bool] = mapped_column(Boolean, default=False)
+    delta: Mapped[int] = mapped_column(Integer, default=1)
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), default=utcnow
+    )
+
+    profile: Mapped[Profile] = relationship(back_populates="skill_evidence")
+
+
+class RewardUnlock(Base):
+    __tablename__ = "reward_unlocks"
+    __table_args__ = (
+        UniqueConstraint("profile_id", "reward_id", name="uq_profile_reward"),
+    )
+
+    id: Mapped[str] = mapped_column(String(64), primary_key=True)
+    profile_id: Mapped[str] = mapped_column(ForeignKey("profiles.id"), nullable=False)
+    reward_id: Mapped[str] = mapped_column(String(128), nullable=False)
+    unlocked_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), default=utcnow
+    )
+    equipped: Mapped[bool] = mapped_column(Boolean, default=False)
+
+    profile: Mapped[Profile] = relationship(back_populates="reward_unlocks")
 
 
 class ProgressSnapshot(Base):
