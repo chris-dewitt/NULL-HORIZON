@@ -1,6 +1,6 @@
 schema_version: 1
 skill_id: data.pipeline.validate
-name: Validate pipeline stages
-domain: data_engineering
-description: Inspect DAG stages, quality gates, and failure status in a batch pipeline.
+name: Pipeline Validation
+domain: data
+description: Curriculum skill for Pipeline Validation.
 prerequisites: []

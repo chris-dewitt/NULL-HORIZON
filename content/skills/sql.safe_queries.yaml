@@ -2,6 +2,6 @@ schema_version: 1
 skill_id: sql.safe_queries
 name: Safe Query Construction
 domain: sql
-description: Avoid unsafe string-built queries when looking up records.
+description: Curriculum skill for Safe Query Construction.
 prerequisites:
   - sql.select

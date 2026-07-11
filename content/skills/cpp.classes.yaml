@@ -1,0 +1,7 @@
+schema_version: 1
+skill_id: cpp.classes
+name: C++ Classes
+domain: cpp
+description: Curriculum skill for C++ Classes.
+prerequisites:
+  - cpp.const

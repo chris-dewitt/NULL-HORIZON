@@ -1,0 +1,85 @@
+schema_version: 1
+mission_id: mlops.repro.01
+version: 1.0.0
+chapter_id: prediction_observatory
+title: Reproducible Training Pin
+summary: Pin dataset and model versions for a reproducible retrain.
+difficulty: practiced
+
+requirements:
+  app_version: ">=0.1.0"
+  online: false
+  prerequisite_skills:
+    - mlops.registry
+
+skills:
+  primary: mlops.repro
+  secondary:
+    - mlops.registry
+
+narrative:
+  briefing_dialogue_id: dialogue.mlops.repro.01.briefing
+  success_dialogue_id: dialogue.mlops.repro.01.success
+
+tools:
+  - systems_panel
+
+environment:
+  schema_version: 1
+  template_id: local.state.v1
+  seed: 164
+  initial_state:
+    dataset_pin: floating
+    model_pin: floating
+    repro: False
+  actions:
+    - id: pin_data
+      label: Pin dataset version
+      effects:
+        dataset_pin: 2026.07
+    - id: pin_model
+      label: Pin training code version
+      requires:
+        dataset_pin: 2026.07
+      effects:
+        model_pin: train-77
+        repro: True
+
+objectives:
+  - id: data
+    type: state_assertion
+    description: Pin the dataset.
+    visible: true
+    assert:
+      dataset_pin: 2026.07
+  - id: model
+    type: state_assertion
+    description: Pin training code.
+    visible: true
+    assert:
+      model_pin: train-77
+      repro: True
+
+hints:
+  - level: 1
+    text: Pin data first.
+  - level: 2
+    text: Then pin training code.
+  - level: 3
+    text: Floating versions break repro.
+  - level: 4
+    text: Both pins required.
+
+rewards:
+  clearance_points: 25
+  mastery:
+    mlops.repro: 1
+    mlops.registry: 1
+  unlocks:
+    - lore.mlops.repro.01
+
+completion:
+  mode: all
+  objective_ids:
+    - data
+    - model

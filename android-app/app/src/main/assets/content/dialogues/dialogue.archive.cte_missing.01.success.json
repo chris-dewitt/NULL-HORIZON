@@ -1,0 +1,14 @@
+{
+  "dialogue_id": "dialogue.archive.cte_missing.01.success",
+  "lines": [
+    {
+      "speaker": "ORION-A",
+      "text": "Mission archive.cte_missing.01 complete."
+    },
+    {
+      "speaker": "SYSTEM",
+      "text": "Progress recorded."
+    }
+  ],
+  "schema_version": 1
+}

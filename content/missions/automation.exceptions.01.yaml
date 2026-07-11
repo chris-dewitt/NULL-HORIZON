@@ -1,0 +1,113 @@
+schema_version: 1
+mission_id: automation.exceptions.01
+version: 1.0.0
+chapter_id: automation_lab
+title: Handle Corrupt Reading
+summary: Catch bad sensor input without crashing.
+difficulty: practiced
+
+requirements:
+  app_version: ">=0.1.0"
+  online: false
+  prerequisite_skills:
+    - python.functions
+
+skills:
+  primary: python.exceptions
+  secondary: []
+
+narrative:
+  briefing_dialogue_id: dialogue.automation.exceptions.01.briefing
+  success_dialogue_id: dialogue.automation.exceptions.01.success
+
+tools:
+  - python_editor
+  - test_console
+
+environment:
+  schema_version: 1
+  template_id: python.editor.fake.v1
+  seed: 83
+  workspace:
+    files:
+      - path: /workspace/solve.py
+        editable: true
+        content: |
+          def solve() -> bool:
+              raw = "bad"
+              return int(raw) == 0
+      - path: /workspace/test_solve.py
+        editable: false
+        content: |
+          from solve import solve
+
+
+          def test_solve():
+              assert solve() is True
+    execution:
+      provider: fake
+      fixtures:
+        - id: fixed
+          match:
+            file_contains:
+              /workspace/solve.py: "except"
+          result:
+            status: completed
+            tests:
+              - id: test_solve
+                status: passed
+        - id: broken
+          match:
+            file_contains:
+              /workspace/solve.py: "return int(raw)"
+          result:
+            status: completed
+            tests:
+              - id: test_solve
+                status: failed
+                message: Behavior still incorrect
+        - id: default_fail
+          result:
+            status: completed
+            tests:
+              - id: test_solve
+                status: failed
+                message: Unexpected workspace state
+
+objectives:
+  - id: apply_fix
+    type: file_assertion
+    description: Apply the required Python fix.
+    visible: true
+    assert:
+      file_contains:/workspace/solve.py: "except"
+  - id: tests_pass
+    type: execution_tests
+    description: Run tests and make them pass.
+    visible: true
+    assert:
+      all_passed: "true"
+      test_count: "1"
+
+hints:
+  - level: 1
+    text: Use try/except.
+  - level: 2
+    text: Treat bad input as 0.
+  - level: 3
+    text: except ValueError.
+  - level: 4
+    text: Return True when handled.
+
+rewards:
+  clearance_points: 35
+  mastery:
+    python.exceptions: 1
+  unlocks:
+    - lore.automation.exceptions.01
+
+completion:
+  mode: all
+  objective_ids:
+    - apply_fix
+    - tests_pass

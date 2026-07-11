@@ -1,7 +1,7 @@
 {
-  "description": "Retrieve rows with SELECT, WHERE, and ORDER BY against a mission database.",
+  "description": "Curriculum skill for Select.",
   "domain": "sql",
-  "name": "Query with SELECT",
+  "name": "Select",
   "prerequisites": [],
   "schema_version": 1,
   "skill_id": "sql.select"

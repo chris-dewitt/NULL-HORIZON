@@ -2,5 +2,6 @@ schema_version: 1
 skill_id: incident.triage
 name: Incident Triage
 domain: systems
-description: Combine terminal, SQL, and Git evidence to close a multi-tool incident.
-prerequisites: []
+description: Curriculum skill for Incident Triage.
+prerequisites:
+  - computational_thinking.incident

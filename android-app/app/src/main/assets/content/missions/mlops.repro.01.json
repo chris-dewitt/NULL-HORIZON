@@ -1,0 +1,115 @@
+{
+  "chapter_id": "prediction_observatory",
+  "completion": {
+    "mode": "all",
+    "objective_ids": [
+      "data",
+      "model"
+    ]
+  },
+  "difficulty": "practiced",
+  "environment": {
+    "actions": [
+      {
+        "effects": {
+          "dataset_pin": 2026.07
+        },
+        "id": "pin_data",
+        "label": "Pin dataset version"
+      },
+      {
+        "effects": {
+          "model_pin": "train-77",
+          "repro": true
+        },
+        "id": "pin_model",
+        "label": "Pin training code version",
+        "requires": {
+          "dataset_pin": 2026.07
+        }
+      }
+    ],
+    "initial_state": {
+      "dataset_pin": "floating",
+      "model_pin": "floating",
+      "repro": false
+    },
+    "schema_version": 1,
+    "seed": 164,
+    "template_id": "local.state.v1"
+  },
+  "hints": [
+    {
+      "level": 1,
+      "text": "Pin data first."
+    },
+    {
+      "level": 2,
+      "text": "Then pin training code."
+    },
+    {
+      "level": 3,
+      "text": "Floating versions break repro."
+    },
+    {
+      "level": 4,
+      "text": "Both pins required."
+    }
+  ],
+  "mission_id": "mlops.repro.01",
+  "narrative": {
+    "briefing_dialogue_id": "dialogue.mlops.repro.01.briefing",
+    "success_dialogue_id": "dialogue.mlops.repro.01.success"
+  },
+  "objectives": [
+    {
+      "assert": {
+        "dataset_pin": 2026.07
+      },
+      "description": "Pin the dataset.",
+      "id": "data",
+      "type": "state_assertion",
+      "visible": true
+    },
+    {
+      "assert": {
+        "model_pin": "train-77",
+        "repro": true
+      },
+      "description": "Pin training code.",
+      "id": "model",
+      "type": "state_assertion",
+      "visible": true
+    }
+  ],
+  "requirements": {
+    "app_version": ">=0.1.0",
+    "online": false,
+    "prerequisite_skills": [
+      "mlops.registry"
+    ]
+  },
+  "rewards": {
+    "clearance_points": 25,
+    "mastery": {
+      "mlops.registry": 1,
+      "mlops.repro": 1
+    },
+    "unlocks": [
+      "lore.mlops.repro.01"
+    ]
+  },
+  "schema_version": 1,
+  "skills": {
+    "primary": "mlops.repro",
+    "secondary": [
+      "mlops.registry"
+    ]
+  },
+  "summary": "Pin dataset and model versions for a reproducible retrain.",
+  "title": "Reproducible Training Pin",
+  "tools": [
+    "systems_panel"
+  ],
+  "version": "1.0.0"
+}

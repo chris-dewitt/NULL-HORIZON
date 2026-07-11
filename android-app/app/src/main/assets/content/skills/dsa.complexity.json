@@ -1,0 +1,10 @@
+{
+  "description": "Curriculum skill for Big-O Reasoning.",
+  "domain": "dsa",
+  "name": "Big-O Reasoning",
+  "prerequisites": [
+    "dsa.search"
+  ],
+  "schema_version": 1,
+  "skill_id": "dsa.complexity"
+}

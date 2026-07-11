@@ -1,0 +1,14 @@
+{
+  "dialogue_id": "dialogue.archive.cte_missing.01.briefing",
+  "lines": [
+    {
+      "speaker": "ORION-A",
+      "text": "Mission briefing for archive.cte_missing.01."
+    },
+    {
+      "speaker": "SYSTEM",
+      "text": "Follow objectives and progressive hints."
+    }
+  ],
+  "schema_version": 1
+}

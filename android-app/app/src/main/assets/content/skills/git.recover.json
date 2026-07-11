@@ -1,7 +1,7 @@
 {
-  "description": "Restore tracked files from HEAD with git checkout -- path.",
+  "description": "Curriculum skill for Recover and Revert.",
   "domain": "git",
-  "name": "Discard unauthorized changes",
+  "name": "Recover and Revert",
   "prerequisites": [
     "git.inspect"
   ],

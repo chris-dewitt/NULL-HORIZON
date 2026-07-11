@@ -1,7 +1,7 @@
 {
-  "description": "Decide which control is likely responsible for a failure.",
+  "description": "Curriculum skill for Form Hypotheses.",
   "domain": "computational_thinking",
-  "name": "Form a hypothesis",
+  "name": "Form Hypotheses",
   "prerequisites": [
     "computational_thinking.observe"
   ],

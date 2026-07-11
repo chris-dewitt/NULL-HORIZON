@@ -1,0 +1,7 @@
+schema_version: 1
+skill_id: data.lineage
+name: Lineage and Orchestration
+domain: data
+description: Curriculum skill for Lineage and Orchestration.
+prerequisites:
+  - data.quality

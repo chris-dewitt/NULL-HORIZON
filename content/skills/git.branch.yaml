@@ -1,0 +1,7 @@
+schema_version: 1
+skill_id: git.branch
+name: Branches
+domain: git
+description: Curriculum skill for Branches.
+prerequisites:
+  - git.history

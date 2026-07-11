@@ -1,0 +1,114 @@
+schema_version: 1
+mission_id: comms.idempotent_capstone.01
+version: 1.0.0
+chapter_id: communications_spire
+title: Idempotent Distress API
+summary: Restore the distress API without duplicating transmissions.
+difficulty: challenge
+
+requirements:
+  app_version: ">=0.1.0"
+  online: false
+  prerequisite_skills:
+    - api.json
+
+skills:
+  primary: api.reliability
+  secondary:
+    - api.json
+    - api.auth
+
+narrative:
+  briefing_dialogue_id: dialogue.comms.idempotent_capstone.01.briefing
+  success_dialogue_id: dialogue.comms.idempotent_capstone.01.success
+
+tools:
+  - service_map
+
+environment:
+  schema_version: 1
+  template_id: service_map.v1
+  seed: 114
+  service_map:
+    nodes:
+      - id: client
+        kind: client
+        label: Beacon
+        status: degraded
+        detail: "duplicate sends"
+      - id: api
+        kind: api
+        label: Distress API
+        status: degraded
+      - id: queue
+        kind: queue
+        label: Outbox
+        status: alert
+        detail: "no idempotency key"
+    edges:
+      - id: c_a
+        from: client
+        to: api
+        kind: request
+        status: degraded
+      - id: a_q
+        from: api
+        to: queue
+        kind: request
+        status: alert
+    actions:
+      - id: add_key
+        label: Require idempotency key
+        effects:
+          keyed: "true"
+          explanation: "Requests without keys are rejected."
+      - id: dedupe
+        label: Deduplicate outbox
+        requires:
+          keyed: "true"
+        effects:
+          node.queue.status: "healthy"
+          node.api.status: "healthy"
+          node.client.status: "healthy"
+          edge.c_a.status: "ok"
+          edge.a_q.status: "ok"
+          stable: "true"
+          explanation: "Duplicate distress sends suppressed."
+
+objectives:
+  - id: key
+    type: service_map_state
+    description: Require idempotency keys.
+    visible: true
+    assert:
+      keyed: "true"
+  - id: stable
+    type: service_map_state
+    description: Deduplicate and stabilize the path.
+    visible: true
+    assert:
+      stable: "true"
+      node.api.status: healthy
+
+hints:
+  - level: 1
+    text: Add idempotency keys first.
+  - level: 2
+    text: Then dedupe the outbox.
+  - level: 3
+    text: Client should return to healthy.
+  - level: 4
+    text: No duplicate distress sends.
+
+rewards:
+  clearance_points: 55
+  mastery:
+    api.reliability: 1
+  unlocks:
+    - lore.comms.idempotent_capstone.01
+
+completion:
+  mode: all
+  objective_ids:
+    - key
+    - stable

@@ -1,0 +1,96 @@
+schema_version: 1
+mission_id: version.stage_commit.01
+version: 1.0.0
+chapter_id: version_vault
+title: Stage and Commit
+summary: Confirm staging discipline before signing a vault commit.
+difficulty: practiced
+
+requirements:
+  app_version: ">=0.1.0"
+  online: false
+  prerequisite_skills:
+    - git.inspect
+
+skills:
+  primary: git.stage
+  secondary:
+    - git.inspect
+
+narrative:
+  briefing_dialogue_id: dialogue.version.stage_commit.01.briefing
+  success_dialogue_id: dialogue.version.stage_commit.01.success
+
+tools:
+  - systems_panel
+
+environment:
+  schema_version: 1
+  template_id: local.state.v1
+  seed: 61
+  initial_state:
+    reviewed_diff: False
+    staged: False
+    committed: False
+  actions:
+    - id: review
+      label: Review working tree diff
+      effects:
+        reviewed_diff: True
+    - id: stage
+      label: Stage signed paths only
+      requires:
+        reviewed_diff: True
+      effects:
+        staged: True
+    - id: commit
+      label: Create signed commit
+      requires:
+        staged: True
+      effects:
+        committed: True
+
+objectives:
+  - id: rev
+    type: state_assertion
+    description: Review the diff.
+    visible: true
+    assert:
+      reviewed_diff: True
+  - id: stg
+    type: state_assertion
+    description: Stage signed paths.
+    visible: true
+    assert:
+      staged: True
+  - id: cmt
+    type: state_assertion
+    description: Create the commit.
+    visible: true
+    assert:
+      committed: True
+
+hints:
+  - level: 1
+    text: Review before staging.
+  - level: 2
+    text: Stage only signed paths.
+  - level: 3
+    text: Then commit.
+  - level: 4
+    text: All three steps are required.
+
+rewards:
+  clearance_points: 25
+  mastery:
+    git.stage: 1
+    git.inspect: 1
+  unlocks:
+    - lore.version.stage_commit.01
+
+completion:
+  mode: all
+  objective_ids:
+    - rev
+    - stg
+    - cmt

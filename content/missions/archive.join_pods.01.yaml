@@ -1,0 +1,74 @@
+schema_version: 1
+mission_id: archive.join_pods.01
+version: 1.0.0
+chapter_id: archive_core
+title: Join Crew to Pods
+summary: Join crew to occupied pods on matching decks.
+difficulty: practiced
+
+requirements:
+  app_version: ">=0.1.0"
+  online: false
+  prerequisite_skills:
+    - sql.filter
+
+skills:
+  primary: sql.join
+  secondary:
+    - sql.filter
+
+narrative:
+  briefing_dialogue_id: dialogue.archive.join_pods.01.briefing
+  success_dialogue_id: dialogue.archive.join_pods.01.success
+
+tools:
+  - sql
+
+environment:
+  schema_version: 1
+  template_id: sql.sqlite.v1
+  seed: 73
+  databases:
+    - id: archive
+      policy: select_only
+      seed_sql: |
+        CREATE TABLE crew (crew_id INTEGER PRIMARY KEY, callsign TEXT, role TEXT, status TEXT, deck TEXT);
+        CREATE TABLE pods (pod_id INTEGER PRIMARY KEY, deck TEXT, occupied INTEGER);
+        INSERT INTO pods VALUES (1,'A',1),(2,'A',1),(3,'B',1),(4,'B',0);
+        INSERT INTO crew VALUES
+         (1,'ORION','navigator','active','A'),
+         (2,'VEGA','engineer','active','A'),
+         (3,'KELL','medic','missing','B'),
+         (4,'RIN','engineer','missing','B'),
+         (5,'NYX','unknown','ghost','B');
+objectives:
+  - id: joined
+    type: sql_result
+    description: Join active crew to occupied pods by deck.
+    visible: true
+    assert:
+      query_contains: JOIN
+      columns: callsign,deck
+      row_count: "2"
+
+hints:
+  - level: 1
+    text: Join crew to pods.
+  - level: 2
+    text: Match on deck.
+  - level: 3
+    text: Filter active crew and occupied pods.
+  - level: 4
+    text: SELECT c.callsign, c.deck FROM crew c JOIN pods p ON c.deck = p.deck WHERE c.status = 'active' AND p.occupied = 1;
+
+rewards:
+  clearance_points: 35
+  mastery:
+    sql.join: 1
+  unlocks:
+    - lore.archive.join_pods.01
+
+completion:
+  mode: all
+  objective_ids:
+    - joined

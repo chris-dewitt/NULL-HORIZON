@@ -1,9 +1,9 @@
 {
-  "description": "Choose the correct comparison and threshold in a safety check.",
+  "description": "Curriculum skill for Conditions.",
   "domain": "python",
-  "name": "Use comparisons",
+  "name": "Conditions",
   "prerequisites": [
-    "python.functions"
+    "python.types"
   ],
   "schema_version": 1,
   "skill_id": "python.conditionals"

@@ -1,7 +1,0 @@
-schema_version: 1
-chapter_id: comms_relay
-title: Comms Relay
-region: Comms Relay
-summary: Trace degraded API hops between ship services.
-mission_ids:
-  - comms.api_trace.01

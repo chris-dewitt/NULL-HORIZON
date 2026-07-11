@@ -1,0 +1,7 @@
+schema_version: 1
+skill_id: data.quality
+name: Data Quality Checks
+domain: data
+description: Curriculum skill for Data Quality Checks.
+prerequisites:
+  - data.etl

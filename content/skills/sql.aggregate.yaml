@@ -1,0 +1,7 @@
+schema_version: 1
+skill_id: sql.aggregate
+name: Aggregation
+domain: sql
+description: Curriculum skill for Aggregation.
+prerequisites:
+  - sql.filter

@@ -1,0 +1,10 @@
+{
+  "description": "Curriculum skill for Classes and Instances.",
+  "domain": "oop",
+  "name": "Classes and Instances",
+  "prerequisites": [
+    "python.classes"
+  ],
+  "schema_version": 1,
+  "skill_id": "oop.classes"
+}

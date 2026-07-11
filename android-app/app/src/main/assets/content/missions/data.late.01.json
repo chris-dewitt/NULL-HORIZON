@@ -1,0 +1,115 @@
+{
+  "chapter_id": "data_foundry",
+  "completion": {
+    "mode": "all",
+    "objective_ids": [
+      "policy",
+      "dedupe"
+    ]
+  },
+  "difficulty": "practiced",
+  "environment": {
+    "actions": [
+      {
+        "effects": {
+          "policy": "side_path"
+        },
+        "id": "accept_late",
+        "label": "Accept late frames into side path"
+      },
+      {
+        "effects": {
+          "idempotent": true,
+          "ok": true
+        },
+        "id": "dedupe",
+        "label": "Dedupe by frame id",
+        "requires": {
+          "policy": "side_path"
+        }
+      }
+    ],
+    "initial_state": {
+      "idempotent": false,
+      "ok": false,
+      "policy": "drop_late"
+    },
+    "schema_version": 1,
+    "seed": 144,
+    "template_id": "local.state.v1"
+  },
+  "hints": [
+    {
+      "level": 1,
+      "text": "Do not silently drop late frames."
+    },
+    {
+      "level": 2,
+      "text": "Use a side path."
+    },
+    {
+      "level": 3,
+      "text": "Dedupe by id."
+    },
+    {
+      "level": 4,
+      "text": "Keep loads idempotent."
+    }
+  ],
+  "mission_id": "data.late.01",
+  "narrative": {
+    "briefing_dialogue_id": "dialogue.data.late.01.briefing",
+    "success_dialogue_id": "dialogue.data.late.01.success"
+  },
+  "objectives": [
+    {
+      "assert": {
+        "policy": "side_path"
+      },
+      "description": "Change drop policy to a side path.",
+      "id": "policy",
+      "type": "state_assertion",
+      "visible": true
+    },
+    {
+      "assert": {
+        "idempotent": true,
+        "ok": true
+      },
+      "description": "Dedupe late frames.",
+      "id": "dedupe",
+      "type": "state_assertion",
+      "visible": true
+    }
+  ],
+  "requirements": {
+    "app_version": ">=0.1.0",
+    "online": false,
+    "prerequisite_skills": [
+      "data.quality"
+    ]
+  },
+  "rewards": {
+    "clearance_points": 25,
+    "mastery": {
+      "data.late": 1,
+      "data.quality": 1
+    },
+    "unlocks": [
+      "lore.data.late.01"
+    ]
+  },
+  "schema_version": 1,
+  "skills": {
+    "primary": "data.late",
+    "secondary": [
+      "data.quality"
+    ]
+  },
+  "summary": "Accept late frames without double-counting already loaded batches.",
+  "title": "Late-Arriving Frames",
+  "tools": [
+    "systems_panel"
+  ],
+  "version": "1.0.0"
+}

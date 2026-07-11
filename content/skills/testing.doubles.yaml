@@ -1,0 +1,7 @@
+schema_version: 1
+skill_id: testing.doubles
+name: Test Doubles
+domain: testing
+description: Curriculum skill for Test Doubles.
+prerequisites:
+  - testing.aaa

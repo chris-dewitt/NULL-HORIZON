@@ -180,6 +180,83 @@ def referential_errors(docs: dict[str, list[tuple[Path, dict[str, Any]]]]) -> li
                 if filesystem.get("entries") is None:
                     errors.append(f"{path}: terminal mission lacks filesystem entries")
 
+    errors.extend(curriculum_structure_errors(docs))
+    return errors
+
+
+DOMAIN_CHAPTERS = {
+    "emergency_interface",
+    "maintenance_deck",
+    "version_vault",
+    "archive_core",
+    "automation_lab",
+    "drone_foundry",
+    "navigation_array",
+    "communications_spire",
+    "verification_chamber",
+    "black_vault",
+    "data_foundry",
+    "reactor_kernel",
+    "prediction_observatory",
+    "horizon_core",
+}
+
+
+def curriculum_structure_errors(
+    docs: dict[str, list[tuple[Path, dict[str, Any]]]],
+) -> list[str]:
+    """Enforce Epic 12 domain coverage and acyclic skill prerequisites."""
+    errors: list[str] = []
+    missions = {document["mission_id"]: document for _, document in docs.get("mission", [])}
+    chapters = {document["chapter_id"]: document for _, document in docs.get("chapter", [])}
+
+    for chapter_id in sorted(DOMAIN_CHAPTERS):
+        if chapter_id not in chapters:
+            errors.append(f"curriculum: missing domain chapter '{chapter_id}'")
+            continue
+        difficulties: set[str] = set()
+        for mission_id in chapters[chapter_id].get("mission_ids", []):
+            mission = missions.get(mission_id)
+            if mission is None:
+                continue
+            difficulties.add(mission.get("difficulty", ""))
+        required = {"practiced", "challenge"}
+        if chapter_id != "horizon_core":
+            required = {"introductory", "practiced", "challenge"}
+        missing = sorted(required - difficulties)
+        if missing:
+            errors.append(
+                f"curriculum: chapter '{chapter_id}' missing difficulties: {', '.join(missing)}"
+            )
+
+    # Skill prerequisite graph must be acyclic.
+    skill_prereqs = {
+        document["skill_id"]: document.get("prerequisites", [])
+        for _, document in docs.get("skill", [])
+    }
+    state = {skill_id: 0 for skill_id in skill_prereqs}  # 0=unseen,1=visiting,2=done
+
+    def visit(skill_id: str, stack: list[str]) -> list[str] | None:
+        state[skill_id] = 1
+        for prereq in skill_prereqs.get(skill_id, []):
+            if prereq not in skill_prereqs:
+                continue
+            if state[prereq] == 1:
+                return stack + [prereq]
+            if state[prereq] == 0:
+                found = visit(prereq, stack + [prereq])
+                if found:
+                    return found
+        state[skill_id] = 2
+        return None
+
+    for skill_id in skill_prereqs:
+        if state[skill_id] == 0:
+            cycle = visit(skill_id, [skill_id])
+            if cycle:
+                errors.append("curriculum: skill prerequisite cycle: " + " -> ".join(cycle))
+                break
+
     return errors
 
 

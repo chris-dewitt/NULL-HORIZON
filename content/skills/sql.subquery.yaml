@@ -1,0 +1,8 @@
+schema_version: 1
+skill_id: sql.subquery
+name: Subqueries and CTEs
+domain: sql
+description: Curriculum skill for Subqueries and CTEs.
+prerequisites:
+  - sql.join
+  - sql.group

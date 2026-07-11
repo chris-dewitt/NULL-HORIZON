@@ -1,0 +1,10 @@
+{
+  "description": "Curriculum skill for Basic Classes.",
+  "domain": "python",
+  "name": "Basic Classes",
+  "prerequisites": [
+    "python.functions"
+  ],
+  "schema_version": 1,
+  "skill_id": "python.classes"
+}

@@ -2,6 +2,6 @@ schema_version: 1
 skill_id: python.testing
 name: Regression Testing
 domain: python
-description: Author a failing test that locks in expected behavior before a fix.
+description: Curriculum skill for Regression Testing.
 prerequisites:
   - python.functions

@@ -1,0 +1,7 @@
+schema_version: 1
+skill_id: testing.integration
+name: Integration Tests
+domain: testing
+description: Curriculum skill for Integration Tests.
+prerequisites:
+  - testing.aaa

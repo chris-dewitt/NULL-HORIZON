@@ -1,0 +1,11 @@
+{
+  "description": "Curriculum skill for Simple Scripts.",
+  "domain": "linux",
+  "name": "Simple Scripts",
+  "prerequisites": [
+    "linux.search",
+    "linux.processes"
+  ],
+  "schema_version": 1,
+  "skill_id": "linux.scripts"
+}

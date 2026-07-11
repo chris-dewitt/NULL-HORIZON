@@ -1,0 +1,7 @@
+schema_version: 1
+skill_id: oop.classes
+name: Classes and Instances
+domain: oop
+description: Curriculum skill for Classes and Instances.
+prerequisites:
+  - python.classes

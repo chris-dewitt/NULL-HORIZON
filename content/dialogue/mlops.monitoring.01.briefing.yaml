@@ -1,0 +1,7 @@
+schema_version: 1
+dialogue_id: dialogue.mlops.monitoring.01.briefing
+lines:
+  - speaker: ORION-A
+    text: Mission briefing for mlops.monitoring.01.
+  - speaker: SYSTEM
+    text: Follow objectives and progressive hints.

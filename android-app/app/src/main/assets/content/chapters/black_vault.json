@@ -1,0 +1,14 @@
+{
+  "chapter_id": "black_vault",
+  "mission_ids": [
+    "security.threat_model.01",
+    "security.validation.01",
+    "archive.unsafe_query.01",
+    "security.authz.01",
+    "security.contain_capstone.01"
+  ],
+  "region": "Black Vault",
+  "schema_version": 1,
+  "summary": "Defensive cybersecurity on fictional ship systems.",
+  "title": "Black Vault"
+}

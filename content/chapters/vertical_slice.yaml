@@ -2,7 +2,7 @@ schema_version: 1
 chapter_id: vertical_slice
 title: Vertical Slice
 region: Campaign Path
-summary: Ordered twelve-mission path that proves the playable platform.
+summary: Ordered twelve-mission onboarding path that proves the playable platform.
 mission_ids:
   - emergency.wake_sequence.01
   - emergency.fault_log.01

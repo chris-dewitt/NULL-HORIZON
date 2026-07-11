@@ -1,0 +1,5 @@
+schema_version: 1
+reward_id: lore.data.etl_intro.01
+kind: lore
+name: Lore data.etl_intro.01
+description: Unlock for completing data.etl_intro.01.

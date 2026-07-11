@@ -1,0 +1,7 @@
+schema_version: 1
+skill_id: mlops.registry
+name: Model Registry
+domain: mlops
+description: Curriculum skill for Model Registry.
+prerequisites:
+  - mlops.rollback

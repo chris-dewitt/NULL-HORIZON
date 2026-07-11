@@ -1,0 +1,7 @@
+schema_version: 1
+skill_id: api.auth
+name: Authentication Concepts
+domain: api
+description: Curriculum skill for Authentication Concepts.
+prerequisites:
+  - api.http

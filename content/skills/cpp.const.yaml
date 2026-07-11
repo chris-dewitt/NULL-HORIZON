@@ -1,0 +1,7 @@
+schema_version: 1
+skill_id: cpp.const
+name: References and Const
+domain: cpp
+description: Curriculum skill for References and Const.
+prerequisites:
+  - cpp.types

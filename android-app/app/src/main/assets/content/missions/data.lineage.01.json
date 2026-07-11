@@ -1,0 +1,115 @@
+{
+  "chapter_id": "data_foundry",
+  "completion": {
+    "mode": "all",
+    "objective_ids": [
+      "e",
+      "f"
+    ]
+  },
+  "difficulty": "practiced",
+  "environment": {
+    "actions": [
+      {
+        "effects": {
+          "extract": "sensors.raw"
+        },
+        "id": "mark_extract",
+        "label": "Mark extract lineage"
+      },
+      {
+        "effects": {
+          "forecast": "reactor.forecast",
+          "mapped": true
+        },
+        "id": "mark_forecast",
+        "label": "Mark forecast consumer",
+        "requires": {
+          "extract": "sensors.raw"
+        }
+      }
+    ],
+    "initial_state": {
+      "extract": "unknown",
+      "forecast": "unknown",
+      "mapped": false
+    },
+    "schema_version": 1,
+    "seed": 143,
+    "template_id": "local.state.v1"
+  },
+  "hints": [
+    {
+      "level": 1,
+      "text": "Start at extract."
+    },
+    {
+      "level": 2,
+      "text": "Then name the forecast consumer."
+    },
+    {
+      "level": 3,
+      "text": "Lineage connects both."
+    },
+    {
+      "level": 4,
+      "text": "Map both ends."
+    }
+  ],
+  "mission_id": "data.lineage.01",
+  "narrative": {
+    "briefing_dialogue_id": "dialogue.data.lineage.01.briefing",
+    "success_dialogue_id": "dialogue.data.lineage.01.success"
+  },
+  "objectives": [
+    {
+      "assert": {
+        "extract": "sensors.raw"
+      },
+      "description": "Identify extract source.",
+      "id": "e",
+      "type": "state_assertion",
+      "visible": true
+    },
+    {
+      "assert": {
+        "forecast": "reactor.forecast",
+        "mapped": true
+      },
+      "description": "Identify forecast consumer.",
+      "id": "f",
+      "type": "state_assertion",
+      "visible": true
+    }
+  ],
+  "requirements": {
+    "app_version": ">=0.1.0",
+    "online": false,
+    "prerequisite_skills": [
+      "data.quality"
+    ]
+  },
+  "rewards": {
+    "clearance_points": 25,
+    "mastery": {
+      "data.lineage": 1,
+      "data.quality": 1
+    },
+    "unlocks": [
+      "lore.data.lineage.01"
+    ]
+  },
+  "schema_version": 1,
+  "skills": {
+    "primary": "data.lineage",
+    "secondary": [
+      "data.quality"
+    ]
+  },
+  "summary": "Trace lineage from sensor extract to forecast publish.",
+  "title": "Lineage Map",
+  "tools": [
+    "systems_panel"
+  ],
+  "version": "1.0.0"
+}

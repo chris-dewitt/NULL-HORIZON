@@ -1,0 +1,99 @@
+schema_version: 1
+mission_id: security.contain_capstone.01
+version: 1.0.0
+chapter_id: black_vault
+title: Contain Compromised Account
+summary: Contain a fictional service-account compromise without disabling life support.
+difficulty: challenge
+
+requirements:
+  app_version: ">=0.1.0"
+  online: false
+  prerequisite_skills:
+    - security.least_privilege
+
+skills:
+  primary: security.least_privilege
+  secondary:
+    - security.authz
+    - security.secrets
+
+narrative:
+  briefing_dialogue_id: dialogue.security.contain_capstone.01.briefing
+  success_dialogue_id: dialogue.security.contain_capstone.01.success
+
+tools:
+  - systems_panel
+
+environment:
+  schema_version: 1
+  template_id: local.state.v1
+  seed: 135
+  initial_state:
+    account: compromised
+    life_support: online
+    contained: False
+  actions:
+    - id: revoke
+      label: Revoke vault.write on service account
+      effects:
+        account: limited
+    - id: rotate
+      label: Rotate service token
+      requires:
+        account: limited
+      effects:
+        account: rotated
+    - id: confirm
+      label: Confirm life support still online
+      requires:
+        account: rotated
+      effects:
+        life_support: online
+        contained: True
+
+objectives:
+  - id: limit
+    type: state_assertion
+    description: Limit the compromised account.
+    visible: true
+    assert:
+      account: limited
+  - id: rotate
+    type: state_assertion
+    description: Rotate the token.
+    visible: true
+    assert:
+      account: rotated
+  - id: keep_ls
+    type: state_assertion
+    description: Contain without disabling life support.
+    visible: true
+    assert:
+      contained: True
+      life_support: online
+
+hints:
+  - level: 1
+    text: Revoke excess privileges first.
+  - level: 2
+    text: Rotate the token.
+  - level: 3
+    text: Do not shut down life support.
+  - level: 4
+    text: Confirm systems stay online.
+
+rewards:
+  clearance_points: 60
+  mastery:
+    security.least_privilege: 1
+    security.authz: 1
+  unlocks:
+    - lore.security.contain_capstone.01
+
+completion:
+  mode: all
+  objective_ids:
+    - limit
+    - rotate
+    - keep_ls

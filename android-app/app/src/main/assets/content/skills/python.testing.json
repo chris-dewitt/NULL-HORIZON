@@ -1,5 +1,5 @@
 {
-  "description": "Author a failing test that locks in expected behavior before a fix.",
+  "description": "Curriculum skill for Regression Testing.",
   "domain": "python",
   "name": "Regression Testing",
   "prerequisites": [

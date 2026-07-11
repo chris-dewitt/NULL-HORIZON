@@ -5,24 +5,19 @@ chapter_id: emergency_interface
 title: Emergency Lighting
 summary: Restore Deck A emergency lighting without draining reserve power below policy.
 difficulty: introductory
-
 requirements:
-  app_version: ">=0.1.0"
+  app_version: '>=0.1.0'
   online: false
   prerequisite_skills: []
-
 skills:
   primary: computational_thinking.observe
   secondary:
-    - computational_thinking.hypothesis
-
+  - computational_thinking.hypothesis
 narrative:
   briefing_dialogue_id: dialogue.emergency.lighting.briefing
   success_dialogue_id: dialogue.emergency.lighting.success
-
 tools:
-  - systems_panel
-
+- systems_panel
 environment:
   schema_version: 1
   template_id: local.state.v1
@@ -34,80 +29,76 @@ environment:
     circuit_b_breaker: closed
     lighting_bus: disconnected
   actions:
-    - id: diagnose_circuit_a
-      label: Mark circuit A as diagnosed
-      description: Record that circuit A is open and blocking the lighting bus.
-      effects:
-        diagnosed_circuit_a: true
-    - id: close_circuit_a
-      label: Close circuit A breaker
-      effects:
-        circuit_a_breaker: closed
-    - id: connect_lighting_bus
-      label: Connect lighting bus to reserve power
-      requires:
-        circuit_a_breaker: closed
-      effects:
-        lighting_bus: connected
-        reserve_power_percent: 88
-        deck_a_lights: online
-    - id: overdraw_reserve
-      label: Force full brightness from reserve
-      description: Restores lights but violates reserve policy.
-      requires:
-        circuit_a_breaker: closed
-      effects:
-        lighting_bus: connected
-        reserve_power_percent: 55
-        deck_a_lights: online
-
-objectives:
-  - id: diagnose_open_breaker
-    type: state_assertion
-    description: Confirm circuit A is the open breaker.
-    visible: true
-    assert:
+  - id: diagnose_circuit_a
+    label: Mark circuit A as diagnosed
+    description: Record that circuit A is open and blocking the lighting bus.
+    effects:
       diagnosed_circuit_a: true
-  - id: close_breaker
-    type: state_assertion
-    description: Close circuit A so the lighting bus can energize.
-    visible: true
-    assert:
+  - id: close_circuit_a
+    label: Close circuit A breaker
+    effects:
       circuit_a_breaker: closed
-  - id: restore_lights
-    type: state_assertion
-    description: Bring Deck A emergency lights online.
-    visible: true
-    assert:
-      deck_a_lights: online
-  - id: preserve_reserve
-    type: state_assertion
-    description: Keep reserve power at 80 percent or higher.
-    visible: false
-    assert:
+  - id: connect_lighting_bus
+    label: Connect lighting bus to reserve power
+    requires:
+      circuit_a_breaker: closed
+    effects:
+      lighting_bus: connected
       reserve_power_percent: 88
-
+      deck_a_lights: online
+  - id: overdraw_reserve
+    label: Force full brightness from reserve
+    description: Restores lights but violates reserve policy.
+    requires:
+      circuit_a_breaker: closed
+    effects:
+      lighting_bus: connected
+      reserve_power_percent: 55
+      deck_a_lights: online
+objectives:
+- id: diagnose_open_breaker
+  type: state_assertion
+  description: Confirm circuit A is the open breaker.
+  visible: true
+  assert:
+    diagnosed_circuit_a: true
+- id: close_breaker
+  type: state_assertion
+  description: Close circuit A so the lighting bus can energize.
+  visible: true
+  assert:
+    circuit_a_breaker: closed
+- id: restore_lights
+  type: state_assertion
+  description: Bring Deck A emergency lights online.
+  visible: true
+  assert:
+    deck_a_lights: online
+- id: preserve_reserve
+  type: state_assertion
+  description: Keep reserve power at 80 percent or higher.
+  visible: false
+  assert:
+    reserve_power_percent: 88
 hints:
-  - level: 1
-    text: Start by inspecting which breaker is open.
-  - level: 2
-    text: Circuit A is open. Closing it is required before the lighting bus can connect.
-  - level: 3
-    text: Connect the lighting bus to reserve power after the breaker is closed.
-  - level: 4
-    text: Avoid forcing full brightness. That path drains reserve below policy.
-
+- level: 1
+  text: Start by inspecting which breaker is open.
+- level: 2
+  text: Circuit A is open. Closing it is required before the lighting bus can connect.
+- level: 3
+  text: Connect the lighting bus to reserve power after the breaker is closed.
+- level: 4
+  text: Avoid forcing full brightness. That path drains reserve below policy.
 rewards:
   clearance_points: 25
   mastery:
     computational_thinking.observe: 1
   unlocks:
-    - lore.emergency.lighting.01
-
+  - lore.emergency.lighting.01
 completion:
   mode: all
   objective_ids:
-    - diagnose_open_breaker
-    - close_breaker
-    - restore_lights
-    - preserve_reserve
+  - diagnose_open_breaker
+  - close_breaker
+  - restore_lights
+  - preserve_reserve

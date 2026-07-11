@@ -1,0 +1,7 @@
+schema_version: 1
+skill_id: sql.constraints
+name: Constraints and Indexes
+domain: sql
+description: Curriculum skill for Constraints and Indexes.
+prerequisites:
+  - sql.select

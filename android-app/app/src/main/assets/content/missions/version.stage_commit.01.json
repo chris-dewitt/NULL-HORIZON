@@ -1,0 +1,133 @@
+{
+  "chapter_id": "version_vault",
+  "completion": {
+    "mode": "all",
+    "objective_ids": [
+      "rev",
+      "stg",
+      "cmt"
+    ]
+  },
+  "difficulty": "practiced",
+  "environment": {
+    "actions": [
+      {
+        "effects": {
+          "reviewed_diff": true
+        },
+        "id": "review",
+        "label": "Review working tree diff"
+      },
+      {
+        "effects": {
+          "staged": true
+        },
+        "id": "stage",
+        "label": "Stage signed paths only",
+        "requires": {
+          "reviewed_diff": true
+        }
+      },
+      {
+        "effects": {
+          "committed": true
+        },
+        "id": "commit",
+        "label": "Create signed commit",
+        "requires": {
+          "staged": true
+        }
+      }
+    ],
+    "initial_state": {
+      "committed": false,
+      "reviewed_diff": false,
+      "staged": false
+    },
+    "schema_version": 1,
+    "seed": 61,
+    "template_id": "local.state.v1"
+  },
+  "hints": [
+    {
+      "level": 1,
+      "text": "Review before staging."
+    },
+    {
+      "level": 2,
+      "text": "Stage only signed paths."
+    },
+    {
+      "level": 3,
+      "text": "Then commit."
+    },
+    {
+      "level": 4,
+      "text": "All three steps are required."
+    }
+  ],
+  "mission_id": "version.stage_commit.01",
+  "narrative": {
+    "briefing_dialogue_id": "dialogue.version.stage_commit.01.briefing",
+    "success_dialogue_id": "dialogue.version.stage_commit.01.success"
+  },
+  "objectives": [
+    {
+      "assert": {
+        "reviewed_diff": true
+      },
+      "description": "Review the diff.",
+      "id": "rev",
+      "type": "state_assertion",
+      "visible": true
+    },
+    {
+      "assert": {
+        "staged": true
+      },
+      "description": "Stage signed paths.",
+      "id": "stg",
+      "type": "state_assertion",
+      "visible": true
+    },
+    {
+      "assert": {
+        "committed": true
+      },
+      "description": "Create the commit.",
+      "id": "cmt",
+      "type": "state_assertion",
+      "visible": true
+    }
+  ],
+  "requirements": {
+    "app_version": ">=0.1.0",
+    "online": false,
+    "prerequisite_skills": [
+      "git.inspect"
+    ]
+  },
+  "rewards": {
+    "clearance_points": 25,
+    "mastery": {
+      "git.inspect": 1,
+      "git.stage": 1
+    },
+    "unlocks": [
+      "lore.version.stage_commit.01"
+    ]
+  },
+  "schema_version": 1,
+  "skills": {
+    "primary": "git.stage",
+    "secondary": [
+      "git.inspect"
+    ]
+  },
+  "summary": "Confirm staging discipline before signing a vault commit.",
+  "title": "Stage and Commit",
+  "tools": [
+    "systems_panel"
+  ],
+  "version": "1.0.0"
+}

@@ -1,7 +1,7 @@
 {
-  "description": "Read and search files with cat and grep.",
+  "description": "Curriculum skill for File Inspection.",
   "domain": "linux",
-  "name": "Inspect file contents",
+  "name": "File Inspection",
   "prerequisites": [
     "linux.navigation"
   ],

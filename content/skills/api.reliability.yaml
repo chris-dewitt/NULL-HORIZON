@@ -1,0 +1,7 @@
+schema_version: 1
+skill_id: api.reliability
+name: Idempotency and Rate Limits
+domain: api
+description: Curriculum skill for Idempotency and Rate Limits.
+prerequisites:
+  - api.json

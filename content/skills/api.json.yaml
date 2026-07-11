@@ -1,0 +1,7 @@
+schema_version: 1
+skill_id: api.json
+name: JSON and Validation
+domain: api
+description: Curriculum skill for JSON and Validation.
+prerequisites:
+  - api.http

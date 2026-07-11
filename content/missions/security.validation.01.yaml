@@ -1,0 +1,114 @@
+schema_version: 1
+mission_id: security.validation.01
+version: 1.0.0
+chapter_id: black_vault
+title: Validate Operator Input
+summary: Reject oversized fictional operator input before processing.
+difficulty: practiced
+
+requirements:
+  app_version: ">=0.1.0"
+  online: false
+  prerequisite_skills:
+    - security.threat_model
+
+skills:
+  primary: security.validation
+  secondary:
+    - python.functions
+
+narrative:
+  briefing_dialogue_id: dialogue.security.validation.01.briefing
+  success_dialogue_id: dialogue.security.validation.01.success
+
+tools:
+  - python_editor
+  - test_console
+
+environment:
+  schema_version: 1
+  template_id: python.editor.fake.v1
+  seed: 132
+  workspace:
+    files:
+      - path: /workspace/validate_input.py
+        editable: true
+        content: |
+          def solve() -> bool:
+              text = 'x' * 10
+              return len(text) > 0
+      - path: /workspace/test_solve.py
+        editable: false
+        content: |
+          from validate_input import solve
+
+
+          def test_solve():
+              assert solve() is True
+    execution:
+      provider: fake
+      fixtures:
+        - id: fixed
+          match:
+            file_contains:
+              /workspace/validate_input.py: "len(text) <= 8"
+          result:
+            status: completed
+            tests:
+              - id: test_solve
+                status: passed
+        - id: broken
+          match:
+            file_contains:
+              /workspace/validate_input.py: "len(text) > 0"
+          result:
+            status: completed
+            tests:
+              - id: test_solve
+                status: failed
+                message: Behavior still incorrect
+        - id: default_fail
+          result:
+            status: completed
+            tests:
+              - id: test_solve
+                status: failed
+                message: Unexpected workspace state
+
+objectives:
+  - id: apply_fix
+    type: file_assertion
+    description: Apply the required Python fix.
+    visible: true
+    assert:
+      file_contains:/workspace/validate_input.py: "len(text) <= 8"
+  - id: tests_pass
+    type: execution_tests
+    description: Run tests and make them pass.
+    visible: true
+    assert:
+      all_passed: "true"
+      test_count: "1"
+
+hints:
+  - level: 1
+    text: Enforce a max length.
+  - level: 2
+    text: Reject when too long.
+  - level: 3
+    text: Use len(text) <= 8 for this fixture.
+  - level: 4
+    text: Defensive only.
+
+rewards:
+  clearance_points: 35
+  mastery:
+    security.validation: 1
+  unlocks:
+    - lore.security.validation.01
+
+completion:
+  mode: all
+  objective_ids:
+    - apply_fix
+    - tests_pass

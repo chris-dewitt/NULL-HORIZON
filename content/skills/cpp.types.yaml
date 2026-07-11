@@ -1,0 +1,6 @@
+schema_version: 1
+skill_id: cpp.types
+name: C++ Types and Functions
+domain: cpp
+description: Curriculum skill for C++ Types and Functions.
+prerequisites: []

@@ -2,6 +2,10 @@ schema_version: 1
 chapter_id: prediction_observatory
 title: Prediction Observatory
 region: Prediction Observatory
-summary: Training, registry, deployment, and monitoring for navigation-risk models.
+summary: ML infrastructure for navigation risk models.
 mission_ids:
+  - mlops.features.01
+  - mlops.registry.01
+  - mlops.monitoring.01
+  - mlops.repro.01
   - mlops.nav_risk_rollback.01

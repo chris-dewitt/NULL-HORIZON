@@ -1,0 +1,7 @@
+schema_version: 1
+skill_id: mlops.monitoring
+name: Drift Monitoring
+domain: mlops
+description: Curriculum skill for Drift Monitoring.
+prerequisites:
+  - mlops.features

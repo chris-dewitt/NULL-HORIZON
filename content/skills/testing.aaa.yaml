@@ -1,0 +1,7 @@
+schema_version: 1
+skill_id: testing.aaa
+name: Arrange Act Assert
+domain: testing
+description: Curriculum skill for Arrange Act Assert.
+prerequisites:
+  - testing.unit

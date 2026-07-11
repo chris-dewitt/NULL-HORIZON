@@ -1,0 +1,6 @@
+schema_version: 1
+skill_id: security.threat_model
+name: Threat Modeling
+domain: security
+description: Curriculum skill for Threat Modeling.
+prerequisites: []

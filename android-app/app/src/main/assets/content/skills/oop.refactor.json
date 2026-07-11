@@ -1,0 +1,10 @@
+{
+  "description": "Curriculum skill for Responsibility Refactoring.",
+  "domain": "oop",
+  "name": "Responsibility Refactoring",
+  "prerequisites": [
+    "oop.polymorphism"
+  ],
+  "schema_version": 1,
+  "skill_id": "oop.refactor"
+}

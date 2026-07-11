@@ -1,0 +1,95 @@
+schema_version: 1
+mission_id: comms.auth_concept.01
+version: 1.0.0
+chapter_id: communications_spire
+title: Auth Token Check
+summary: Require a verified token before releasing coordinates.
+difficulty: practiced
+
+requirements:
+  app_version: ">=0.1.0"
+  online: false
+  prerequisite_skills:
+    - api.http
+
+skills:
+  primary: api.auth
+  secondary:
+    - api.http
+
+narrative:
+  briefing_dialogue_id: dialogue.comms.auth_concept.01.briefing
+  success_dialogue_id: dialogue.comms.auth_concept.01.success
+
+tools:
+  - systems_panel
+
+environment:
+  schema_version: 1
+  template_id: local.state.v1
+  seed: 113
+  initial_state:
+    token: missing
+    coords_released: False
+  actions:
+    - id: present_token
+      label: Attach operator token
+      effects:
+        token: present
+    - id: verify
+      label: Verify token signature
+      requires:
+        token: present
+      effects:
+        token: verified
+    - id: release
+      label: Release restricted coordinates
+      requires:
+        token: verified
+      effects:
+        coords_released: True
+
+objectives:
+  - id: tok
+    type: state_assertion
+    description: Attach a token.
+    visible: true
+    assert:
+      token: present
+  - id: ver
+    type: state_assertion
+    description: Verify the token.
+    visible: true
+    assert:
+      token: verified
+  - id: rel
+    type: state_assertion
+    description: Release coordinates only after verify.
+    visible: true
+    assert:
+      coords_released: True
+
+hints:
+  - level: 1
+    text: Attach a token first.
+  - level: 2
+    text: Verify before release.
+  - level: 3
+    text: Never release on missing token.
+  - level: 4
+    text: Complete verify then release.
+
+rewards:
+  clearance_points: 25
+  mastery:
+    api.auth: 1
+    api.http: 1
+  unlocks:
+    - lore.comms.auth_concept.01
+
+completion:
+  mode: all
+  objective_ids:
+    - tok
+    - ver
+    - rel

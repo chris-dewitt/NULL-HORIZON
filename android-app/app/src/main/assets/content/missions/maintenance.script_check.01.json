@@ -1,0 +1,157 @@
+{
+  "chapter_id": "maintenance_deck",
+  "completion": {
+    "mode": "all",
+    "objective_ids": [
+      "apply_fix",
+      "tests_pass"
+    ]
+  },
+  "difficulty": "practiced",
+  "environment": {
+    "schema_version": 1,
+    "seed": 55,
+    "template_id": "python.editor.fake.v1",
+    "workspace": {
+      "execution": {
+        "fixtures": [
+          {
+            "id": "fixed",
+            "match": {
+              "file_contains": {
+                "/workspace/health.py": "status = 'ok'"
+              }
+            },
+            "result": {
+              "status": "completed",
+              "tests": [
+                {
+                  "id": "test_health",
+                  "status": "passed"
+                }
+              ]
+            }
+          },
+          {
+            "id": "broken",
+            "match": {
+              "file_contains": {
+                "/workspace/health.py": "status = 'degraded'"
+              }
+            },
+            "result": {
+              "status": "completed",
+              "tests": [
+                {
+                  "id": "test_health",
+                  "message": "Behavior still incorrect",
+                  "status": "failed"
+                }
+              ]
+            }
+          },
+          {
+            "id": "default_fail",
+            "result": {
+              "status": "completed",
+              "tests": [
+                {
+                  "id": "test_health",
+                  "message": "Unexpected workspace state",
+                  "status": "failed"
+                }
+              ]
+            }
+          }
+        ],
+        "provider": "fake"
+      },
+      "files": [
+        {
+          "content": "def solve() -> bool:\n    status = 'degraded'\n    return status == \"ok\"\n",
+          "editable": true,
+          "path": "/workspace/health.py"
+        },
+        {
+          "content": "from health import solve\n\n\ndef test_health():\n    assert solve() is True\n",
+          "editable": false,
+          "path": "/workspace/test_solve.py"
+        }
+      ]
+    }
+  },
+  "hints": [
+    {
+      "level": 1,
+      "text": "Open health.py."
+    },
+    {
+      "level": 2,
+      "text": "status is wrong."
+    },
+    {
+      "level": 3,
+      "text": "Set status to ok."
+    },
+    {
+      "level": 4,
+      "text": "Run tests."
+    }
+  ],
+  "mission_id": "maintenance.script_check.01",
+  "narrative": {
+    "briefing_dialogue_id": "dialogue.maintenance.script_check.01.briefing",
+    "success_dialogue_id": "dialogue.maintenance.script_check.01.success"
+  },
+  "objectives": [
+    {
+      "assert": {
+        "file_contains:/workspace/health.py": "status = 'ok'"
+      },
+      "description": "Apply the required Python fix.",
+      "id": "apply_fix",
+      "type": "file_assertion",
+      "visible": true
+    },
+    {
+      "assert": {
+        "all_passed": "true",
+        "test_count": "1"
+      },
+      "description": "Run tests and make them pass.",
+      "id": "tests_pass",
+      "type": "execution_tests",
+      "visible": true
+    }
+  ],
+  "requirements": {
+    "app_version": ">=0.1.0",
+    "online": false,
+    "prerequisite_skills": [
+      "linux.search"
+    ]
+  },
+  "rewards": {
+    "clearance_points": 35,
+    "mastery": {
+      "linux.scripts": 1
+    },
+    "unlocks": [
+      "lore.maintenance.script_check.01"
+    ]
+  },
+  "schema_version": 1,
+  "skills": {
+    "primary": "linux.scripts",
+    "secondary": [
+      "python.functions"
+    ]
+  },
+  "summary": "Repair a tiny health-check script used by deck automation.",
+  "title": "Simple Health Script",
+  "tools": [
+    "python_editor",
+    "test_console"
+  ],
+  "version": "1.0.0"
+}

@@ -1,0 +1,7 @@
+schema_version: 1
+skill_id: oop.composition
+name: Composition
+domain: oop
+description: Curriculum skill for Composition.
+prerequisites:
+  - oop.classes

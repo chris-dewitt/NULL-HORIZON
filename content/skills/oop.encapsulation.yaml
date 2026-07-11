@@ -1,0 +1,7 @@
+schema_version: 1
+skill_id: oop.encapsulation
+name: Encapsulation
+domain: oop
+description: Curriculum skill for Encapsulation.
+prerequisites:
+  - oop.classes

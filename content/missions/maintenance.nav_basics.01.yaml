@@ -1,0 +1,82 @@
+schema_version: 1
+mission_id: maintenance.nav_basics.01
+version: 1.0.0
+chapter_id: maintenance_deck
+title: Deck Navigation
+summary: Navigate the maintenance deck filesystem to the tool locker.
+difficulty: introductory
+
+requirements:
+  app_version: ">=0.1.0"
+  online: false
+  prerequisite_skills: []
+
+skills:
+  primary: linux.navigation
+  secondary: []
+
+narrative:
+  briefing_dialogue_id: dialogue.maintenance.nav_basics.01.briefing
+  success_dialogue_id: dialogue.maintenance.nav_basics.01.success
+
+tools:
+  - terminal
+
+environment:
+  schema_version: 1
+  template_id: terminal.vfs.v1
+  seed: 51
+  filesystem:
+    cwd: /home/operator
+    entries:
+      - path: /home/operator
+        type: dir
+      - path: /home/operator/README.txt
+        type: file
+        content: |
+          Tools are under /opt/deck/tools.
+      - path: /opt/deck/tools
+        type: dir
+      - path: /opt/deck/tools/wrench.txt
+        type: file
+        content: |
+          calibrated
+
+objectives:
+  - id: reach_tools
+    type: filesystem_state
+    description: Navigate to /opt/deck/tools.
+    visible: true
+    assert:
+      cwd: /opt/deck/tools
+  - id: list_tools
+    type: command_output
+    description: List the tool locker.
+    visible: true
+    assert:
+      last_command: ls
+      stdout_contains: wrench.txt
+      exit_code: 0
+
+hints:
+  - level: 1
+    text: Start with pwd and ls.
+  - level: 2
+    text: Read README.txt for the path.
+  - level: 3
+    text: cd /opt/deck/tools
+  - level: 4
+    text: Run ls in the tool locker.
+
+rewards:
+  clearance_points: 30
+  mastery:
+    linux.navigation: 1
+  unlocks:
+    - lore.maintenance.nav_basics.01
+
+completion:
+  mode: all
+  objective_ids:
+    - reach_tools
+    - list_tools

@@ -1,0 +1,5 @@
+schema_version: 1
+reward_id: lore.security.threat_model.01
+kind: lore
+name: Lore security.threat_model.01
+description: Unlock for completing security.threat_model.01.

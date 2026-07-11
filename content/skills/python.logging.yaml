@@ -1,0 +1,7 @@
+schema_version: 1
+skill_id: python.logging
+name: Logging
+domain: python
+description: Curriculum skill for Logging.
+prerequisites:
+  - python.functions

@@ -1,0 +1,14 @@
+{
+  "chapter_id": "drone_foundry",
+  "mission_ids": [
+    "drone.classes.01",
+    "drone.encapsulate.01",
+    "drone.compose.01",
+    "drone.poly.01",
+    "drone.capstone.01"
+  ],
+  "region": "Drone Foundry",
+  "schema_version": 1,
+  "summary": "Object-oriented design for repair drones.",
+  "title": "Drone Foundry"
+}

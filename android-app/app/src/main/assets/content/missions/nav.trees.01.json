@@ -1,0 +1,155 @@
+{
+  "chapter_id": "navigation_array",
+  "completion": {
+    "mode": "all",
+    "objective_ids": [
+      "apply_fix",
+      "tests_pass"
+    ]
+  },
+  "difficulty": "practiced",
+  "environment": {
+    "schema_version": 1,
+    "seed": 104,
+    "template_id": "python.editor.fake.v1",
+    "workspace": {
+      "execution": {
+        "fixtures": [
+          {
+            "id": "fixed",
+            "match": {
+              "file_contains": {
+                "/workspace/nav.py": "depth == 2"
+              }
+            },
+            "result": {
+              "status": "completed",
+              "tests": [
+                {
+                  "id": "test_solve",
+                  "status": "passed"
+                }
+              ]
+            }
+          },
+          {
+            "id": "broken",
+            "match": {
+              "file_contains": {
+                "/workspace/nav.py": "return False"
+              }
+            },
+            "result": {
+              "status": "completed",
+              "tests": [
+                {
+                  "id": "test_solve",
+                  "message": "Behavior still incorrect",
+                  "status": "failed"
+                }
+              ]
+            }
+          },
+          {
+            "id": "default_fail",
+            "result": {
+              "status": "completed",
+              "tests": [
+                {
+                  "id": "test_solve",
+                  "message": "Unexpected workspace state",
+                  "status": "failed"
+                }
+              ]
+            }
+          }
+        ],
+        "provider": "fake"
+      },
+      "files": [
+        {
+          "content": "def solve() -> bool:\n    depth = 2\n    return False\n",
+          "editable": true,
+          "path": "/workspace/nav.py"
+        },
+        {
+          "content": "from nav import solve\n\n\ndef test_solve():\n    assert solve() is True\n",
+          "editable": false,
+          "path": "/workspace/test_solve.py"
+        }
+      ]
+    }
+  },
+  "hints": [
+    {
+      "level": 1,
+      "text": "Use the depth value."
+    },
+    {
+      "level": 2,
+      "text": "Return depth == 2."
+    },
+    {
+      "level": 3,
+      "text": "depth check"
+    },
+    {
+      "level": 4,
+      "text": "Run tests."
+    }
+  ],
+  "mission_id": "nav.trees.01",
+  "narrative": {
+    "briefing_dialogue_id": "dialogue.nav.trees.01.briefing",
+    "success_dialogue_id": "dialogue.nav.trees.01.success"
+  },
+  "objectives": [
+    {
+      "assert": {
+        "file_contains:/workspace/nav.py": "depth == 2"
+      },
+      "description": "Apply the required Python fix.",
+      "id": "apply_fix",
+      "type": "file_assertion",
+      "visible": true
+    },
+    {
+      "assert": {
+        "all_passed": "true",
+        "test_count": "1"
+      },
+      "description": "Run tests and make them pass.",
+      "id": "tests_pass",
+      "type": "execution_tests",
+      "visible": true
+    }
+  ],
+  "requirements": {
+    "app_version": ">=0.1.0",
+    "online": false,
+    "prerequisite_skills": [
+      "dsa.maps"
+    ]
+  },
+  "rewards": {
+    "clearance_points": 35,
+    "mastery": {
+      "dsa.trees": 1
+    },
+    "unlocks": [
+      "lore.nav.trees.01"
+    ]
+  },
+  "schema_version": 1,
+  "skills": {
+    "primary": "dsa.trees",
+    "secondary": []
+  },
+  "summary": "Compute whether a tiny tree depth is valid.",
+  "title": "Tree Depth Check",
+  "tools": [
+    "python_editor",
+    "test_console"
+  ],
+  "version": "1.0.0"
+}

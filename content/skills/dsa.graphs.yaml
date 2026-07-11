@@ -1,0 +1,7 @@
+schema_version: 1
+skill_id: dsa.graphs
+name: Graph Traversal
+domain: dsa
+description: Curriculum skill for Graph Traversal.
+prerequisites:
+  - dsa.trees

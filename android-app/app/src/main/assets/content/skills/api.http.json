@@ -1,0 +1,10 @@
+{
+  "description": "Curriculum skill for HTTP Methods and Status.",
+  "domain": "api",
+  "name": "HTTP Methods and Status",
+  "prerequisites": [
+    "systems.api_trace"
+  ],
+  "schema_version": 1,
+  "skill_id": "api.http"
+}

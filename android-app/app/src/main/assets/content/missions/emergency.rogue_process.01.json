@@ -1,5 +1,5 @@
 {
-  "chapter_id": "emergency_interface",
+  "chapter_id": "maintenance_deck",
   "completion": {
     "mode": "all",
     "objective_ids": [
@@ -7,7 +7,7 @@
       "stop_rogue"
     ]
   },
-  "difficulty": "introductory",
+  "difficulty": "challenge",
   "environment": {
     "filesystem": {
       "cwd": "/home/operator",

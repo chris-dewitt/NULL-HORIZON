@@ -1,0 +1,7 @@
+schema_version: 1
+skill_id: linux.search
+name: Search
+domain: linux
+description: Curriculum skill for Search.
+prerequisites:
+  - linux.inspection

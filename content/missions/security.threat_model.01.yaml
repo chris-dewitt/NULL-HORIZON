@@ -1,0 +1,96 @@
+schema_version: 1
+mission_id: security.threat_model.01
+version: 1.0.0
+chapter_id: black_vault
+title: Threat Model Pass
+summary: Identify assets, actors, and entry points for a fictional vault service.
+difficulty: introductory
+
+requirements:
+  app_version: ">=0.1.0"
+  online: false
+  prerequisite_skills: []
+
+skills:
+  primary: security.threat_model
+  secondary: []
+
+narrative:
+  briefing_dialogue_id: dialogue.security.threat_model.01.briefing
+  success_dialogue_id: dialogue.security.threat_model.01.success
+
+tools:
+  - systems_panel
+
+environment:
+  schema_version: 1
+  template_id: local.state.v1
+  seed: 131
+  initial_state:
+    assets: unknown
+    actors: unknown
+    entrypoints: unknown
+    modeled: False
+  actions:
+    - id: list_assets
+      label: List sensitive assets
+      effects:
+        assets: listed
+    - id: list_actors
+      label: List trust boundaries
+      requires:
+        assets: listed
+      effects:
+        actors: listed
+    - id: list_entry
+      label: List entry points
+      requires:
+        actors: listed
+      effects:
+        entrypoints: listed
+        modeled: True
+
+objectives:
+  - id: a
+    type: state_assertion
+    description: List assets.
+    visible: true
+    assert:
+      assets: listed
+  - id: b
+    type: state_assertion
+    description: List actors/trust boundaries.
+    visible: true
+    assert:
+      actors: listed
+  - id: c
+    type: state_assertion
+    description: List entry points.
+    visible: true
+    assert:
+      entrypoints: listed
+      modeled: True
+
+hints:
+  - level: 1
+    text: Start with assets.
+  - level: 2
+    text: Then trust boundaries.
+  - level: 3
+    text: Then entry points.
+  - level: 4
+    text: No offensive steps.
+
+rewards:
+  clearance_points: 25
+  mastery:
+    security.threat_model: 1
+  unlocks:
+    - lore.security.threat_model.01
+
+completion:
+  mode: all
+  objective_ids:
+    - a
+    - b
+    - c

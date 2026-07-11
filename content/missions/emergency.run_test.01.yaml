@@ -1,0 +1,112 @@
+schema_version: 1
+mission_id: emergency.run_test.01
+version: 1.0.0
+chapter_id: emergency_interface
+title: Run a Test
+summary: Fix a trivial readiness check and run its test.
+difficulty: practiced
+
+requirements:
+  app_version: ">=0.1.0"
+  online: false
+  prerequisite_skills: []
+
+skills:
+  primary: python.testing
+  secondary:
+    - python.functions
+
+narrative:
+  briefing_dialogue_id: dialogue.emergency.run_test.01.briefing
+  success_dialogue_id: dialogue.emergency.run_test.01.success
+
+tools:
+  - python_editor
+  - test_console
+
+environment:
+  schema_version: 1
+  template_id: python.editor.fake.v1
+  seed: 42
+  workspace:
+    files:
+      - path: /workspace/ready.py
+        editable: true
+        content: |
+          def solve() -> bool:
+              return False
+      - path: /workspace/test_solve.py
+        editable: false
+        content: |
+          from ready import solve
+
+
+          def test_ready():
+              assert solve() is True
+    execution:
+      provider: fake
+      fixtures:
+        - id: fixed
+          match:
+            file_contains:
+              /workspace/ready.py: "return True"
+          result:
+            status: completed
+            tests:
+              - id: test_ready
+                status: passed
+        - id: broken
+          match:
+            file_contains:
+              /workspace/ready.py: "return False"
+          result:
+            status: completed
+            tests:
+              - id: test_ready
+                status: failed
+                message: Behavior still incorrect
+        - id: default_fail
+          result:
+            status: completed
+            tests:
+              - id: test_ready
+                status: failed
+                message: Unexpected workspace state
+
+objectives:
+  - id: apply_fix
+    type: file_assertion
+    description: Apply the required Python fix.
+    visible: true
+    assert:
+      file_contains:/workspace/ready.py: "return True"
+  - id: tests_pass
+    type: execution_tests
+    description: Run tests and make them pass.
+    visible: true
+    assert:
+      all_passed: "true"
+      test_count: "1"
+
+hints:
+  - level: 1
+    text: Open ready.py.
+  - level: 2
+    text: The function should return True.
+  - level: 3
+    text: Change return False to return True.
+  - level: 4
+    text: Run tests.
+
+rewards:
+  clearance_points: 35
+  mastery:
+    python.testing: 1
+  unlocks:
+    - lore.emergency.run_test.01
+
+completion:
+  mode: all
+  objective_ids:
+    - apply_fix
+    - tests_pass

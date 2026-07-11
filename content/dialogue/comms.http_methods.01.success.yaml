@@ -1,0 +1,7 @@
+schema_version: 1
+dialogue_id: dialogue.comms.http_methods.01.success
+lines:
+  - speaker: ORION-A
+    text: Mission comms.http_methods.01 complete.
+  - speaker: SYSTEM
+    text: Progress recorded.

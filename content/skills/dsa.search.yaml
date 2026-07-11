@@ -1,0 +1,7 @@
+schema_version: 1
+skill_id: dsa.search
+name: Searching and Sorting
+domain: dsa
+description: Curriculum skill for Searching and Sorting.
+prerequisites:
+  - dsa.lists

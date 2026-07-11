@@ -1,0 +1,7 @@
+schema_version: 1
+skill_id: dsa.maps
+name: Sets and Hash Maps
+domain: dsa
+description: Curriculum skill for Sets and Hash Maps.
+prerequisites:
+  - dsa.lists

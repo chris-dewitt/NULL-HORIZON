@@ -1,6 +1,6 @@
 schema_version: 1
 skill_id: linux.navigation
-name: Navigate a filesystem
+name: Filesystem Navigation
 domain: linux
-description: Move between directories and inspect paths with pwd, ls, and cd.
+description: Curriculum skill for Filesystem Navigation.
 prerequisites: []

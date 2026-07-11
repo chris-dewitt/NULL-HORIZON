@@ -1,7 +1,7 @@
 {
-  "description": "Inspect DAG stages, quality gates, and failure status in a batch pipeline.",
-  "domain": "data_engineering",
-  "name": "Validate pipeline stages",
+  "description": "Curriculum skill for Pipeline Validation.",
+  "domain": "data",
+  "name": "Pipeline Validation",
   "prerequisites": [],
   "schema_version": 1,
   "skill_id": "data.pipeline.validate"

@@ -1,0 +1,74 @@
+schema_version: 1
+mission_id: maintenance.inspect_log.01
+version: 1.0.0
+chapter_id: maintenance_deck
+title: Inspect Service Log
+summary: Find and read the maintenance service log.
+difficulty: introductory
+
+requirements:
+  app_version: ">=0.1.0"
+  online: false
+  prerequisite_skills:
+    - linux.navigation
+
+skills:
+  primary: linux.inspection
+  secondary:
+    - linux.navigation
+
+narrative:
+  briefing_dialogue_id: dialogue.maintenance.inspect_log.01.briefing
+  success_dialogue_id: dialogue.maintenance.inspect_log.01.success
+
+tools:
+  - terminal
+
+environment:
+  schema_version: 1
+  template_id: terminal.vfs.v1
+  seed: 52
+  filesystem:
+    cwd: /home/operator
+    entries:
+      - path: /home/operator
+        type: dir
+      - path: /var/log/maintenance
+        type: dir
+      - path: /var/log/maintenance/service.log
+        type: file
+        content: |
+          INFO ok
+          ERROR pump-2 stall
+
+objectives:
+  - id: read_log
+    type: command_output
+    description: Read service.log and confirm the pump stall.
+    visible: true
+    assert:
+      last_command: cat /var/log/maintenance/service.log
+      stdout_contains: pump-2 stall
+      exit_code: 0
+
+hints:
+  - level: 1
+    text: Logs are under /var/log/maintenance.
+  - level: 2
+    text: Use cat on service.log.
+  - level: 3
+    text: Confirm pump-2 stall appears.
+  - level: 4
+    text: cat /var/log/maintenance/service.log
+
+rewards:
+  clearance_points: 30
+  mastery:
+    linux.inspection: 1
+  unlocks:
+    - lore.maintenance.inspect_log.01
+
+completion:
+  mode: all
+  objective_ids:
+    - read_log

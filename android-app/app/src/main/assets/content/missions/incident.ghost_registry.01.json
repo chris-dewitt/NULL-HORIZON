@@ -1,5 +1,5 @@
 {
-  "chapter_id": "incident_bridge",
+  "chapter_id": "horizon_core",
   "completion": {
     "mode": "all",
     "objective_ids": [
@@ -8,7 +8,7 @@
       "restore_policy"
     ]
   },
-  "difficulty": "challenge",
+  "difficulty": "practiced",
   "environment": {
     "databases": [
       {

@@ -1,0 +1,7 @@
+schema_version: 1
+skill_id: computational_thinking.incident
+name: Incident Objectives
+domain: computational_thinking
+description: Curriculum skill for Incident Objectives.
+prerequisites:
+  - computational_thinking.hypothesis

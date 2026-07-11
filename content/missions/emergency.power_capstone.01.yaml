@@ -1,0 +1,112 @@
+schema_version: 1
+mission_id: emergency.power_capstone.01
+version: 1.0.0
+chapter_id: emergency_interface
+title: Restore Emergency Power
+summary: Restore emergency power and open a communication channel to ORION.
+difficulty: challenge
+
+requirements:
+  app_version: ">=0.1.0"
+  online: false
+  prerequisite_skills:
+    - computational_thinking.observe
+
+skills:
+  primary: computational_thinking.incident
+  secondary:
+    - computational_thinking.observe
+
+narrative:
+  briefing_dialogue_id: dialogue.emergency.power_capstone.01.briefing
+  success_dialogue_id: dialogue.emergency.power_capstone.01.success
+
+tools:
+  - systems_panel
+
+environment:
+  schema_version: 1
+  template_id: local.state.v1
+  seed: 43
+  initial_state:
+    main_bus: offline
+    comm_link: down
+    orion_channel: closed
+    power_restored: False
+  actions:
+    - id: diagnose_bus
+      label: Diagnose main bus
+      effects:
+        diagnosed: True
+    - id: restore_bus
+      label: Restore main bus
+      requires:
+        diagnosed: True
+      effects:
+        main_bus: online
+    - id: open_comm
+      label: Open comm link
+      requires:
+        main_bus: online
+      effects:
+        comm_link: up
+    - id: hail_orion
+      label: Open ORION channel
+      requires:
+        comm_link: up
+      effects:
+        orion_channel: open
+        power_restored: True
+
+objectives:
+  - id: diagnose
+    type: state_assertion
+    description: Diagnose the main bus.
+    visible: true
+    assert:
+      diagnosed: True
+  - id: bus
+    type: state_assertion
+    description: Bring the main bus online.
+    visible: true
+    assert:
+      main_bus: online
+  - id: comm
+    type: state_assertion
+    description: Open the communication link.
+    visible: true
+    assert:
+      comm_link: up
+  - id: orion
+    type: state_assertion
+    description: Open the ORION channel.
+    visible: true
+    assert:
+      orion_channel: open
+      power_restored: True
+
+hints:
+  - level: 1
+    text: Diagnose before restoring power.
+  - level: 2
+    text: Restore the main bus next.
+  - level: 3
+    text: Open the comm link after the bus is online.
+  - level: 4
+    text: Finally open the ORION channel.
+
+rewards:
+  clearance_points: 50
+  mastery:
+    computational_thinking.incident: 1
+    computational_thinking.observe: 1
+  unlocks:
+    - lore.emergency.power_capstone.01
+
+completion:
+  mode: all
+  objective_ids:
+    - diagnose
+    - bus
+    - comm
+    - orion

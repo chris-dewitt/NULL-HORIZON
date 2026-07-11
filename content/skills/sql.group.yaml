@@ -1,0 +1,7 @@
+schema_version: 1
+skill_id: sql.group
+name: Grouping
+domain: sql
+description: Curriculum skill for Grouping.
+prerequisites:
+  - sql.aggregate

@@ -1,0 +1,7 @@
+schema_version: 1
+skill_id: security.authz
+name: Authn versus Authz
+domain: security
+description: Curriculum skill for Authn versus Authz.
+prerequisites:
+  - security.threat_model

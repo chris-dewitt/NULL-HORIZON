@@ -1,0 +1,121 @@
+schema_version: 1
+mission_id: drone.capstone.01
+version: 1.0.0
+chapter_id: drone_foundry
+title: Composable Safety Modules
+summary: Replace a brittle hierarchy with composed safety checks.
+difficulty: challenge
+
+requirements:
+  app_version: ">=0.1.0"
+  online: false
+  prerequisite_skills: []
+
+skills:
+  primary: oop.refactor
+  secondary: []
+
+narrative:
+  briefing_dialogue_id: dialogue.drone.capstone.01.briefing
+  success_dialogue_id: dialogue.drone.capstone.01.success
+
+tools:
+  - python_editor
+  - test_console
+
+environment:
+  schema_version: 1
+  template_id: python.editor.fake.v1
+  seed: 94
+  workspace:
+    files:
+      - path: /workspace/drone.py
+        editable: true
+        content: |
+          class Safety:
+              def ok(self):
+                  return True
+
+          class Drone:
+              def __init__(self):
+                  self.safety = None
+
+          def solve() -> bool:
+              d = Drone()
+              d.safety = None
+              return False
+      - path: /workspace/test_solve.py
+        editable: false
+        content: |
+          from drone import solve
+
+
+          def test_solve():
+              assert solve() is True
+    execution:
+      provider: fake
+      fixtures:
+        - id: fixed
+          match:
+            file_contains:
+              /workspace/drone.py: "Safety()"
+          result:
+            status: completed
+            tests:
+              - id: test_solve
+                status: passed
+        - id: broken
+          match:
+            file_contains:
+              /workspace/drone.py: "return False"
+          result:
+            status: completed
+            tests:
+              - id: test_solve
+                status: failed
+                message: Behavior still incorrect
+        - id: default_fail
+          result:
+            status: completed
+            tests:
+              - id: test_solve
+                status: failed
+                message: Unexpected workspace state
+
+objectives:
+  - id: apply_fix
+    type: file_assertion
+    description: Apply the required Python fix.
+    visible: true
+    assert:
+      file_contains:/workspace/drone.py: "Safety()"
+  - id: tests_pass
+    type: execution_tests
+    description: Run tests and make them pass.
+    visible: true
+    assert:
+      all_passed: "true"
+      test_count: "1"
+
+hints:
+  - level: 1
+    text: Attach Safety().
+  - level: 2
+    text: self.safety = Safety()
+  - level: 3
+    text: Return d.safety.ok()
+  - level: 4
+    text: Composition over inheritance.
+
+rewards:
+  clearance_points: 45
+  mastery:
+    oop.refactor: 1
+  unlocks:
+    - lore.drone.capstone.01
+
+completion:
+  mode: all
+  objective_ids:
+    - apply_fix
+    - tests_pass

@@ -1,7 +1,7 @@
 schema_version: 1
 skill_id: computational_thinking.hypothesis
-name: Form a hypothesis
+name: Form Hypotheses
 domain: computational_thinking
-description: Decide which control is likely responsible for a failure.
+description: Curriculum skill for Form Hypotheses.
 prerequisites:
   - computational_thinking.observe

@@ -1,0 +1,7 @@
+schema_version: 1
+skill_id: linux.permissions
+name: Permissions and Environment
+domain: linux
+description: Curriculum skill for Permissions and Environment.
+prerequisites:
+  - linux.inspection

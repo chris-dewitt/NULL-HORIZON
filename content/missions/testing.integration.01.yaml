@@ -1,0 +1,99 @@
+schema_version: 1
+mission_id: testing.integration.01
+version: 1.0.0
+chapter_id: verification_chamber
+title: Integration Harness
+summary: Wire unit, contract, and integration checks before certifying a patch.
+difficulty: practiced
+
+requirements:
+  app_version: ">=0.1.0"
+  online: false
+  prerequisite_skills:
+    - testing.aaa
+
+skills:
+  primary: testing.integration
+  secondary:
+    - testing.aaa
+
+narrative:
+  briefing_dialogue_id: dialogue.testing.integration.01.briefing
+  success_dialogue_id: dialogue.testing.integration.01.success
+
+tools:
+  - systems_panel
+
+environment:
+  schema_version: 1
+  template_id: local.state.v1
+  seed: 123
+  initial_state:
+    unit: pending
+    contract: pending
+    integration: pending
+    certified: False
+  actions:
+    - id: run_unit
+      label: Run unit suite
+      effects:
+        unit: pass
+    - id: run_contract
+      label: Run contract checks
+      requires:
+        unit: pass
+      effects:
+        contract: pass
+    - id: run_integration
+      label: Run integration harness
+      requires:
+        contract: pass
+      effects:
+        integration: pass
+        certified: True
+
+objectives:
+  - id: u
+    type: state_assertion
+    description: Pass unit tests.
+    visible: true
+    assert:
+      unit: pass
+  - id: c
+    type: state_assertion
+    description: Pass contract checks.
+    visible: true
+    assert:
+      contract: pass
+  - id: i
+    type: state_assertion
+    description: Pass integration and certify.
+    visible: true
+    assert:
+      integration: pass
+      certified: True
+
+hints:
+  - level: 1
+    text: Start with unit tests.
+  - level: 2
+    text: Then contracts.
+  - level: 3
+    text: Integration last.
+  - level: 4
+    text: Certification requires all three.
+
+rewards:
+  clearance_points: 25
+  mastery:
+    testing.integration: 1
+    testing.aaa: 1
+  unlocks:
+    - lore.testing.integration.01
+
+completion:
+  mode: all
+  objective_ids:
+    - u
+    - c
+    - i

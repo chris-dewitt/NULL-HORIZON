@@ -1,0 +1,7 @@
+schema_version: 1
+skill_id: security.least_privilege
+name: Least Privilege
+domain: security
+description: Curriculum skill for Least Privilege.
+prerequisites:
+  - security.authz

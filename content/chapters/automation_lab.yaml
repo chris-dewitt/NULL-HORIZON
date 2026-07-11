@@ -2,7 +2,13 @@ schema_version: 1
 chapter_id: automation_lab
 title: Automation Lab
 region: Automation Lab
-summary: Repair Python automation and lock behavior with regression tests.
+summary: Python automation for life-support systems.
 mission_ids:
+  - automation.types.01
   - automation.pressure_threshold.01
-  - automation.regression_guard.01
+  - automation.loops.01
+  - automation.collections.01
+  - automation.exceptions.01
+  - automation.files.01
+  - automation.modules.01
+  - automation.oxygen_capstone.01

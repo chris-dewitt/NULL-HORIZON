@@ -1,0 +1,115 @@
+schema_version: 1
+mission_id: automation.modules.01
+version: 1.0.0
+chapter_id: automation_lab
+title: Import Helper Module
+summary: Call a helper through a module-style function name.
+difficulty: practiced
+
+requirements:
+  app_version: ">=0.1.0"
+  online: false
+  prerequisite_skills:
+    - python.functions
+
+skills:
+  primary: python.modules
+  secondary: []
+
+narrative:
+  briefing_dialogue_id: dialogue.automation.modules.01.briefing
+  success_dialogue_id: dialogue.automation.modules.01.success
+
+tools:
+  - python_editor
+  - test_console
+
+environment:
+  schema_version: 1
+  template_id: python.editor.fake.v1
+  seed: 85
+  workspace:
+    files:
+      - path: /workspace/solve.py
+        editable: true
+        content: |
+          def helper() -> bool:
+              return True
+
+          def solve() -> bool:
+              return False
+      - path: /workspace/test_solve.py
+        editable: false
+        content: |
+          from solve import solve
+
+
+          def test_solve():
+              assert solve() is True
+    execution:
+      provider: fake
+      fixtures:
+        - id: fixed
+          match:
+            file_contains:
+              /workspace/solve.py: "helper()"
+          result:
+            status: completed
+            tests:
+              - id: test_solve
+                status: passed
+        - id: broken
+          match:
+            file_contains:
+              /workspace/solve.py: "return False"
+          result:
+            status: completed
+            tests:
+              - id: test_solve
+                status: failed
+                message: Behavior still incorrect
+        - id: default_fail
+          result:
+            status: completed
+            tests:
+              - id: test_solve
+                status: failed
+                message: Unexpected workspace state
+
+objectives:
+  - id: apply_fix
+    type: file_assertion
+    description: Apply the required Python fix.
+    visible: true
+    assert:
+      file_contains:/workspace/solve.py: "helper()"
+  - id: tests_pass
+    type: execution_tests
+    description: Run tests and make them pass.
+    visible: true
+    assert:
+      all_passed: "true"
+      test_count: "1"
+
+hints:
+  - level: 1
+    text: Call helper().
+  - level: 2
+    text: Do not hardcode True in solve.
+  - level: 3
+    text: return helper()
+  - level: 4
+    text: Run tests.
+
+rewards:
+  clearance_points: 35
+  mastery:
+    python.modules: 1
+  unlocks:
+    - lore.automation.modules.01
+
+completion:
+  mode: all
+  objective_ids:
+    - apply_fix
+    - tests_pass

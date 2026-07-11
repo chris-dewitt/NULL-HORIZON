@@ -5,24 +5,19 @@ chapter_id: emergency_interface
 title: Wake Sequence
 summary: Bring the emergency interface online and acknowledge the first ORION fragment.
 difficulty: introductory
-
 requirements:
-  app_version: ">=0.1.0"
+  app_version: '>=0.1.0'
   online: false
   prerequisite_skills: []
-
 skills:
   primary: computational_thinking.observe
   secondary:
-    - computational_thinking.hypothesis
-
+  - computational_thinking.hypothesis
 narrative:
   briefing_dialogue_id: dialogue.emergency.wake_sequence.briefing
   success_dialogue_id: dialogue.emergency.wake_sequence.success
-
 tools:
-  - systems_panel
-
+- systems_panel
 environment:
   schema_version: 1
   template_id: local.state.v1
@@ -33,76 +28,72 @@ environment:
     orion_fragment: silent
     wake_ack: false
   actions:
-    - id: load_operator_profile
-      label: Load emergency operator profile
-      effects:
-        operator_profile: loaded
-    - id: energize_emergency_bus
-      label: Energize emergency bus
-      requires:
-        operator_profile: loaded
-      effects:
-        emergency_bus: online
-    - id: hail_orion_fragment
-      label: Hail ORION fragment A
-      requires:
-        emergency_bus: online
-      effects:
-        orion_fragment: responding
-    - id: acknowledge_wake
-      label: Acknowledge wake sequence
-      requires:
-        orion_fragment: responding
-      effects:
-        wake_ack: true
-
-objectives:
-  - id: load_profile
-    type: state_assertion
-    description: Load the emergency operator profile.
-    visible: true
-    assert:
+  - id: load_operator_profile
+    label: Load emergency operator profile
+    effects:
       operator_profile: loaded
-  - id: bus_online
-    type: state_assertion
-    description: Bring the emergency bus online.
-    visible: true
-    assert:
+  - id: energize_emergency_bus
+    label: Energize emergency bus
+    requires:
+      operator_profile: loaded
+    effects:
       emergency_bus: online
-  - id: fragment_responding
-    type: state_assertion
-    description: Get a response from ORION fragment A.
-    visible: true
-    assert:
+  - id: hail_orion_fragment
+    label: Hail ORION fragment A
+    requires:
+      emergency_bus: online
+    effects:
       orion_fragment: responding
-  - id: acknowledge
-    type: state_assertion
-    description: Acknowledge the completed wake sequence.
-    visible: true
-    assert:
+  - id: acknowledge_wake
+    label: Acknowledge wake sequence
+    requires:
+      orion_fragment: responding
+    effects:
       wake_ack: true
-
+objectives:
+- id: load_profile
+  type: state_assertion
+  description: Load the emergency operator profile.
+  visible: true
+  assert:
+    operator_profile: loaded
+- id: bus_online
+  type: state_assertion
+  description: Bring the emergency bus online.
+  visible: true
+  assert:
+    emergency_bus: online
+- id: fragment_responding
+  type: state_assertion
+  description: Get a response from ORION fragment A.
+  visible: true
+  assert:
+    orion_fragment: responding
+- id: acknowledge
+  type: state_assertion
+  description: Acknowledge the completed wake sequence.
+  visible: true
+  assert:
+    wake_ack: true
 hints:
-  - level: 1
-    text: Start by loading the emergency operator profile.
-  - level: 2
-    text: The emergency bus cannot energize until the profile is loaded.
-  - level: 3
-    text: Hail ORION fragment A after the bus is online.
-  - level: 4
-    text: Acknowledge the wake once the fragment responds.
-
+- level: 1
+  text: Start by loading the emergency operator profile.
+- level: 2
+  text: The emergency bus cannot energize until the profile is loaded.
+- level: 3
+  text: Hail ORION fragment A after the bus is online.
+- level: 4
+  text: Acknowledge the wake once the fragment responds.
 rewards:
   clearance_points: 20
   mastery:
     computational_thinking.observe: 1
   unlocks:
-    - lore.emergency.wake_sequence.01
-
+  - lore.emergency.wake_sequence.01
 completion:
   mode: all
   objective_ids:
-    - load_profile
-    - bus_online
-    - fragment_responding
-    - acknowledge
+  - load_profile
+  - bus_online
+  - fragment_responding
+  - acknowledge

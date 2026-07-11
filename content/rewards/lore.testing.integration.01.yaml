@@ -1,0 +1,5 @@
+schema_version: 1
+reward_id: lore.testing.integration.01
+kind: lore
+name: Lore testing.integration.01
+description: Unlock for completing testing.integration.01.

@@ -1,0 +1,151 @@
+{
+  "chapter_id": "data_foundry",
+  "completion": {
+    "mode": "all",
+    "objective_ids": [
+      "inspect",
+      "repair"
+    ]
+  },
+  "difficulty": "introductory",
+  "environment": {
+    "pipeline": {
+      "actions": [
+        {
+          "effects": {
+            "explanation": "Transform rejects late schema versions.",
+            "inspected": "true"
+          },
+          "id": "inspect_transform",
+          "label": "Inspect transform failure"
+        },
+        {
+          "effects": {
+            "edge.e2.status": "ok",
+            "explanation": "Schema aligned; load completed.",
+            "node.load.status": "succeeded",
+            "node.transform.detail": "schema aligned",
+            "node.transform.status": "succeeded",
+            "repaired": "true"
+          },
+          "id": "repair_schema",
+          "label": "Align transform schema",
+          "requires": {
+            "inspected": "true"
+          }
+        }
+      ],
+      "edges": [
+        {
+          "from": "extract",
+          "id": "e1",
+          "kind": "data",
+          "status": "ok",
+          "to": "transform"
+        },
+        {
+          "from": "transform",
+          "id": "e2",
+          "kind": "data",
+          "status": "blocked",
+          "to": "load"
+        }
+      ],
+      "nodes": [
+        {
+          "id": "extract",
+          "kind": "extract",
+          "label": "Extract",
+          "status": "succeeded"
+        },
+        {
+          "detail": "schema drift",
+          "id": "transform",
+          "kind": "transform",
+          "label": "Transform",
+          "status": "failed"
+        },
+        {
+          "id": "load",
+          "kind": "load",
+          "label": "Load",
+          "status": "pending"
+        }
+      ],
+      "run_id": "data-etl_intro-01-run"
+    },
+    "schema_version": 1,
+    "seed": 141,
+    "template_id": "pipeline.dag.v1"
+  },
+  "hints": [
+    {
+      "level": 1,
+      "text": "Inspect transform."
+    },
+    {
+      "level": 2,
+      "text": "Align schema."
+    },
+    {
+      "level": 3,
+      "text": "Ensure load succeeds."
+    },
+    {
+      "level": 4,
+      "text": "Follow the action order."
+    }
+  ],
+  "mission_id": "data.etl_intro.01",
+  "narrative": {
+    "briefing_dialogue_id": "dialogue.data.etl_intro.01.briefing",
+    "success_dialogue_id": "dialogue.data.etl_intro.01.success"
+  },
+  "objectives": [
+    {
+      "assert": {
+        "inspected": "true"
+      },
+      "description": "Inspect the failing transform stage.",
+      "id": "inspect",
+      "type": "pipeline_state",
+      "visible": true
+    },
+    {
+      "assert": {
+        "node.load.status": "succeeded",
+        "node.transform.status": "succeeded",
+        "repaired": "true"
+      },
+      "description": "Repair the transform and complete the load.",
+      "id": "repair",
+      "type": "pipeline_state",
+      "visible": true
+    }
+  ],
+  "requirements": {
+    "app_version": ">=0.1.0",
+    "online": false,
+    "prerequisite_skills": []
+  },
+  "rewards": {
+    "clearance_points": 40,
+    "mastery": {
+      "data.etl": 1
+    },
+    "unlocks": [
+      "lore.data.etl_intro.01"
+    ]
+  },
+  "schema_version": 1,
+  "skills": {
+    "primary": "data.etl",
+    "secondary": []
+  },
+  "summary": "Inspect and repair a basic extract-transform-load failure.",
+  "title": "ETL Orientation",
+  "tools": [
+    "pipeline"
+  ],
+  "version": "1.0.0"
+}

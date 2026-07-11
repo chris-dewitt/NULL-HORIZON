@@ -1,0 +1,10 @@
+{
+  "description": "Curriculum skill for Aggregation.",
+  "domain": "sql",
+  "name": "Aggregation",
+  "prerequisites": [
+    "sql.filter"
+  ],
+  "schema_version": 1,
+  "skill_id": "sql.aggregate"
+}

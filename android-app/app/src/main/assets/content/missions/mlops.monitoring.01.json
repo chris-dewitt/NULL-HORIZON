@@ -1,0 +1,115 @@
+{
+  "chapter_id": "prediction_observatory",
+  "completion": {
+    "mode": "all",
+    "objective_ids": [
+      "ack",
+      "fb"
+    ]
+  },
+  "difficulty": "practiced",
+  "environment": {
+    "actions": [
+      {
+        "effects": {
+          "alert": "acked"
+        },
+        "id": "ack",
+        "label": "Acknowledge drift alert"
+      },
+      {
+        "effects": {
+          "fallback": true,
+          "handled": true
+        },
+        "id": "fallback",
+        "label": "Enable human review fallback",
+        "requires": {
+          "alert": "acked"
+        }
+      }
+    ],
+    "initial_state": {
+      "alert": "open",
+      "fallback": false,
+      "handled": false
+    },
+    "schema_version": 1,
+    "seed": 163,
+    "template_id": "local.state.v1"
+  },
+  "hints": [
+    {
+      "level": 1,
+      "text": "Acknowledge first."
+    },
+    {
+      "level": 2,
+      "text": "Enable human review."
+    },
+    {
+      "level": 3,
+      "text": "Do not ignore drift."
+    },
+    {
+      "level": 4,
+      "text": "Fallback protects navigation."
+    }
+  ],
+  "mission_id": "mlops.monitoring.01",
+  "narrative": {
+    "briefing_dialogue_id": "dialogue.mlops.monitoring.01.briefing",
+    "success_dialogue_id": "dialogue.mlops.monitoring.01.success"
+  },
+  "objectives": [
+    {
+      "assert": {
+        "alert": "acked"
+      },
+      "description": "Acknowledge the alert.",
+      "id": "ack",
+      "type": "state_assertion",
+      "visible": true
+    },
+    {
+      "assert": {
+        "fallback": true,
+        "handled": true
+      },
+      "description": "Enable human fallback.",
+      "id": "fb",
+      "type": "state_assertion",
+      "visible": true
+    }
+  ],
+  "requirements": {
+    "app_version": ">=0.1.0",
+    "online": false,
+    "prerequisite_skills": [
+      "mlops.features"
+    ]
+  },
+  "rewards": {
+    "clearance_points": 25,
+    "mastery": {
+      "mlops.features": 1,
+      "mlops.monitoring": 1
+    },
+    "unlocks": [
+      "lore.mlops.monitoring.01"
+    ]
+  },
+  "schema_version": 1,
+  "skills": {
+    "primary": "mlops.monitoring",
+    "secondary": [
+      "mlops.features"
+    ]
+  },
+  "summary": "Acknowledge drift and enable human review fallback.",
+  "title": "Drift Monitor Alert",
+  "tools": [
+    "systems_panel"
+  ],
+  "version": "1.0.0"
+}

@@ -1,0 +1,10 @@
+{
+  "description": "Curriculum skill for Standard Containers.",
+  "domain": "cpp",
+  "name": "Standard Containers",
+  "prerequisites": [
+    "cpp.classes"
+  ],
+  "schema_version": 1,
+  "skill_id": "cpp.containers"
+}
