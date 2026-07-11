@@ -5,12 +5,13 @@ This document summarizes the architecture defined in [PRODUCT_SPEC.md](PRODUCT_S
 ## System boundaries
 
 ```text
-Android app (Compose)
-  -> local simulators (terminal, Git, SQL, pipelines, ML ops)
-  -> local progress / content bundles
-  -> HTTPS -> FastAPI API
-                -> PostgreSQL / Redis
-                -> Isolated execution orchestrator (Python / C++ runners)
+Android app (Compose) ──┐
+PC app (Compose Desktop)┤
+                        ├-> local simulators (terminal, Git, SQL, pipelines, ML ops)
+                        ├-> local progress / content bundles
+                        └-> HTTPS -> FastAPI API
+                                      -> PostgreSQL / Redis
+                                      -> Isolated execution orchestrator (Python / C++ runners)
 ```
 
 ## Non-negotiable boundaries
@@ -25,7 +26,8 @@ Android app (Compose)
 
 | Path | Responsibility |
 |---|---|
-| `android-app/` | Kotlin / Compose client |
+| `android-app/` | Kotlin / Jetpack Compose Android client |
+| `pc-app/` | Kotlin / Compose Desktop PC client (ADR-0019) |
 | `backend/api/` | Public HTTP API |
 | `backend/runner/` | Execution orchestration and workers |
 | `backend/shared/` | Shared backend schemas and observability helpers |

@@ -1,0 +1,10 @@
+{
+  "description": "Curriculum skill for Model Registry.",
+  "domain": "mlops",
+  "name": "Model Registry",
+  "prerequisites": [
+    "mlops.rollback"
+  ],
+  "schema_version": 1,
+  "skill_id": "mlops.registry"
+}

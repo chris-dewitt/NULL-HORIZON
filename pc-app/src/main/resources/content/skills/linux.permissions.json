@@ -1,0 +1,10 @@
+{
+  "description": "Curriculum skill for Permissions and Environment.",
+  "domain": "linux",
+  "name": "Permissions and Environment",
+  "prerequisites": [
+    "linux.inspection"
+  ],
+  "schema_version": 1,
+  "skill_id": "linux.permissions"
+}

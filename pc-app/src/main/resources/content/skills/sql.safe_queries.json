@@ -1,0 +1,10 @@
+{
+  "description": "Curriculum skill for Safe Query Construction.",
+  "domain": "sql",
+  "name": "Safe Query Construction",
+  "prerequisites": [
+    "sql.select"
+  ],
+  "schema_version": 1,
+  "skill_id": "sql.safe_queries"
+}

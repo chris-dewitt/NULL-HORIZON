@@ -1,0 +1,10 @@
+{
+  "description": "Curriculum skill for Authn versus Authz.",
+  "domain": "security",
+  "name": "Authn versus Authz",
+  "prerequisites": [
+    "security.threat_model"
+  ],
+  "schema_version": 1,
+  "skill_id": "security.authz"
+}

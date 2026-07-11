@@ -1,0 +1,10 @@
+{
+  "dialogue_id": "dialogue.version.recover_commit.success",
+  "lines": [
+    {
+      "speaker": "ORION-A",
+      "text": "Signed thruster routing restored. The Auditor will notice this."
+    }
+  ],
+  "schema_version": 1
+}

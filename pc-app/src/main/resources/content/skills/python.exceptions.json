@@ -1,0 +1,10 @@
+{
+  "description": "Curriculum skill for Exceptions.",
+  "domain": "python",
+  "name": "Exceptions",
+  "prerequisites": [
+    "python.functions"
+  ],
+  "schema_version": 1,
+  "skill_id": "python.exceptions"
+}

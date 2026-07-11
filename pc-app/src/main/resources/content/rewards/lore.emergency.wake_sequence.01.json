@@ -1,0 +1,7 @@
+{
+  "description": "First ORION fragment response after emergency reconstruction.",
+  "kind": "lore",
+  "name": "Wake Fragment",
+  "reward_id": "lore.emergency.wake_sequence.01",
+  "schema_version": 1
+}

@@ -1,0 +1,109 @@
+{
+  "chapter_id": "maintenance_deck",
+  "completion": {
+    "mode": "all",
+    "objective_ids": [
+      "reach_tools",
+      "list_tools"
+    ]
+  },
+  "difficulty": "introductory",
+  "environment": {
+    "filesystem": {
+      "cwd": "/home/operator",
+      "entries": [
+        {
+          "path": "/home/operator",
+          "type": "dir"
+        },
+        {
+          "content": "Tools are under /opt/deck/tools.\n",
+          "path": "/home/operator/README.txt",
+          "type": "file"
+        },
+        {
+          "path": "/opt/deck/tools",
+          "type": "dir"
+        },
+        {
+          "content": "calibrated\n",
+          "path": "/opt/deck/tools/wrench.txt",
+          "type": "file"
+        }
+      ]
+    },
+    "schema_version": 1,
+    "seed": 51,
+    "template_id": "terminal.vfs.v1"
+  },
+  "hints": [
+    {
+      "level": 1,
+      "text": "Start with pwd and ls."
+    },
+    {
+      "level": 2,
+      "text": "Read README.txt for the path."
+    },
+    {
+      "level": 3,
+      "text": "cd /opt/deck/tools"
+    },
+    {
+      "level": 4,
+      "text": "Run ls in the tool locker."
+    }
+  ],
+  "mission_id": "maintenance.nav_basics.01",
+  "narrative": {
+    "briefing_dialogue_id": "dialogue.maintenance.nav_basics.01.briefing",
+    "success_dialogue_id": "dialogue.maintenance.nav_basics.01.success"
+  },
+  "objectives": [
+    {
+      "assert": {
+        "cwd": "/opt/deck/tools"
+      },
+      "description": "Navigate to /opt/deck/tools.",
+      "id": "reach_tools",
+      "type": "filesystem_state",
+      "visible": true
+    },
+    {
+      "assert": {
+        "exit_code": 0,
+        "last_command": "ls",
+        "stdout_contains": "wrench.txt"
+      },
+      "description": "List the tool locker.",
+      "id": "list_tools",
+      "type": "command_output",
+      "visible": true
+    }
+  ],
+  "requirements": {
+    "app_version": ">=0.1.0",
+    "online": false,
+    "prerequisite_skills": []
+  },
+  "rewards": {
+    "clearance_points": 30,
+    "mastery": {
+      "linux.navigation": 1
+    },
+    "unlocks": [
+      "lore.maintenance.nav_basics.01"
+    ]
+  },
+  "schema_version": 1,
+  "skills": {
+    "primary": "linux.navigation",
+    "secondary": []
+  },
+  "summary": "Navigate the maintenance deck filesystem to the tool locker.",
+  "title": "Deck Navigation",
+  "tools": [
+    "terminal"
+  ],
+  "version": "1.0.0"
+}

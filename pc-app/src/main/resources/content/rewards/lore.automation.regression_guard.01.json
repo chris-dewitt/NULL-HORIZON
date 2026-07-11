@@ -1,0 +1,7 @@
+{
+  "description": "A failing upper-bound test that forced the clamp repair.",
+  "kind": "lore",
+  "name": "Regression Guard",
+  "reward_id": "lore.automation.regression_guard.01",
+  "schema_version": 1
+}

@@ -1,0 +1,87 @@
+package com.nullhorizon.pc.feature.mission
+
+import com.nullhorizon.app.content.ContentRepository
+import com.nullhorizon.app.content.MissionProgressRepository
+import com.nullhorizon.app.content.model.ChapterDefinition
+import com.nullhorizon.app.content.model.MissionDefinition
+import com.nullhorizon.app.data.mission.MissionStatus
+import com.nullhorizon.app.data.mission.MissionSummary
+import com.nullhorizon.pc.util.PcViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
+
+data class MissionListUiState(
+    val isLoading: Boolean = true,
+    val missions: List<MissionSummary> = emptyList(),
+    val errorMessage: String? = null,
+)
+
+class MissionListViewModel(
+    private val contentRepository: ContentRepository,
+    private val progressRepository: MissionProgressRepository,
+) : PcViewModel() {
+    private val _uiState = MutableStateFlow(MissionListUiState())
+    val uiState: StateFlow<MissionListUiState> = _uiState.asStateFlow()
+
+    init {
+        viewModelScope.launch {
+            runCatching {
+                val missions = prioritizeVerticalSlice(contentRepository.listMissions())
+                val chapterIds = missions.map { it.chapterId }.distinct()
+                val chapters = chapterIds.associateWith { contentRepository.chapter(it) }
+                progressRepository.completedMissionIds.collect { completed ->
+                    _uiState.update {
+                        it.copy(
+                            isLoading = false,
+                            missions = missions.map { mission ->
+                                toSummary(mission, chapters.getValue(mission.chapterId), completed)
+                            },
+                            errorMessage = null,
+                        )
+                    }
+                }
+            }.onFailure { error ->
+                _uiState.update {
+                    it.copy(
+                        isLoading = false,
+                        errorMessage = error.message ?: "Failed to load missions",
+                    )
+                }
+            }
+        }
+    }
+
+    private suspend fun prioritizeVerticalSlice(
+        missions: List<MissionDefinition>,
+    ): List<MissionDefinition> {
+        val sliceOrder = runCatching {
+            contentRepository.chapter("vertical_slice").missionIds
+        }.getOrDefault(emptyList())
+        if (sliceOrder.isEmpty()) return missions
+        val byId = missions.associateBy { it.missionId }
+        val prioritized = sliceOrder.mapNotNull { byId[it] }
+        val remainder = missions.filter { it.missionId !in sliceOrder }
+        return prioritized + remainder
+    }
+
+    private fun toSummary(
+        mission: MissionDefinition,
+        chapter: ChapterDefinition,
+        completed: Set<String>,
+    ): MissionSummary {
+        val status = when {
+            mission.missionId in completed -> MissionStatus.Completed
+            else -> MissionStatus.Available
+        }
+        return MissionSummary(
+            id = mission.missionId,
+            title = mission.title,
+            region = chapter.region,
+            difficulty = mission.difficulty,
+            status = status,
+        )
+    }
+}

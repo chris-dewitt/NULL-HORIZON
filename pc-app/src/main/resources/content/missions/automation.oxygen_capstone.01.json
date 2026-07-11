@@ -1,0 +1,156 @@
+{
+  "chapter_id": "automation_lab",
+  "completion": {
+    "mode": "all",
+    "objective_ids": [
+      "apply_fix",
+      "tests_pass"
+    ]
+  },
+  "difficulty": "challenge",
+  "environment": {
+    "schema_version": 1,
+    "seed": 86,
+    "template_id": "python.editor.fake.v1",
+    "workspace": {
+      "execution": {
+        "fixtures": [
+          {
+            "id": "fixed",
+            "match": {
+              "file_contains": {
+                "/workspace/solve.py": "except"
+              }
+            },
+            "result": {
+              "status": "completed",
+              "tests": [
+                {
+                  "id": "test_solve",
+                  "status": "passed"
+                }
+              ]
+            }
+          },
+          {
+            "id": "broken",
+            "match": {
+              "file_contains": {
+                "/workspace/solve.py": "total += int(item)"
+              }
+            },
+            "result": {
+              "status": "completed",
+              "tests": [
+                {
+                  "id": "test_solve",
+                  "message": "Behavior still incorrect",
+                  "status": "failed"
+                }
+              ]
+            }
+          },
+          {
+            "id": "default_fail",
+            "result": {
+              "status": "completed",
+              "tests": [
+                {
+                  "id": "test_solve",
+                  "message": "Unexpected workspace state",
+                  "status": "failed"
+                }
+              ]
+            }
+          }
+        ],
+        "provider": "fake"
+      },
+      "files": [
+        {
+          "content": "def solve() -> bool:\n    readings = [10, \"corrupt\", 20]\n    total = 0\n    for item in readings:\n        total += int(item)\n    return total == 30\n",
+          "editable": true,
+          "path": "/workspace/solve.py"
+        },
+        {
+          "content": "from solve import solve\n\n\ndef test_solve():\n    assert solve() is True\n",
+          "editable": false,
+          "path": "/workspace/test_solve.py"
+        }
+      ]
+    }
+  },
+  "hints": [
+    {
+      "level": 1,
+      "text": "Skip corrupt readings."
+    },
+    {
+      "level": 2,
+      "text": "Use try/except in the loop."
+    },
+    {
+      "level": 3,
+      "text": "Continue on failure."
+    },
+    {
+      "level": 4,
+      "text": "Total should be 30."
+    }
+  ],
+  "mission_id": "automation.oxygen_capstone.01",
+  "narrative": {
+    "briefing_dialogue_id": "dialogue.automation.oxygen_capstone.01.briefing",
+    "success_dialogue_id": "dialogue.automation.oxygen_capstone.01.success"
+  },
+  "objectives": [
+    {
+      "assert": {
+        "file_contains:/workspace/solve.py": "except"
+      },
+      "description": "Apply the required Python fix.",
+      "id": "apply_fix",
+      "type": "file_assertion",
+      "visible": true
+    },
+    {
+      "assert": {
+        "all_passed": "true",
+        "test_count": "1"
+      },
+      "description": "Run tests and make them pass.",
+      "id": "tests_pass",
+      "type": "execution_tests",
+      "visible": true
+    }
+  ],
+  "requirements": {
+    "app_version": ">=0.1.0",
+    "online": false,
+    "prerequisite_skills": [
+      "python.files",
+      "python.exceptions"
+    ]
+  },
+  "rewards": {
+    "clearance_points": 45,
+    "mastery": {
+      "python.exceptions": 1
+    },
+    "unlocks": [
+      "lore.automation.oxygen_capstone.01"
+    ]
+  },
+  "schema_version": 1,
+  "skills": {
+    "primary": "python.exceptions",
+    "secondary": []
+  },
+  "summary": "Allocate oxygen while skipping corrupt readings.",
+  "title": "Oxygen Allocation",
+  "tools": [
+    "python_editor",
+    "test_console"
+  ],
+  "version": "1.0.0"
+}

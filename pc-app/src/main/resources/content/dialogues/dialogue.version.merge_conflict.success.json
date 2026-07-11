@@ -1,0 +1,14 @@
+{
+  "dialogue_id": "dialogue.version.merge_conflict.success",
+  "lines": [
+    {
+      "speaker": "ORION",
+      "text": "Merge complete. Power policy now carries the repair branch values."
+    },
+    {
+      "speaker": "MICA",
+      "text": "Conflicts are not failures. They are decision points with a paper trail."
+    }
+  ],
+  "schema_version": 1
+}

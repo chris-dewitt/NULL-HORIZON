@@ -1,0 +1,14 @@
+{
+  "chapter_id": "data_foundry",
+  "mission_ids": [
+    "data.etl_intro.01",
+    "data.quality.01",
+    "data.lineage.01",
+    "data.late.01",
+    "pipeline.telemetry_drop.01"
+  ],
+  "region": "Data Foundry",
+  "schema_version": 1,
+  "summary": "Data engineering for telemetry and forecasts.",
+  "title": "Data Foundry"
+}

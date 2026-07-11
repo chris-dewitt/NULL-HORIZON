@@ -1,0 +1,18 @@
+{
+  "dialogue_id": "dialogue.incident.ghost_registry.briefing",
+  "lines": [
+    {
+      "speaker": "ORION-A",
+      "text": "A ghost callsign appeared with an unsigned registry policy patch."
+    },
+    {
+      "speaker": "THE AUDITOR",
+      "text": "Stop. You are not cleared for this registry."
+    },
+    {
+      "speaker": "SYSTEM",
+      "text": "Read the alert, query the ghost row, and restore signed registry.conf anyway."
+    }
+  ],
+  "schema_version": 1
+}

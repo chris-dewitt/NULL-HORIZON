@@ -1,0 +1,15 @@
+{
+  "chapter_id": "maintenance_deck",
+  "mission_ids": [
+    "maintenance.nav_basics.01",
+    "maintenance.inspect_log.01",
+    "maintenance.search_error.01",
+    "maintenance.env_policy.01",
+    "maintenance.script_check.01",
+    "emergency.rogue_process.01"
+  ],
+  "region": "Maintenance Deck",
+  "schema_version": 1,
+  "summary": "Linux and Bash repairs on the damaged colony ship.",
+  "title": "Maintenance Deck"
+}

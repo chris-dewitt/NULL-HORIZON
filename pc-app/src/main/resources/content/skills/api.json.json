@@ -1,0 +1,10 @@
+{
+  "description": "Curriculum skill for JSON and Validation.",
+  "domain": "api",
+  "name": "JSON and Validation",
+  "prerequisites": [
+    "api.http"
+  ],
+  "schema_version": 1,
+  "skill_id": "api.json"
+}

@@ -1,0 +1,11 @@
+{
+  "chapter_id": "horizon_core",
+  "mission_ids": [
+    "incident.ghost_registry.01",
+    "incident.containment_or_sabotage.01"
+  ],
+  "region": "Horizon Core",
+  "schema_version": 1,
+  "summary": "Integrated incidents that combine earlier domains.",
+  "title": "Horizon Core"
+}

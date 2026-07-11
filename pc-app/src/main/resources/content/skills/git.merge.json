@@ -1,0 +1,10 @@
+{
+  "description": "Curriculum skill for Merge and Conflicts.",
+  "domain": "git",
+  "name": "Merge and Conflicts",
+  "prerequisites": [
+    "git.branch"
+  ],
+  "schema_version": 1,
+  "skill_id": "git.merge"
+}

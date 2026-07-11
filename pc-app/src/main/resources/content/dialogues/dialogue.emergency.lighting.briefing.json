@@ -1,0 +1,14 @@
+{
+  "dialogue_id": "dialogue.emergency.lighting.briefing",
+  "lines": [
+    {
+      "speaker": "ORION",
+      "text": "Deck A emergency lighting is dark. Reserve power is available, but circuit routing is inconsistent."
+    },
+    {
+      "speaker": "MICA",
+      "text": "Policy reminder. Do not drain the reserve below safe threshold while restoring lights."
+    }
+  ],
+  "schema_version": 1
+}

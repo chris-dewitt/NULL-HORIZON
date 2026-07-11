@@ -1,0 +1,151 @@
+{
+  "chapter_id": "emergency_interface",
+  "completion": {
+    "mode": "all",
+    "objective_ids": [
+      "load_profile",
+      "bus_online",
+      "fragment_responding",
+      "acknowledge"
+    ]
+  },
+  "difficulty": "introductory",
+  "environment": {
+    "actions": [
+      {
+        "effects": {
+          "operator_profile": "loaded"
+        },
+        "id": "load_operator_profile",
+        "label": "Load emergency operator profile"
+      },
+      {
+        "effects": {
+          "emergency_bus": "online"
+        },
+        "id": "energize_emergency_bus",
+        "label": "Energize emergency bus",
+        "requires": {
+          "operator_profile": "loaded"
+        }
+      },
+      {
+        "effects": {
+          "orion_fragment": "responding"
+        },
+        "id": "hail_orion_fragment",
+        "label": "Hail ORION fragment A",
+        "requires": {
+          "emergency_bus": "online"
+        }
+      },
+      {
+        "effects": {
+          "wake_ack": true
+        },
+        "id": "acknowledge_wake",
+        "label": "Acknowledge wake sequence",
+        "requires": {
+          "orion_fragment": "responding"
+        }
+      }
+    ],
+    "initial_state": {
+      "emergency_bus": "offline",
+      "operator_profile": "dormant",
+      "orion_fragment": "silent",
+      "wake_ack": false
+    },
+    "schema_version": 1,
+    "seed": 3,
+    "template_id": "local.state.v1"
+  },
+  "hints": [
+    {
+      "level": 1,
+      "text": "Start by loading the emergency operator profile."
+    },
+    {
+      "level": 2,
+      "text": "The emergency bus cannot energize until the profile is loaded."
+    },
+    {
+      "level": 3,
+      "text": "Hail ORION fragment A after the bus is online."
+    },
+    {
+      "level": 4,
+      "text": "Acknowledge the wake once the fragment responds."
+    }
+  ],
+  "mission_id": "emergency.wake_sequence.01",
+  "narrative": {
+    "briefing_dialogue_id": "dialogue.emergency.wake_sequence.briefing",
+    "success_dialogue_id": "dialogue.emergency.wake_sequence.success"
+  },
+  "objectives": [
+    {
+      "assert": {
+        "operator_profile": "loaded"
+      },
+      "description": "Load the emergency operator profile.",
+      "id": "load_profile",
+      "type": "state_assertion",
+      "visible": true
+    },
+    {
+      "assert": {
+        "emergency_bus": "online"
+      },
+      "description": "Bring the emergency bus online.",
+      "id": "bus_online",
+      "type": "state_assertion",
+      "visible": true
+    },
+    {
+      "assert": {
+        "orion_fragment": "responding"
+      },
+      "description": "Get a response from ORION fragment A.",
+      "id": "fragment_responding",
+      "type": "state_assertion",
+      "visible": true
+    },
+    {
+      "assert": {
+        "wake_ack": true
+      },
+      "description": "Acknowledge the completed wake sequence.",
+      "id": "acknowledge",
+      "type": "state_assertion",
+      "visible": true
+    }
+  ],
+  "requirements": {
+    "app_version": ">=0.1.0",
+    "online": false,
+    "prerequisite_skills": []
+  },
+  "rewards": {
+    "clearance_points": 20,
+    "mastery": {
+      "computational_thinking.observe": 1
+    },
+    "unlocks": [
+      "lore.emergency.wake_sequence.01"
+    ]
+  },
+  "schema_version": 1,
+  "skills": {
+    "primary": "computational_thinking.observe",
+    "secondary": [
+      "computational_thinking.hypothesis"
+    ]
+  },
+  "summary": "Bring the emergency interface online and acknowledge the first ORION fragment.",
+  "title": "Wake Sequence",
+  "tools": [
+    "systems_panel"
+  ],
+  "version": "1.0.0"
+}

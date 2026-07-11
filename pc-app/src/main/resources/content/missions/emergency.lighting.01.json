@@ -1,0 +1,155 @@
+{
+  "chapter_id": "emergency_interface",
+  "completion": {
+    "mode": "all",
+    "objective_ids": [
+      "diagnose_open_breaker",
+      "close_breaker",
+      "restore_lights",
+      "preserve_reserve"
+    ]
+  },
+  "difficulty": "introductory",
+  "environment": {
+    "actions": [
+      {
+        "description": "Record that circuit A is open and blocking the lighting bus.",
+        "effects": {
+          "diagnosed_circuit_a": true
+        },
+        "id": "diagnose_circuit_a",
+        "label": "Mark circuit A as diagnosed"
+      },
+      {
+        "effects": {
+          "circuit_a_breaker": "closed"
+        },
+        "id": "close_circuit_a",
+        "label": "Close circuit A breaker"
+      },
+      {
+        "effects": {
+          "deck_a_lights": "online",
+          "lighting_bus": "connected",
+          "reserve_power_percent": 88
+        },
+        "id": "connect_lighting_bus",
+        "label": "Connect lighting bus to reserve power",
+        "requires": {
+          "circuit_a_breaker": "closed"
+        }
+      },
+      {
+        "description": "Restores lights but violates reserve policy.",
+        "effects": {
+          "deck_a_lights": "online",
+          "lighting_bus": "connected",
+          "reserve_power_percent": 55
+        },
+        "id": "overdraw_reserve",
+        "label": "Force full brightness from reserve",
+        "requires": {
+          "circuit_a_breaker": "closed"
+        }
+      }
+    ],
+    "initial_state": {
+      "circuit_a_breaker": "open",
+      "circuit_b_breaker": "closed",
+      "deck_a_lights": "offline",
+      "lighting_bus": "disconnected",
+      "reserve_power_percent": 100
+    },
+    "schema_version": 1,
+    "seed": 42,
+    "template_id": "local.state.v1"
+  },
+  "hints": [
+    {
+      "level": 1,
+      "text": "Start by inspecting which breaker is open."
+    },
+    {
+      "level": 2,
+      "text": "Circuit A is open. Closing it is required before the lighting bus can connect."
+    },
+    {
+      "level": 3,
+      "text": "Connect the lighting bus to reserve power after the breaker is closed."
+    },
+    {
+      "level": 4,
+      "text": "Avoid forcing full brightness. That path drains reserve below policy."
+    }
+  ],
+  "mission_id": "emergency.lighting.01",
+  "narrative": {
+    "briefing_dialogue_id": "dialogue.emergency.lighting.briefing",
+    "success_dialogue_id": "dialogue.emergency.lighting.success"
+  },
+  "objectives": [
+    {
+      "assert": {
+        "diagnosed_circuit_a": true
+      },
+      "description": "Confirm circuit A is the open breaker.",
+      "id": "diagnose_open_breaker",
+      "type": "state_assertion",
+      "visible": true
+    },
+    {
+      "assert": {
+        "circuit_a_breaker": "closed"
+      },
+      "description": "Close circuit A so the lighting bus can energize.",
+      "id": "close_breaker",
+      "type": "state_assertion",
+      "visible": true
+    },
+    {
+      "assert": {
+        "deck_a_lights": "online"
+      },
+      "description": "Bring Deck A emergency lights online.",
+      "id": "restore_lights",
+      "type": "state_assertion",
+      "visible": true
+    },
+    {
+      "assert": {
+        "reserve_power_percent": 88
+      },
+      "description": "Keep reserve power at 80 percent or higher.",
+      "id": "preserve_reserve",
+      "type": "state_assertion",
+      "visible": false
+    }
+  ],
+  "requirements": {
+    "app_version": ">=0.1.0",
+    "online": false,
+    "prerequisite_skills": []
+  },
+  "rewards": {
+    "clearance_points": 25,
+    "mastery": {
+      "computational_thinking.observe": 1
+    },
+    "unlocks": [
+      "lore.emergency.lighting.01"
+    ]
+  },
+  "schema_version": 1,
+  "skills": {
+    "primary": "computational_thinking.observe",
+    "secondary": [
+      "computational_thinking.hypothesis"
+    ]
+  },
+  "summary": "Restore Deck A emergency lighting without draining reserve power below policy.",
+  "title": "Emergency Lighting",
+  "tools": [
+    "systems_panel"
+  ],
+  "version": "1.0.0"
+}

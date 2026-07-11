@@ -1,0 +1,11 @@
+{
+  "description": "Curriculum skill for Subqueries and CTEs.",
+  "domain": "sql",
+  "name": "Subqueries and CTEs",
+  "prerequisites": [
+    "sql.join",
+    "sql.group"
+  ],
+  "schema_version": 1,
+  "skill_id": "sql.subquery"
+}

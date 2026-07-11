@@ -1,0 +1,87 @@
+{
+  "chapter_id": "archive_core",
+  "completion": {
+    "mode": "all",
+    "objective_ids": [
+      "joined"
+    ]
+  },
+  "difficulty": "practiced",
+  "environment": {
+    "databases": [
+      {
+        "id": "archive",
+        "policy": "select_only",
+        "seed_sql": "CREATE TABLE crew (crew_id INTEGER PRIMARY KEY, callsign TEXT, role TEXT, status TEXT, deck TEXT);\nCREATE TABLE pods (pod_id INTEGER PRIMARY KEY, deck TEXT, occupied INTEGER);\nINSERT INTO pods VALUES (1,'A',1),(2,'A',1),(3,'B',1),(4,'B',0);\nINSERT INTO crew VALUES\n (1,'ORION','navigator','active','A'),\n (2,'VEGA','engineer','active','A'),\n (3,'KELL','medic','missing','B'),\n (4,'RIN','engineer','missing','B'),\n (5,'NYX','unknown','ghost','B');\n"
+      }
+    ],
+    "schema_version": 1,
+    "seed": 73,
+    "template_id": "sql.sqlite.v1"
+  },
+  "hints": [
+    {
+      "level": 1,
+      "text": "Join crew to pods."
+    },
+    {
+      "level": 2,
+      "text": "Match on deck."
+    },
+    {
+      "level": 3,
+      "text": "Filter active crew and occupied pods."
+    },
+    {
+      "level": 4,
+      "text": "SELECT c.callsign, c.deck FROM crew c JOIN pods p ON c.deck = p.deck WHERE c.status = 'active' AND p.occupied = 1;"
+    }
+  ],
+  "mission_id": "archive.join_pods.01",
+  "narrative": {
+    "briefing_dialogue_id": "dialogue.archive.join_pods.01.briefing",
+    "success_dialogue_id": "dialogue.archive.join_pods.01.success"
+  },
+  "objectives": [
+    {
+      "assert": {
+        "columns": "callsign,deck",
+        "query_contains": "JOIN",
+        "row_count": "2"
+      },
+      "description": "Join active crew to occupied pods by deck.",
+      "id": "joined",
+      "type": "sql_result",
+      "visible": true
+    }
+  ],
+  "requirements": {
+    "app_version": ">=0.1.0",
+    "online": false,
+    "prerequisite_skills": [
+      "sql.filter"
+    ]
+  },
+  "rewards": {
+    "clearance_points": 35,
+    "mastery": {
+      "sql.join": 1
+    },
+    "unlocks": [
+      "lore.archive.join_pods.01"
+    ]
+  },
+  "schema_version": 1,
+  "skills": {
+    "primary": "sql.join",
+    "secondary": [
+      "sql.filter"
+    ]
+  },
+  "summary": "Join crew to occupied pods on matching decks.",
+  "title": "Join Crew to Pods",
+  "tools": [
+    "sql"
+  ],
+  "version": "1.0.0"
+}

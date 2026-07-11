@@ -1,0 +1,136 @@
+{
+  "chapter_id": "black_vault",
+  "completion": {
+    "mode": "all",
+    "objective_ids": [
+      "limit",
+      "rotate",
+      "keep_ls"
+    ]
+  },
+  "difficulty": "challenge",
+  "environment": {
+    "actions": [
+      {
+        "effects": {
+          "account": "limited"
+        },
+        "id": "revoke",
+        "label": "Revoke vault.write on service account"
+      },
+      {
+        "effects": {
+          "account": "rotated"
+        },
+        "id": "rotate",
+        "label": "Rotate service token",
+        "requires": {
+          "account": "limited"
+        }
+      },
+      {
+        "effects": {
+          "contained": true,
+          "life_support": "online"
+        },
+        "id": "confirm",
+        "label": "Confirm life support still online",
+        "requires": {
+          "account": "rotated"
+        }
+      }
+    ],
+    "initial_state": {
+      "account": "compromised",
+      "contained": false,
+      "life_support": "online"
+    },
+    "schema_version": 1,
+    "seed": 135,
+    "template_id": "local.state.v1"
+  },
+  "hints": [
+    {
+      "level": 1,
+      "text": "Revoke excess privileges first."
+    },
+    {
+      "level": 2,
+      "text": "Rotate the token."
+    },
+    {
+      "level": 3,
+      "text": "Do not shut down life support."
+    },
+    {
+      "level": 4,
+      "text": "Confirm systems stay online."
+    }
+  ],
+  "mission_id": "security.contain_capstone.01",
+  "narrative": {
+    "briefing_dialogue_id": "dialogue.security.contain_capstone.01.briefing",
+    "success_dialogue_id": "dialogue.security.contain_capstone.01.success"
+  },
+  "objectives": [
+    {
+      "assert": {
+        "account": "limited"
+      },
+      "description": "Limit the compromised account.",
+      "id": "limit",
+      "type": "state_assertion",
+      "visible": true
+    },
+    {
+      "assert": {
+        "account": "rotated"
+      },
+      "description": "Rotate the token.",
+      "id": "rotate",
+      "type": "state_assertion",
+      "visible": true
+    },
+    {
+      "assert": {
+        "contained": true,
+        "life_support": "online"
+      },
+      "description": "Contain without disabling life support.",
+      "id": "keep_ls",
+      "type": "state_assertion",
+      "visible": true
+    }
+  ],
+  "requirements": {
+    "app_version": ">=0.1.0",
+    "online": false,
+    "prerequisite_skills": [
+      "security.least_privilege"
+    ]
+  },
+  "rewards": {
+    "clearance_points": 60,
+    "mastery": {
+      "security.authz": 1,
+      "security.least_privilege": 1
+    },
+    "unlocks": [
+      "lore.security.contain_capstone.01"
+    ]
+  },
+  "schema_version": 1,
+  "skills": {
+    "primary": "security.least_privilege",
+    "secondary": [
+      "security.authz",
+      "security.secrets"
+    ]
+  },
+  "summary": "Contain a fictional service-account compromise without disabling life support.",
+  "title": "Contain Compromised Account",
+  "tools": [
+    "systems_panel"
+  ],
+  "version": "1.0.0"
+}

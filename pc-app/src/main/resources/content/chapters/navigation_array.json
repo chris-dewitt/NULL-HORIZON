@@ -1,0 +1,16 @@
+{
+  "chapter_id": "navigation_array",
+  "mission_ids": [
+    "nav.lists.01",
+    "nav.stacks.01",
+    "nav.maps.01",
+    "nav.search.01",
+    "nav.trees.01",
+    "nav.graphs.01",
+    "nav.path_capstone.01"
+  ],
+  "region": "Navigation Array",
+  "schema_version": 1,
+  "summary": "Data structures and algorithms for debris routing.",
+  "title": "Navigation Array"
+}

@@ -1,0 +1,14 @@
+{
+  "dialogue_id": "dialogue.cpp.const.01.success",
+  "lines": [
+    {
+      "speaker": "ORION-A",
+      "text": "Mission cpp.const.01 complete."
+    },
+    {
+      "speaker": "SYSTEM",
+      "text": "Progress recorded."
+    }
+  ],
+  "schema_version": 1
+}

@@ -1,0 +1,10 @@
+{
+  "description": "Curriculum skill for Drift Monitoring.",
+  "domain": "mlops",
+  "name": "Drift Monitoring",
+  "prerequisites": [
+    "mlops.features"
+  ],
+  "schema_version": 1,
+  "skill_id": "mlops.monitoring"
+}

@@ -1,0 +1,10 @@
+{
+  "dialogue_id": "dialogue.version.inspect_status.success",
+  "lines": [
+    {
+      "speaker": "ORION-A",
+      "text": "You identified the unauthorized thruster_a override. Recovery comes next."
+    }
+  ],
+  "schema_version": 1
+}

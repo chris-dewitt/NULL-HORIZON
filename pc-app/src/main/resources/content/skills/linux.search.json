@@ -1,0 +1,10 @@
+{
+  "description": "Curriculum skill for Search.",
+  "domain": "linux",
+  "name": "Search",
+  "prerequisites": [
+    "linux.inspection"
+  ],
+  "schema_version": 1,
+  "skill_id": "linux.search"
+}

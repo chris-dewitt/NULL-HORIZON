@@ -1,0 +1,10 @@
+{
+  "description": "Curriculum skill for Unit Tests.",
+  "domain": "testing",
+  "name": "Unit Tests",
+  "prerequisites": [
+    "python.testing"
+  ],
+  "schema_version": 1,
+  "skill_id": "testing.unit"
+}

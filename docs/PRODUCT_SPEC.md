@@ -3,11 +3,11 @@
 
 **Document status:** Implementation baseline  
 **Version:** 0.2  
-**Platform:** Android, distributed through Google Play  
+**Platform:** Android (primary, Google Play) and Compose Desktop PC (`pc-app/`, ADR-0019)  
 **Working title:** NULL HORIZON  
 **Primary audience:** Beginner through early-intermediate backend developers  
 **Business model:** Free core game; no pay-to-learn mechanics  
-**Primary client:** Kotlin and Jetpack Compose  
+**Primary client:** Kotlin and Jetpack Compose (Android); secondary PC client via Compose Desktop  
 **Primary backend:** Python and FastAPI  
 **Repository model:** Monorepo  
 **Document purpose:** Give an agentic coding system enough product, architecture, security, content, and delivery context to begin implementation without inventing the core design.

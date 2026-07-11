@@ -1,0 +1,21 @@
+{
+  "chapter_id": "vertical_slice",
+  "mission_ids": [
+    "emergency.wake_sequence.01",
+    "emergency.fault_log.01",
+    "emergency.rogue_process.01",
+    "version.inspect_status.01",
+    "version.recover_commit.01",
+    "archive.missing_crew.01",
+    "automation.pressure_threshold.01",
+    "automation.regression_guard.01",
+    "comms.api_trace.01",
+    "archive.unsafe_query.01",
+    "pipeline.telemetry_drop.01",
+    "incident.ghost_registry.01"
+  ],
+  "region": "Campaign Path",
+  "schema_version": 1,
+  "summary": "Ordered twelve-mission onboarding path that proves the playable platform.",
+  "title": "Vertical Slice"
+}

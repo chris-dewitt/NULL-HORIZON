@@ -1,0 +1,131 @@
+{
+  "chapter_id": "version_vault",
+  "completion": {
+    "mode": "all",
+    "objective_ids": [
+      "inspect_status",
+      "inspect_diff",
+      "restore_signed"
+    ]
+  },
+  "difficulty": "introductory",
+  "environment": {
+    "git": {
+      "branches": {
+        "main": "c1"
+      },
+      "commits": [
+        {
+          "author": "crew",
+          "files": {
+            "README.md": "Version Vault signed configs.\n",
+            "routing.conf": "thruster_a=nominal\nthruster_b=nominal\n"
+          },
+          "id": "c0",
+          "message": "Initial vault seed"
+        },
+        {
+          "author": "orion",
+          "files": {
+            "README.md": "Version Vault signed configs.\n",
+            "routing.conf": "thruster_a=nominal\nthruster_b=standby\n"
+          },
+          "id": "c1",
+          "message": "Sign thruster routing",
+          "parent": "c0"
+        }
+      ],
+      "initial_branch": "main",
+      "working_tree": {
+        "routing.conf": "thruster_a=override\nthruster_b=standby\n"
+      }
+    },
+    "schema_version": 1,
+    "seed": 11,
+    "template_id": "git.repo.v1"
+  },
+  "hints": [
+    {
+      "level": 1,
+      "text": "Start with git status to see which file changed."
+    },
+    {
+      "level": 2,
+      "text": "Use git diff to read the unauthorized content."
+    },
+    {
+      "level": 3,
+      "text": "Restore a tracked file with git checkout -- routing.conf."
+    },
+    {
+      "level": 4,
+      "text": "After checkout, git status should report a clean working tree."
+    }
+  ],
+  "mission_id": "version.unsigned_change.01",
+  "narrative": {
+    "briefing_dialogue_id": "dialogue.version.unsigned_change.briefing",
+    "success_dialogue_id": "dialogue.version.unsigned_change.success"
+  },
+  "objectives": [
+    {
+      "assert": {
+        "last_command": "git status",
+        "stdout_contains": "routing.conf",
+        "working_tree_clean": false
+      },
+      "description": "Run git status and confirm the working tree is dirty.",
+      "id": "inspect_status",
+      "type": "git_state",
+      "visible": true
+    },
+    {
+      "assert": {
+        "last_command": "git diff",
+        "stdout_contains": "thruster_a=override"
+      },
+      "description": "Run git diff and confirm the unauthorized thruster_a override.",
+      "id": "inspect_diff",
+      "type": "git_state",
+      "visible": true
+    },
+    {
+      "assert": {
+        "file_equals:routing.conf": "thruster_a=nominal\nthruster_b=standby\n",
+        "working_tree_clean": true
+      },
+      "description": "Discard the unauthorized edit and restore the signed routing.conf.",
+      "id": "restore_signed",
+      "type": "git_state",
+      "visible": true
+    }
+  ],
+  "requirements": {
+    "app_version": ">=0.1.0",
+    "online": false,
+    "prerequisite_skills": []
+  },
+  "rewards": {
+    "clearance_points": 35,
+    "mastery": {
+      "git.inspect": 1,
+      "git.recover": 1
+    },
+    "unlocks": [
+      "lore.version.unsigned_change.01"
+    ]
+  },
+  "schema_version": 1,
+  "skills": {
+    "primary": "git.inspect",
+    "secondary": [
+      "git.recover"
+    ]
+  },
+  "summary": "Find and discard an unauthorized working-tree edit in the Version Vault.",
+  "title": "Unsigned Change",
+  "tools": [
+    "git"
+  ],
+  "version": "1.0.0"
+}

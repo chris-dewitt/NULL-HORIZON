@@ -1,0 +1,98 @@
+{
+  "chapter_id": "maintenance_deck",
+  "completion": {
+    "mode": "all",
+    "objective_ids": [
+      "read_log"
+    ]
+  },
+  "difficulty": "introductory",
+  "environment": {
+    "filesystem": {
+      "cwd": "/home/operator",
+      "entries": [
+        {
+          "path": "/home/operator",
+          "type": "dir"
+        },
+        {
+          "path": "/var/log/maintenance",
+          "type": "dir"
+        },
+        {
+          "content": "INFO ok\nERROR pump-2 stall\n",
+          "path": "/var/log/maintenance/service.log",
+          "type": "file"
+        }
+      ]
+    },
+    "schema_version": 1,
+    "seed": 52,
+    "template_id": "terminal.vfs.v1"
+  },
+  "hints": [
+    {
+      "level": 1,
+      "text": "Logs are under /var/log/maintenance."
+    },
+    {
+      "level": 2,
+      "text": "Use cat on service.log."
+    },
+    {
+      "level": 3,
+      "text": "Confirm pump-2 stall appears."
+    },
+    {
+      "level": 4,
+      "text": "cat /var/log/maintenance/service.log"
+    }
+  ],
+  "mission_id": "maintenance.inspect_log.01",
+  "narrative": {
+    "briefing_dialogue_id": "dialogue.maintenance.inspect_log.01.briefing",
+    "success_dialogue_id": "dialogue.maintenance.inspect_log.01.success"
+  },
+  "objectives": [
+    {
+      "assert": {
+        "exit_code": 0,
+        "last_command": "cat /var/log/maintenance/service.log",
+        "stdout_contains": "pump-2 stall"
+      },
+      "description": "Read service.log and confirm the pump stall.",
+      "id": "read_log",
+      "type": "command_output",
+      "visible": true
+    }
+  ],
+  "requirements": {
+    "app_version": ">=0.1.0",
+    "online": false,
+    "prerequisite_skills": [
+      "linux.navigation"
+    ]
+  },
+  "rewards": {
+    "clearance_points": 30,
+    "mastery": {
+      "linux.inspection": 1
+    },
+    "unlocks": [
+      "lore.maintenance.inspect_log.01"
+    ]
+  },
+  "schema_version": 1,
+  "skills": {
+    "primary": "linux.inspection",
+    "secondary": [
+      "linux.navigation"
+    ]
+  },
+  "summary": "Find and read the maintenance service log.",
+  "title": "Inspect Service Log",
+  "tools": [
+    "terminal"
+  ],
+  "version": "1.0.0"
+}

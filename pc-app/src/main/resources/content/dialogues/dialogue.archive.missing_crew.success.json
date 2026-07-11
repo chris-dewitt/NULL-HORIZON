@@ -1,0 +1,14 @@
+{
+  "dialogue_id": "dialogue.archive.missing_crew.success",
+  "lines": [
+    {
+      "speaker": "ORION",
+      "text": "Missing crew identified. Registry integrity checks still match the seed census."
+    },
+    {
+      "speaker": "MICA",
+      "text": "Good. SELECT is a sensor. Keep the mission database separate from ship profile storage."
+    }
+  ],
+  "schema_version": 1
+}

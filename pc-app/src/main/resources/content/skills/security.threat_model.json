@@ -1,0 +1,8 @@
+{
+  "description": "Curriculum skill for Threat Modeling.",
+  "domain": "security",
+  "name": "Threat Modeling",
+  "prerequisites": [],
+  "schema_version": 1,
+  "skill_id": "security.threat_model"
+}

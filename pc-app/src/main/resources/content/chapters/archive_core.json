@@ -1,0 +1,16 @@
+{
+  "chapter_id": "archive_core",
+  "mission_ids": [
+    "archive.missing_crew.01",
+    "archive.sort_limit.01",
+    "archive.aggregate.01",
+    "archive.join_pods.01",
+    "archive.cte_missing.01",
+    "archive.constraints.01",
+    "archive.manifest_capstone.01"
+  ],
+  "region": "Archive Core",
+  "schema_version": 1,
+  "summary": "SQL investigation of crew and passenger records.",
+  "title": "Archive Core"
+}

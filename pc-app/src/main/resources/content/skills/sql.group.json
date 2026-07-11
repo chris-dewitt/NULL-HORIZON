@@ -1,0 +1,10 @@
+{
+  "description": "Curriculum skill for Grouping.",
+  "domain": "sql",
+  "name": "Grouping",
+  "prerequisites": [
+    "sql.aggregate"
+  ],
+  "schema_version": 1,
+  "skill_id": "sql.group"
+}

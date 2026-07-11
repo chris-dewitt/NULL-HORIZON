@@ -1,0 +1,83 @@
+{
+  "chapter_id": "emergency_interface",
+  "completion": {
+    "mode": "all",
+    "objective_ids": [
+      "select_all"
+    ]
+  },
+  "difficulty": "introductory",
+  "environment": {
+    "databases": [
+      {
+        "id": "archive",
+        "policy": "select_only",
+        "seed_sql": "CREATE TABLE roster (id INTEGER PRIMARY KEY, callsign TEXT, status TEXT);\nINSERT INTO roster VALUES (1, 'ORION', 'fragment'), (2, 'VEGA', 'active');\n"
+      }
+    ],
+    "schema_version": 1,
+    "seed": 41,
+    "template_id": "sql.sqlite.v1"
+  },
+  "hints": [
+    {
+      "level": 1,
+      "text": "Open the SQL console."
+    },
+    {
+      "level": 2,
+      "text": "Select from roster."
+    },
+    {
+      "level": 3,
+      "text": "Return callsign and status columns."
+    },
+    {
+      "level": 4,
+      "text": "SELECT callsign, status FROM roster;"
+    }
+  ],
+  "mission_id": "emergency.first_sql.01",
+  "narrative": {
+    "briefing_dialogue_id": "dialogue.emergency.first_sql.01.briefing",
+    "success_dialogue_id": "dialogue.emergency.first_sql.01.success"
+  },
+  "objectives": [
+    {
+      "assert": {
+        "columns": "callsign,status",
+        "query_contains": "roster",
+        "row_count": "2"
+      },
+      "description": "Select callsign and status for all roster rows.",
+      "id": "select_all",
+      "type": "sql_result",
+      "visible": true
+    }
+  ],
+  "requirements": {
+    "app_version": ">=0.1.0",
+    "online": false,
+    "prerequisite_skills": []
+  },
+  "rewards": {
+    "clearance_points": 35,
+    "mastery": {
+      "sql.select": 1
+    },
+    "unlocks": [
+      "lore.emergency.first_sql.01"
+    ]
+  },
+  "schema_version": 1,
+  "skills": {
+    "primary": "sql.select",
+    "secondary": []
+  },
+  "summary": "Run a first SELECT against the emergency crew roster.",
+  "title": "First SQL Request",
+  "tools": [
+    "sql"
+  ],
+  "version": "1.0.0"
+}

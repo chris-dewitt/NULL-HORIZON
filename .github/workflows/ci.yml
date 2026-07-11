@@ -78,6 +78,21 @@ jobs:
       - name: Lint, unit tests, and debug assemble
         run: ./gradlew --no-daemon lintDebug test assembleDebug
 
+  pc:
+    name: PC Desktop
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: pc-app
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+      - name: Unit tests and compile
+        run: ./gradlew --no-daemon test compileKotlin
+
   repo-guards:
     name: Repository guards
     runs-on: ubuntu-latest
@@ -91,9 +106,12 @@ jobs:
           test -f scripts/check.sh
           test -f backend/api/app/main.py
           test -f android-app/app/src/main/java/com/nullhorizon/app/MainActivity.kt
+          test -f pc-app/src/main/kotlin/com/nullhorizon/pc/Main.kt
+          test -f docs/ADR/0019-compose-desktop-pc-client.md
           test -f content/schema/mission.schema.json
           test -f scripts/validate_content.py
           test -f android-app/app/src/main/assets/content/manifest.json
+          test -f pc-app/src/main/resources/content/manifest.json
       - name: Basic secret scan
         run: |
           if git grep -nE 'BEGIN (RSA |OPENSSH |EC )?PRIVATE KEY|AKIA[0-9A-Z]{16}|xox[baprs]-[0-9A-Za-z-]{10,}' -- \

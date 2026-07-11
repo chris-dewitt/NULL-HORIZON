@@ -46,6 +46,7 @@ Operating rules for human and agentic contributors working in this monorepo.
 ## Epic boundaries
 
 - Epic 0 establishes repository standards, documentation, CI skeleton, and minimal compilable Android and FastAPI shells.
+- A separate Compose Desktop PC client (`pc-app/`, ADR-0019) parallels the Android client and reuses the same content bundles and JVM-safe mission engines.
 - Epic 1 delivers the Android application shell: navigation, design tokens, local profile, ship-map and mission placeholders, and accessibility settings.
 - Epic 2 delivers the mission content engine: schemas, YAML→JSON bundles, validation CLI, local content repository, and deterministic mission/objective/hint engines.
 - Epic 3 delivers the simulated terminal: virtual filesystem, command parser/registry, terminal UI, and command/filesystem objective assertions.
