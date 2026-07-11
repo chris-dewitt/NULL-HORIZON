@@ -1,12 +1,13 @@
 # NULL HORIZON backend
 
-FastAPI foundation for Epic 7. Learner-authored code must never execute in this process.
+FastAPI foundation plus trusted-development execution orchestration (Epics 7–8).
+Learner-authored code must never execute in the API process.
 
 ## Layout
 
 ```text
 api/       Public HTTP API, models, Alembic
-runner/    Execution contracts and future workers
+runner/    Execution contracts, queue, workers, orchestrator
 shared/    Shared schemas and observability helpers
 ```
 
@@ -26,6 +27,12 @@ Trusted development services:
 docker compose -f ../infra/compose/dev.yml up --build
 ```
 
-## Security boundary
+## Execution providers
 
-`EXECUTION_PROVIDER` defaults to `fake`. The fake provider returns deterministic fixtures and never imports learner source. Real execution belongs in isolated runners (Epic 8), not in `api/`.
+| `EXECUTION_PROVIDER` | Behavior |
+| --- | --- |
+| `fake` (default) | Deterministic fixtures; never imports learner source |
+| `local_trusted` | Runner orchestrator with ephemeral workspaces and subprocess workers |
+| `hardened` / `production` | Blocked until security review (HTTP 503) |
+
+See ADR-0011. Public deployment of a hardened sandbox remains disabled.

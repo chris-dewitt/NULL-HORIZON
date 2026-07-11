@@ -7,6 +7,7 @@ from datetime import UTC, datetime
 from typing import Annotated
 
 from fastapi import APIRouter, Depends, Header, HTTPException, status
+from runner.contracts.provider import DeploymentBlockedError
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
@@ -18,7 +19,7 @@ from api.app.deps import (
     get_execution_provider,
     get_idempotency,
 )
-from api.app.providers.fake import FakeExecutionProvider
+from api.app.providers.base import ExecutionProvider
 from api.app.schemas import (
     ExecutionReceipt,
     ExecutionResultResponse,
@@ -34,7 +35,7 @@ def submit_execution(
     session: Annotated[Session, Depends(get_db)],
     profile: Annotated[Profile, Depends(get_current_profile)],
     idem: Annotated[IdempotencyService, Depends(get_idempotency)],
-    provider: Annotated[FakeExecutionProvider, Depends(get_execution_provider)],
+    provider: Annotated[ExecutionProvider, Depends(get_execution_provider)],
     idempotency_key: Annotated[str | None, Header(alias="Idempotency-Key")] = None,
 ) -> ExecutionReceipt:
     key = idem.require_key(idempotency_key or body.idempotency_key)
@@ -56,8 +57,18 @@ def submit_execution(
         created_at=now,
         updated_at=now,
     )
-    # Fake provider builds a deterministic result without running learner code.
-    result = provider.build_result(execution_id, body)
+    try:
+        result = provider.build_result(execution_id, body)
+    except DeploymentBlockedError as exc:
+        raise HTTPException(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail={
+                "error": {
+                    "code": "EXECUTION_BLOCKED",
+                    "message": str(exc),
+                }
+            },
+        ) from exc
     row = ExecutionResultRow(
         id=f"res_{secrets.token_urlsafe(10)}",
         execution_id=execution_id,
@@ -74,7 +85,7 @@ def submit_execution(
     session.flush()
 
     receipt = ExecutionReceipt(
-        execution_id=execution_id, status="completed", poll_after_ms=0
+        execution_id=execution_id, status=result.status, poll_after_ms=0
     )
     idem.put("execution_submit", profile.id, key, receipt.model_dump())
     return receipt
