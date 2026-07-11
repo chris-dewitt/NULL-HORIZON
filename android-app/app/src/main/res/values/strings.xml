@@ -52,6 +52,15 @@
     <string name="mission_sql_result_truncated">Showing 20 of %1$d rows</string>
     <string name="mission_sql_input">SQL query</string>
     <string name="mission_sql_run">Run query</string>
+    <string name="mission_editor">Code editor</string>
+    <string name="mission_editor_undo">Undo</string>
+    <string name="mission_editor_redo">Redo</string>
+    <string name="mission_editor_show_diff">Show diff</string>
+    <string name="mission_editor_hide_diff">Hide diff</string>
+    <string name="mission_editor_symbols">Symbols</string>
+    <string name="mission_test_console">Test console</string>
+    <string name="mission_test_console_empty">No test run yet.</string>
+    <string name="mission_run_tests">Run tests</string>
     <string name="mission_objectives">Objectives</string>
     <string name="mission_request_hint">Request hint</string>
     <string name="mission_hint_item">Hint %1$d: %2$s</string>
