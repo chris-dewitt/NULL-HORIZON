@@ -1,0 +1,7 @@
+schema_version: 1
+skill_id: linux.inspection
+name: Inspect file contents
+domain: linux
+description: Read and search files with cat and grep.
+prerequisites:
+  - linux.navigation

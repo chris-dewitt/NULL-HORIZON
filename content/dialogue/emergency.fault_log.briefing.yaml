@@ -1,0 +1,7 @@
+schema_version: 1
+dialogue_id: dialogue.emergency.fault_log.briefing
+lines:
+  - speaker: ORION
+    text: Life-support telemetry is incomplete. A fault log exists somewhere under /var/log.
+  - speaker: MICA
+    text: Use the terminal. Do not invent paths that are not in the mission filesystem.

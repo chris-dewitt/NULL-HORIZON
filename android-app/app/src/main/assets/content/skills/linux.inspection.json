@@ -1,0 +1,10 @@
+{
+  "description": "Read and search files with cat and grep.",
+  "domain": "linux",
+  "name": "Inspect file contents",
+  "prerequisites": [
+    "linux.navigation"
+  ],
+  "schema_version": 1,
+  "skill_id": "linux.inspection"
+}

@@ -162,6 +162,19 @@ def referential_errors(docs: dict[str, list[tuple[Path, dict[str, Any]]]]) -> li
             if ".." in target or not target.startswith("/workspace/"):
                 errors.append(f"{path}: editable path escapes workspace: {target}")
 
+        filesystem = mission["environment"].get("filesystem")
+        if filesystem:
+            cwd = filesystem.get("cwd", "")
+            if ".." in cwd or not cwd.startswith("/"):
+                errors.append(f"{path}: filesystem cwd must be an absolute sandbox path")
+            for entry in filesystem.get("entries", []):
+                entry_path = entry.get("path", "")
+                if ".." in entry_path.split("/") or not entry_path.startswith("/"):
+                    errors.append(f"{path}: filesystem entry escapes sandbox: {entry_path}")
+            if mission["requirements"]["online"] is False and "terminal" in mission.get("tools", []):
+                if filesystem.get("entries") is None:
+                    errors.append(f"{path}: terminal mission lacks filesystem entries")
+
     return errors
 
 

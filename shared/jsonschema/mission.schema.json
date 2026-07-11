@@ -26,7 +26,7 @@
     "schema_version": { "type": "integer", "const": 1 },
     "mission_id": {
       "type": "string",
-      "pattern": "^[a-z0-9]+(\\.[a-z0-9_]+)+$"
+      "pattern": "^[a-z0-9_]+(\\.[a-z0-9_]+)+$"
     },
     "version": {
       "type": "string",
@@ -134,6 +134,22 @@
           {
             "if": {
               "properties": { "type": { "const": "state_assertion" } }
+            },
+            "then": {
+              "required": ["assert"]
+            }
+          },
+          {
+            "if": {
+              "properties": { "type": { "const": "command_output" } }
+            },
+            "then": {
+              "required": ["assert"]
+            }
+          },
+          {
+            "if": {
+              "properties": { "type": { "const": "filesystem_state" } }
             },
             "then": {
               "required": ["assert"]
