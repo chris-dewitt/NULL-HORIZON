@@ -28,11 +28,19 @@ class ProfileSetupViewModel(
     init {
         viewModelScope.launch {
             profileRepository.profile.collect { profile ->
-                _uiState.update {
-                    it.copy(
+                _uiState.update { current ->
+                    val configured = profile?.isConfigured == true
+                    val nextName = when {
+                        profile != null -> profile.displayName
+                        // Local data was just deleted — reset the form.
+                        current.profileConfigured && !configured -> ""
+                        else -> current.displayNameInput
+                    }
+                    current.copy(
                         isLoading = false,
-                        profileConfigured = profile?.isConfigured == true,
-                        displayNameInput = profile?.displayName.orEmpty().ifBlank { it.displayNameInput },
+                        profileConfigured = configured,
+                        displayNameInput = nextName,
+                        errorMessage = if (configured) current.errorMessage else null,
                     )
                 }
             }

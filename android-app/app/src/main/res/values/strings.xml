@@ -22,7 +22,7 @@
     <string name="ship_map_selected">Selected: %1$s (%2$s)</string>
 
     <string name="missions_title">Missions</string>
-    <string name="missions_subtitle">Loaded from the starter content bundle. Select a mission to begin.</string>
+    <string name="missions_subtitle">Vertical-slice missions are listed first. Select one to begin.</string>
     <string name="missions_loading">Loading missions…</string>
     <string name="mission_status_available">Available</string>
     <string name="mission_status_locked">Locked</string>
@@ -104,7 +104,12 @@
     <string name="settings_crash_reporting">Allow crash reporting</string>
     <string name="settings_data_section">Your data</string>
     <string name="settings_export_data">Export local data</string>
+    <string name="settings_export_preview">Export preview</string>
     <string name="settings_delete_data">Delete local data</string>
+    <string name="settings_delete_confirm_title">Delete local data?</string>
+    <string name="settings_delete_confirm_body">This removes your local operator profile, mission progress, and privacy settings from this device. You will return to profile setup.</string>
+    <string name="settings_delete_confirm_action">Delete</string>
+    <string name="settings_delete_cancel">Cancel</string>
     <string name="settings_accessibility_section">Accessibility</string>
     <string name="settings_high_contrast">High contrast</string>
     <string name="settings_reduced_motion">Reduced motion</string>
