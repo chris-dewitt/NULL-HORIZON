@@ -13,7 +13,7 @@ android {
         minSdk = libs.versions.minSdk.get().toInt()
         targetSdk = libs.versions.targetSdk.get().toInt()
         versionCode = 1
-        versionName = "0.0.1"
+        versionName = "0.1.0-epic1"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
@@ -45,6 +45,10 @@ android {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
     }
+
+    testOptions {
+        unitTests.isIncludeAndroidResources = false
+    }
 }
 
 dependencies {
@@ -54,11 +58,20 @@ dependencies {
     implementation(libs.androidx.compose.ui)
     implementation(libs.androidx.compose.ui.tooling.preview)
     implementation(libs.androidx.compose.material3)
+    implementation(libs.androidx.compose.material.icons.core)
+    implementation(libs.androidx.compose.material.icons.extended)
+    implementation(libs.androidx.navigation.compose)
+    implementation(libs.androidx.lifecycle.runtime.compose)
+    implementation(libs.androidx.lifecycle.viewmodel.compose)
+    implementation(libs.androidx.datastore.preferences)
+    implementation(libs.kotlinx.coroutines.core)
 
     debugImplementation(libs.androidx.compose.ui.tooling)
     debugImplementation(libs.androidx.compose.ui.test.manifest)
 
     testImplementation(libs.junit)
+    testImplementation(libs.truth)
+    testImplementation(libs.kotlinx.coroutines.test)
 
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.junit)
