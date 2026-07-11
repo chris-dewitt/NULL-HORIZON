@@ -30,27 +30,71 @@ class MissionProgressItem(BaseModel):
     mission_id: str
     status: str
     best_hint_level: int = 0
+    clearance_awarded: int = 0
+    attempt_count: int = 1
+    mission_version: str = "1.0.0"
+
+
+class SkillEvidenceItem(BaseModel):
+    event_id: str
+    skill_id: str
+    mission_id: str
+    assisted: bool = False
+    delta: int = Field(default=1, ge=1)
+
+
+class SkillMasteryItem(BaseModel):
+    skill_id: str
+    mastery_level: str
+    evidence_count: int
+    unassisted_evidence_count: int
+    last_practiced_at_epoch_ms: int = 0
+
+
+class RewardItem(BaseModel):
+    reward_id: str
+    equipped: bool = False
+
+
+class ReviewRecommendationItem(BaseModel):
+    skill_id: str
+    reason: str
 
 
 class ProgressResponse(BaseModel):
     profile_id: str
-    missions: list[MissionProgressItem]
+    rank: str = "Emergency Operator"
+    clearance_points: int = 0
+    missions: list[MissionProgressItem] = []
+    skills: list[SkillMasteryItem] = []
+    rewards: list[RewardItem] = []
+    review_recommendations: list[ReviewRecommendationItem] = []
 
 
 class UpsertMissionProgressRequest(BaseModel):
     status: Literal["completed"] = "completed"
     best_hint_level: int = Field(default=0, ge=0)
+    clearance_awarded: int = Field(default=0, ge=0)
+    attempt_count: int = Field(default=1, ge=1)
+    mission_version: str = "1.0.0"
 
 
 class ProgressSyncRequest(BaseModel):
     idempotency_key: str | None = None
-    missions: list[MissionProgressItem]
+    missions: list[MissionProgressItem] = []
+    skill_evidence: list[SkillEvidenceItem] = []
+    rewards: list[RewardItem] = []
 
 
 class ProgressSyncResponse(BaseModel):
     profile_id: str
     accepted: int
+    rank: str
+    clearance_points: int
     missions: list[MissionProgressItem]
+    skills: list[SkillMasteryItem]
+    rewards: list[RewardItem]
+    review_recommendations: list[ReviewRecommendationItem] = []
 
 
 class ContentManifestResponse(BaseModel):

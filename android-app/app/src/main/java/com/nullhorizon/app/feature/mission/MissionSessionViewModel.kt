@@ -15,6 +15,7 @@ import com.nullhorizon.app.feature.mission.engine.HintEngine
 import com.nullhorizon.app.feature.mission.engine.MissionPhase
 import com.nullhorizon.app.feature.mission.engine.MissionSessionState
 import com.nullhorizon.app.feature.mission.engine.MissionStateMachine
+import com.nullhorizon.app.progression.DebriefSummary
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -30,6 +31,7 @@ data class MissionSessionUiState(
     val success: DialogueDefinition? = null,
     val session: MissionSessionState = MissionSessionState(),
     val visibleHintTexts: List<String> = emptyList(),
+    val debrief: DebriefSummary? = null,
     val errorMessage: String? = null,
 )
 
@@ -172,7 +174,11 @@ class MissionSessionViewModel(
         updateSession(next, mission)
         if (next.phase == MissionPhase.Completed) {
             viewModelScope.launch {
-                progressRepository.markCompleted(mission.missionId)
+                val debrief = progressRepository.recordCompletion(
+                    mission = mission,
+                    hintLevelUsed = next.hintLevel,
+                )
+                _uiState.update { it.copy(debrief = debrief) }
             }
         }
     }
@@ -207,6 +213,7 @@ class MissionSessionViewModel(
             success = success,
             session = session,
             visibleHintTexts = hints,
+            debrief = _uiState.value.debrief,
             errorMessage = null,
         )
     }

@@ -146,3 +146,22 @@ data class ChapterDefinition(
     val summary: String? = null,
     @SerialName("mission_ids") val missionIds: List<String>,
 )
+
+@Serializable
+data class SkillDefinition(
+    @SerialName("schema_version") val schemaVersion: Int,
+    @SerialName("skill_id") val skillId: String,
+    val name: String,
+    val domain: String,
+    val description: String? = null,
+    val prerequisites: List<String> = emptyList(),
+)
+
+@Serializable
+data class RewardDefinition(
+    @SerialName("schema_version") val schemaVersion: Int,
+    @SerialName("reward_id") val rewardId: String,
+    val kind: String,
+    val name: String,
+    val description: String? = null,
+)

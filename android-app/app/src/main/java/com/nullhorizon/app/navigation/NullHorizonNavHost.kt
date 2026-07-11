@@ -33,6 +33,8 @@ import com.nullhorizon.app.feature.settings.SettingsScreen
 import com.nullhorizon.app.feature.settings.SettingsViewModel
 import com.nullhorizon.app.feature.shipmap.ShipMapScreen
 import com.nullhorizon.app.feature.shipmap.ShipMapViewModel
+import com.nullhorizon.app.feature.skills.SkillMapScreen
+import com.nullhorizon.app.feature.skills.SkillMapViewModel
 
 @Composable
 fun NullHorizonNavHost(
@@ -164,6 +166,15 @@ private fun MainShell(
                     viewModel = viewModel,
                     onMissionSelected = onOpenMission,
                 )
+            }
+            composable(TopLevelDestination.Skills.route) {
+                val viewModel: SkillMapViewModel = viewModel(
+                    factory = SkillMapViewModel.factory(
+                        contentRepository = appContainer.contentRepository,
+                        progressionRepository = appContainer.progressionRepository,
+                    ),
+                )
+                SkillMapScreen(viewModel = viewModel)
             }
             composable(TopLevelDestination.Settings.route) {
                 val viewModel: SettingsViewModel = viewModel(
