@@ -14,7 +14,11 @@ cd pc-app
 ./gradlew run
 ```
 
-Requires JDK 17+. Optional native installers:
+Requires a JDK on `PATH` / `JAVA_HOME` (17+ is fine). The project compiles with
+**JDK 17**; if you only have a newer JDK installed (for example Temurin 25),
+Gradle will auto-download a JDK 17 toolchain on first run.
+
+Optional native installers:
 
 ```bash
 ./gradlew packageDeb   # Linux
