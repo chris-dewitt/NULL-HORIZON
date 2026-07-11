@@ -30,6 +30,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.nullhorizon.app.R
 import com.nullhorizon.app.feature.mission.engine.MissionPhase
 import com.nullhorizon.app.simulation.git.GitRepositoryState
+import com.nullhorizon.app.simulation.sql.SqlSessionState
 import com.nullhorizon.app.simulation.terminal.TerminalSessionState
 
 @OptIn(ExperimentalLayoutApi::class)
@@ -114,6 +115,14 @@ fun MissionSessionScreen(
                             enabled = state.session.phase == MissionPhase.InProgress,
                             onSubmit = viewModel::runGitCommand,
                             onResolveConflict = viewModel::resolveConflict,
+                        )
+                    }
+
+                    if (mission.tools.contains("sql") && state.session.sql != null) {
+                        SqlPanel(
+                            sql = state.session.sql!!,
+                            enabled = state.session.phase == MissionPhase.InProgress,
+                            onSubmit = viewModel::runSqlQuery,
                         )
                     }
 
@@ -448,4 +457,149 @@ private fun commitGraphLines(git: GitRepositoryState): List<String> {
         current = commit.parents.firstOrNull()
     }
     return lines
+}
+
+@Composable
+private fun SqlPanel(
+    sql: SqlSessionState,
+    enabled: Boolean,
+    onSubmit: (String) -> Unit,
+) {
+    var input by rememberSaveable { mutableStateOf("") }
+
+    Text(
+        text = stringResource(R.string.mission_sql),
+        style = MaterialTheme.typography.titleMedium,
+    )
+    Text(
+        text = stringResource(R.string.mission_sql_database, sql.databaseId, sql.policy),
+        style = MaterialTheme.typography.labelLarge,
+        fontFamily = FontFamily.Monospace,
+        modifier = Modifier.semantics {
+            contentDescription = "SQL database ${sql.databaseId}"
+        },
+    )
+
+    Text(
+        text = stringResource(R.string.mission_sql_schema),
+        style = MaterialTheme.typography.titleSmall,
+    )
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .border(1.dp, MaterialTheme.colorScheme.outline)
+            .padding(12.dp)
+            .semantics { contentDescription = "SQL schema browser" },
+        verticalArrangement = Arrangement.spacedBy(8.dp),
+    ) {
+        if (sql.schema.isEmpty()) {
+            Text(
+                text = stringResource(R.string.mission_sql_schema_empty),
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+            )
+        } else {
+            sql.schema.forEach { table ->
+                val columns = table.columns.joinToString { "${it.name}:${it.type}" }
+                Text(
+                    text = "${table.name} ($columns)",
+                    fontFamily = FontFamily.Monospace,
+                    style = MaterialTheme.typography.bodySmall,
+                )
+                sql.sampleRows[table.name]?.let { sample ->
+                    if (sample.rows.isNotEmpty()) {
+                        Text(
+                            text = stringResource(R.string.mission_sql_sample, table.name),
+                            style = MaterialTheme.typography.labelMedium,
+                        )
+                        Text(
+                            text = sample.columns.joinToString(" | "),
+                            fontFamily = FontFamily.Monospace,
+                            style = MaterialTheme.typography.bodySmall,
+                        )
+                        sample.rows.take(3).forEach { row ->
+                            Text(
+                                text = row.joinToString(" | "),
+                                fontFamily = FontFamily.Monospace,
+                                style = MaterialTheme.typography.bodySmall,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            )
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    Text(
+        text = stringResource(R.string.mission_sql_result),
+        style = MaterialTheme.typography.titleSmall,
+    )
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .border(1.dp, MaterialTheme.colorScheme.outline)
+            .padding(12.dp)
+            .semantics { contentDescription = "SQL result table" },
+        verticalArrangement = Arrangement.spacedBy(4.dp),
+    ) {
+        when {
+            sql.lastError != null -> Text(
+                text = sql.lastError.orEmpty(),
+                color = MaterialTheme.colorScheme.error,
+                fontFamily = FontFamily.Monospace,
+                style = MaterialTheme.typography.bodySmall,
+            )
+            sql.lastResult == null -> Text(
+                text = stringResource(R.string.mission_sql_result_empty),
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+            )
+            else -> {
+                val result = sql.lastResult!!
+                Text(
+                    text = result.columns.joinToString(" | "),
+                    fontFamily = FontFamily.Monospace,
+                    style = MaterialTheme.typography.bodyMedium,
+                )
+                result.rows.take(20).forEach { row ->
+                    Text(
+                        text = row.joinToString(" | "),
+                        fontFamily = FontFamily.Monospace,
+                        style = MaterialTheme.typography.bodySmall,
+                    )
+                }
+                if (result.rows.size > 20) {
+                    Text(
+                        text = stringResource(R.string.mission_sql_result_truncated, result.rowCount),
+                        style = MaterialTheme.typography.labelMedium,
+                    )
+                }
+            }
+        }
+    }
+
+    if (enabled) {
+        OutlinedTextField(
+            value = input,
+            onValueChange = { input = it },
+            modifier = Modifier
+                .fillMaxWidth()
+                .semantics { contentDescription = "SQL input" },
+            minLines = 2,
+            maxLines = 5,
+            label = { Text(stringResource(R.string.mission_sql_input)) },
+        )
+        Button(
+            onClick = {
+                val query = input.trim()
+                if (query.isNotEmpty()) {
+                    onSubmit(query)
+                }
+            },
+            modifier = Modifier.semantics { contentDescription = "Run SQL query" },
+        ) {
+            Text(stringResource(R.string.mission_sql_run))
+        }
+    }
 }

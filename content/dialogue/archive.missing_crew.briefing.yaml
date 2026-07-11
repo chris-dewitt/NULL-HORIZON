@@ -1,0 +1,7 @@
+schema_version: 1
+dialogue_id: dialogue.archive.missing_crew.briefing
+lines:
+  - speaker: ORION
+    text: Archive Core reports crew records with status missing. The registry database is isolated for this console.
+  - speaker: MICA
+    text: Inspect the schema, then SELECT the missing callsigns. Do not attempt writes — policy is select_only.

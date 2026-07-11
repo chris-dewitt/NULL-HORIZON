@@ -1,0 +1,6 @@
+schema_version: 1
+skill_id: sql.select
+name: Query with SELECT
+domain: sql
+description: Retrieve rows with SELECT, WHERE, and ORDER BY against a mission database.
+prerequisites: []

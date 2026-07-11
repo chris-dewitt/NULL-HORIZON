@@ -1,0 +1,5 @@
+schema_version: 1
+reward_id: lore.archive.missing_crew.01
+kind: lore
+name: Missing Crew Ledger
+description: A short ledger naming the two callsigns marked missing in Archive Core.

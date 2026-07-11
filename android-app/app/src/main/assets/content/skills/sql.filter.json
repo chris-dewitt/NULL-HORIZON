@@ -1,0 +1,10 @@
+{
+  "description": "Narrow result sets with WHERE predicates on status and related columns.",
+  "domain": "sql",
+  "name": "Filter rows",
+  "prerequisites": [
+    "sql.select"
+  ],
+  "schema_version": 1,
+  "skill_id": "sql.filter"
+}

@@ -119,6 +119,13 @@ class MissionSessionViewModel(
         runGitCommand(command)
     }
 
+    fun runSqlQuery(query: String) {
+        val machine = stateMachine ?: return
+        val mission = _uiState.value.mission ?: return
+        val next = machine.runSqlQuery(_uiState.value.session, query)
+        persistAndMaybeComplete(next, mission)
+    }
+
     private fun persistAndMaybeComplete(next: MissionSessionState, mission: MissionDefinition) {
         updateSession(next, mission)
         if (next.phase == MissionPhase.Completed) {

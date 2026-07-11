@@ -67,6 +67,9 @@ dependencies {
     implementation(libs.androidx.datastore.preferences)
     implementation(libs.kotlinx.coroutines.core)
     implementation(libs.kotlinx.serialization.json)
+    // Mission SQL console (Epic 5): isolated in-memory SQLite via JDBC so JVM unit tests
+    // can exercise the learner query path without Android SQLite/Room APIs. See ADR-0007.
+    implementation(libs.sqlite.jdbc)
 
     debugImplementation(libs.androidx.compose.ui.tooling)
     debugImplementation(libs.androidx.compose.ui.test.manifest)
