@@ -19,6 +19,8 @@ class ObjectiveEngine {
                         "filesystem_state" -> matchesFilesystem(state, expected)
                         "command_output" -> matchesCommandOutput(state, expected)
                         "git_state" -> matchesGitState(state, expected)
+                        "sql_result" -> matchesSqlResult(state, expected)
+                        "database_assertion" -> matchesDatabaseAssertion(state, expected)
                         else -> false
                     }
                 }
@@ -104,6 +106,68 @@ class ObjectiveEngine {
                 }
                 else -> false
             }
+        }
+    }
+
+    private fun matchesSqlResult(
+        state: MissionSessionState,
+        expected: Map<String, String>,
+    ): Boolean {
+        val sql = state.sql ?: return false
+        if (!sql.lastOk) return false
+        val result = sql.lastResult ?: return false
+        return expected.all { (key, value) ->
+            when {
+                key == "query_contains" -> sql.lastQuery.contains(value, ignoreCase = true)
+                key == "row_count" -> result.rowCount.toString() == value
+                key == "columns" -> result.columns.joinToString(",") == value
+                key == "ordered" -> true // handled with rows_* keys
+                key == "rows" -> {
+                    val ordered = expected["ordered"]?.lowercase() != "false"
+                    matchesRows(result.rows, value, ordered)
+                }
+                else -> false
+            }
+        }
+    }
+
+    private fun matchesDatabaseAssertion(
+        state: MissionSessionState,
+        expected: Map<String, String>,
+    ): Boolean {
+        val sql = state.sql ?: return false
+        return expected.all { (key, value) ->
+            when {
+                key == "database_id" -> sql.databaseId == value
+                key.startsWith("table_row_count:") -> {
+                    val table = key.removePrefix("table_row_count:")
+                    sql.tableRowCounts[table]?.toString() == value
+                }
+                key.startsWith("table_exists:") -> {
+                    val table = key.removePrefix("table_exists:")
+                    val exists = sql.schema.any { it.name == table }
+                    exists.toString() == value
+                }
+                else -> false
+            }
+        }
+    }
+
+    private fun matchesRows(
+        actual: List<List<String>>,
+        encoded: String,
+        ordered: Boolean,
+    ): Boolean {
+        val expectedRows = encoded.split(';')
+            .map { it.trim() }
+            .filter { it.isNotEmpty() }
+            .map { row -> row.split('|').map { cell -> cell.trim() } }
+        if (actual.size != expectedRows.size) return false
+        return if (ordered) {
+            actual == expectedRows
+        } else {
+            actual.map { it.joinToString("|") }.toSet() ==
+                expectedRows.map { it.joinToString("|") }.toSet()
         }
     }
 }

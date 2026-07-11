@@ -3,6 +3,7 @@ package com.nullhorizon.app.feature.mission.engine
 import com.nullhorizon.app.content.model.MissionDefinition
 import com.nullhorizon.app.content.toStateMap
 import com.nullhorizon.app.simulation.git.GitSimulator
+import com.nullhorizon.app.simulation.sql.SqlSimulator
 import com.nullhorizon.app.simulation.terminal.TerminalSimulator
 import com.nullhorizon.app.simulation.terminal.VirtualFileSystem
 import com.nullhorizon.app.simulation.terminal.VirtualFsEntry
@@ -29,15 +30,20 @@ class MissionStateMachine(
 
     private val initialGitState = mission.environment.git?.let { GitSimulator.fromDefinition(it) }
 
+    private val sqlSimulator: SqlSimulator? =
+        mission.environment.databases.firstOrNull()?.let { SqlSimulator(it) }
+
     fun initialState(): MissionSessionState {
         val terminal = terminalSimulator?.initialState(
             mission.environment.filesystem?.cwd ?: "/",
         )
+        val sql = sqlSimulator?.reset()
         return MissionSessionState(
             phase = MissionPhase.Briefing,
             worldState = mission.environment.initialState.toStateMap(),
             terminal = terminal,
             git = initialGitState,
+            sql = sql,
             completedObjectiveIds = emptySet(),
             hintLevel = 0,
             lastActionMessage = null,
@@ -114,6 +120,23 @@ class MissionStateMachine(
         return evaluate(
             state.copy(
                 git = nextGit,
+                lastActionMessage = null,
+            ),
+        )
+    }
+
+    fun runSqlQuery(state: MissionSessionState, query: String): MissionSessionState {
+        if (state.phase != MissionPhase.InProgress) {
+            return state.copy(lastActionMessage = "Start the mission before using SQL.")
+        }
+        val simulator = sqlSimulator
+            ?: return state.copy(lastActionMessage = "This mission has no SQL database.")
+        val sqlState = state.sql
+            ?: return state.copy(lastActionMessage = "SQL console is not initialized.")
+        val nextSql = simulator.execute(sqlState, query)
+        return evaluate(
+            state.copy(
+                sql = nextSql,
                 lastActionMessage = null,
             ),
         )
