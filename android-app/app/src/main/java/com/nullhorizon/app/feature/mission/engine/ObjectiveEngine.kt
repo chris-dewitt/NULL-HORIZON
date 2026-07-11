@@ -6,17 +6,25 @@ import com.nullhorizon.app.content.toStateMap
 class ObjectiveEngine {
     fun completedObjectiveIds(
         mission: MissionDefinition,
-        worldState: Map<String, String>,
+        state: MissionSessionState,
     ): Set<String> {
-        return mission.objectives
+        val newlySatisfied = mission.objectives
             .filter { objective ->
-                when (objective.type) {
-                    "state_assertion" -> matches(worldState, objective.assert.toStateMap())
-                    else -> false
+                if (objective.id in state.completedObjectiveIds) {
+                    true
+                } else {
+                    val expected = objective.assert.toStateMap()
+                    when (objective.type) {
+                        "state_assertion" -> matches(state.worldState, expected)
+                        "filesystem_state" -> matchesFilesystem(state, expected)
+                        "command_output" -> matchesCommandOutput(state, expected)
+                        else -> false
+                    }
                 }
             }
             .map { it.id }
             .toSet()
+        return state.completedObjectiveIds + newlySatisfied
     }
 
     fun isMissionComplete(
@@ -33,5 +41,35 @@ class ObjectiveEngine {
 
     private fun matches(worldState: Map<String, String>, expected: Map<String, String>): Boolean {
         return expected.all { (key, value) -> worldState[key] == value }
+    }
+
+    private fun matchesFilesystem(
+        state: MissionSessionState,
+        expected: Map<String, String>,
+    ): Boolean {
+        val terminal = state.terminal ?: return false
+        return expected.all { (key, value) ->
+            when (key) {
+                "cwd" -> terminal.cwd == value
+                else -> false
+            }
+        }
+    }
+
+    private fun matchesCommandOutput(
+        state: MissionSessionState,
+        expected: Map<String, String>,
+    ): Boolean {
+        val terminal = state.terminal ?: return false
+        return expected.all { (key, value) ->
+            when (key) {
+                "last_command" -> terminal.lastCommand == value
+                "stdout_equals" -> terminal.lastStdout == value
+                "stdout_contains" -> terminal.lastStdout.contains(value)
+                "stderr_contains" -> terminal.lastStderr.contains(value)
+                "exit_code" -> terminal.lastExitCode.toString() == value
+                else -> false
+            }
+        }
     }
 }

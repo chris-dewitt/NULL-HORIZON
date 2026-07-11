@@ -93,6 +93,17 @@ class MissionSessionViewModel(
         val machine = stateMachine ?: return
         val mission = _uiState.value.mission ?: return
         val next = machine.applyAction(_uiState.value.session, actionId)
+        persistAndMaybeComplete(next, mission)
+    }
+
+    fun runCommand(line: String) {
+        val machine = stateMachine ?: return
+        val mission = _uiState.value.mission ?: return
+        val next = machine.runCommand(_uiState.value.session, line)
+        persistAndMaybeComplete(next, mission)
+    }
+
+    private fun persistAndMaybeComplete(next: MissionSessionState, mission: MissionDefinition) {
         updateSession(next, mission)
         if (next.phase == MissionPhase.Completed) {
             viewModelScope.launch {

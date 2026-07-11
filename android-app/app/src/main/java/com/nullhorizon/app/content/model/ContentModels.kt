@@ -67,6 +67,20 @@ data class EnvironmentDefinition(
     val seed: Int,
     @SerialName("initial_state") val initialState: Map<String, JsonElement> = emptyMap(),
     val actions: List<MissionActionDefinition> = emptyList(),
+    val filesystem: VirtualFilesystemDefinition? = null,
+)
+
+@Serializable
+data class VirtualFilesystemDefinition(
+    val cwd: String,
+    val entries: List<VirtualFilesystemEntry>,
+)
+
+@Serializable
+data class VirtualFilesystemEntry(
+    val path: String,
+    val type: String,
+    val content: String? = null,
 )
 
 @Serializable
