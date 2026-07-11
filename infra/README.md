@@ -1,3 +1,5 @@
 # Infrastructure
 
-Local Docker Compose, Terraform, policies, and images. Production infrastructure is out of scope for Epic 0.
+Local Docker Compose for trusted development services lives in `compose/dev.yml`
+(Postgres, Redis, API). Production infrastructure remains out of scope until later epics.
+
