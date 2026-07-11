@@ -2,11 +2,14 @@
   "bundle_id": "null-horizon-starter",
   "channel": "dev",
   "chapters": [
+    "archive_core",
     "emergency_interface",
     "version_vault"
   ],
   "content_schema_version": 1,
   "dialogues": [
+    "dialogue.archive.missing_crew.briefing",
+    "dialogue.archive.missing_crew.success",
     "dialogue.emergency.fault_log.briefing",
     "dialogue.emergency.fault_log.success",
     "dialogue.emergency.lighting.briefing",
@@ -19,12 +22,14 @@
   "locale": "en",
   "min_app_version": "0.1.0",
   "missions": [
+    "archive.missing_crew.01",
     "emergency.fault_log.01",
     "emergency.lighting.01",
     "version.merge_conflict.01",
     "version.unsigned_change.01"
   ],
   "rewards": [
+    "lore.archive.missing_crew.01",
     "lore.emergency.fault_log.01",
     "lore.emergency.lighting.01",
     "lore.version.merge_conflict.01",
@@ -38,7 +43,9 @@
     "git.merge",
     "git.recover",
     "linux.inspection",
-    "linux.navigation"
+    "linux.navigation",
+    "sql.filter",
+    "sql.select"
   ],
   "version": "0.2.0"
 }

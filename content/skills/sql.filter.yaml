@@ -1,0 +1,7 @@
+schema_version: 1
+skill_id: sql.filter
+name: Filter rows
+domain: sql
+description: Narrow result sets with WHERE predicates on status and related columns.
+prerequisites:
+  - sql.select

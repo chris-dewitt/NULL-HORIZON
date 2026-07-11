@@ -1,0 +1,10 @@
+{
+  "chapter_id": "archive_core",
+  "mission_ids": [
+    "archive.missing_crew.01"
+  ],
+  "region": "Archive Core",
+  "schema_version": 1,
+  "summary": "Crew, cargo, and historical records recovered through SQL.",
+  "title": "Archive Core"
+}

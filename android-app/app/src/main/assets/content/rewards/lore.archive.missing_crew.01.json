@@ -1,0 +1,7 @@
+{
+  "description": "A short ledger naming the two callsigns marked missing in Archive Core.",
+  "kind": "lore",
+  "name": "Missing Crew Ledger",
+  "reward_id": "lore.archive.missing_crew.01",
+  "schema_version": 1
+}

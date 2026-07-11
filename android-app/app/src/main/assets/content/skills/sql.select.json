@@ -1,0 +1,8 @@
+{
+  "description": "Retrieve rows with SELECT, WHERE, and ORDER BY against a mission database.",
+  "domain": "sql",
+  "name": "Query with SELECT",
+  "prerequisites": [],
+  "schema_version": 1,
+  "skill_id": "sql.select"
+}

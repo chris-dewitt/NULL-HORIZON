@@ -1,0 +1,114 @@
+schema_version: 1
+mission_id: archive.missing_crew.01
+version: 1.0.0
+chapter_id: archive_core
+title: Missing Crew
+summary: Query the isolated crew registry to find records marked missing.
+difficulty: introductory
+
+requirements:
+  app_version: ">=0.1.0"
+  online: false
+  prerequisite_skills: []
+
+skills:
+  primary: sql.select
+  secondary:
+    - sql.filter
+
+narrative:
+  briefing_dialogue_id: dialogue.archive.missing_crew.briefing
+  success_dialogue_id: dialogue.archive.missing_crew.success
+
+tools:
+  - sql
+
+environment:
+  schema_version: 1
+  template_id: sql.sqlite.v1
+  seed: 17
+  databases:
+    - id: crew_registry
+      policy: select_only
+      seed_sql: |
+        CREATE TABLE crew (
+          crew_id INTEGER PRIMARY KEY,
+          callsign TEXT NOT NULL,
+          role TEXT NOT NULL,
+          status TEXT NOT NULL,
+          pod_id INTEGER
+        );
+        CREATE TABLE pods (
+          pod_id INTEGER PRIMARY KEY,
+          deck TEXT NOT NULL,
+          occupied INTEGER NOT NULL
+        );
+        INSERT INTO pods (pod_id, deck, occupied) VALUES
+          (1, 'A', 1),
+          (2, 'A', 1),
+          (3, 'B', 1),
+          (4, 'B', 0),
+          (5, 'C', 1),
+          (6, 'C', 1);
+        INSERT INTO crew (crew_id, callsign, role, status, pod_id) VALUES
+          (1, 'ORION', 'navigator', 'active', 1),
+          (2, 'MICA', 'systems', 'active', 2),
+          (3, 'KELL', 'medic', 'missing', 3),
+          (4, 'RIN', 'engineer', 'missing', 5),
+          (5, 'VOSS', 'pilot', 'active', 6),
+          (6, 'NYX', 'archivist', 'active', NULL);
+
+objectives:
+  - id: list_missing_ordered
+    type: sql_result
+    description: Select missing crew callsigns and roles, ordered by callsign.
+    visible: true
+    assert:
+      query_contains: "status"
+      columns: "callsign,role"
+      row_count: "2"
+      ordered: "true"
+      rows: "KELL|medic;RIN|engineer"
+  - id: list_missing_unordered
+    type: sql_result
+    description: Select the missing callsigns (order does not matter).
+    visible: true
+    assert:
+      query_contains: "missing"
+      columns: "callsign"
+      row_count: "2"
+      ordered: "false"
+      rows: "RIN;KELL"
+  - id: preserve_census
+    type: database_assertion
+    description: Confirm the crew census still has six seeded rows.
+    visible: true
+    assert:
+      database_id: crew_registry
+      table_exists:crew: "true"
+      table_row_count:crew: "6"
+
+hints:
+  - level: 1
+    text: Open the schema browser. The crew table has status values.
+  - level: 2
+    text: Try SELECT callsign, role FROM crew WHERE status = 'missing' ORDER BY callsign;
+  - level: 3
+    text: A second query can return only callsign without ORDER BY.
+  - level: 4
+    text: The census assertion checks that SELECT-only policy left six crew rows intact.
+
+rewards:
+  clearance_points: 40
+  mastery:
+    sql.select: 1
+    sql.filter: 1
+  unlocks:
+    - lore.archive.missing_crew.01
+
+completion:
+  mode: all
+  objective_ids:
+    - list_missing_ordered
+    - list_missing_unordered
+    - preserve_census
