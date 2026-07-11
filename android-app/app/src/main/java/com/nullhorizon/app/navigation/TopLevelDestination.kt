@@ -37,4 +37,7 @@ enum class TopLevelDestination(
 object Routes {
     const val ProfileSetup = "profile_setup"
     const val Main = "main"
+    const val MissionSession = "mission/{missionId}"
+
+    fun missionSession(missionId: String): String = "mission/$missionId"
 }

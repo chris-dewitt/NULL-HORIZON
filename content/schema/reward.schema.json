@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://nullhorizon.local/schema/reward.schema.json",
+  "title": "Reward",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "reward_id", "kind", "name"],
+  "properties": {
+    "schema_version": { "type": "integer", "const": 1 },
+    "reward_id": {
+      "type": "string",
+      "pattern": "^[a-z0-9_]+(\\.[a-z0-9_]+)+$"
+    },
+    "kind": {
+      "type": "string",
+      "enum": ["lore", "cosmetic", "clearance", "badge"]
+    },
+    "name": { "type": "string", "minLength": 1 },
+    "description": { "type": "string" }
+  }
+}

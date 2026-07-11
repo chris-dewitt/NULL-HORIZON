@@ -16,13 +16,17 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.nullhorizon.app.di.AppContainer
 import com.nullhorizon.app.feature.mission.MissionListScreen
 import com.nullhorizon.app.feature.mission.MissionListViewModel
+import com.nullhorizon.app.feature.mission.MissionSessionScreen
+import com.nullhorizon.app.feature.mission.MissionSessionViewModel
 import com.nullhorizon.app.feature.onboarding.ProfileSetupScreen
 import com.nullhorizon.app.feature.onboarding.ProfileSetupViewModel
 import com.nullhorizon.app.feature.settings.SettingsScreen
@@ -47,7 +51,6 @@ fun NullHorizonNavHost(
         Routes.ProfileSetup
     }
 
-    // Wait until the first profile emission so rotation/process restore does not flash setup.
     if (profileState.isLoading) {
         return
     }
@@ -70,6 +73,26 @@ fun NullHorizonNavHost(
         composable(Routes.Main) {
             MainShell(
                 appContainer = appContainer,
+                onOpenMission = { missionId ->
+                    navController.navigate(Routes.missionSession(missionId))
+                },
+            )
+        }
+        composable(
+            route = Routes.MissionSession,
+            arguments = listOf(navArgument("missionId") { type = NavType.StringType }),
+        ) { entry ->
+            val missionId = entry.arguments?.getString("missionId").orEmpty()
+            val viewModel: MissionSessionViewModel = viewModel(
+                factory = MissionSessionViewModel.factory(
+                    missionId = missionId,
+                    contentRepository = appContainer.contentRepository,
+                    progressRepository = appContainer.missionProgressRepository,
+                ),
+            )
+            MissionSessionScreen(
+                viewModel = viewModel,
+                onBack = { navController.popBackStack() },
             )
         }
     }
@@ -78,6 +101,7 @@ fun NullHorizonNavHost(
 @Composable
 private fun MainShell(
     appContainer: AppContainer,
+    onOpenMission: (String) -> Unit,
 ) {
     val tabNavController = rememberNavController()
     val navBackStackEntry by tabNavController.currentBackStackEntryAsState()
@@ -130,8 +154,16 @@ private fun MainShell(
                 ShipMapScreen(viewModel = viewModel)
             }
             composable(TopLevelDestination.Missions.route) {
-                val viewModel: MissionListViewModel = viewModel()
-                MissionListScreen(viewModel = viewModel)
+                val viewModel: MissionListViewModel = viewModel(
+                    factory = MissionListViewModel.factory(
+                        contentRepository = appContainer.contentRepository,
+                        progressRepository = appContainer.missionProgressRepository,
+                    ),
+                )
+                MissionListScreen(
+                    viewModel = viewModel,
+                    onMissionSelected = onOpenMission,
+                )
             }
             composable(TopLevelDestination.Settings.route) {
                 val viewModel: SettingsViewModel = viewModel(

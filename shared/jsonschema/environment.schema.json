@@ -1,0 +1,58 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://nullhorizon.local/schema/environment.schema.json",
+  "title": "Environment",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "template_id", "seed"],
+  "properties": {
+    "schema_version": { "type": "integer", "const": 1 },
+    "template_id": { "type": "string", "minLength": 1 },
+    "seed": { "type": "integer" },
+    "initial_state": {
+      "type": "object",
+      "additionalProperties": {
+        "type": ["string", "number", "boolean"]
+      }
+    },
+    "actions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "label", "effects"],
+        "properties": {
+          "id": { "type": "string", "minLength": 1 },
+          "label": { "type": "string", "minLength": 1 },
+          "description": { "type": "string" },
+          "requires": {
+            "type": "object",
+            "additionalProperties": {
+              "type": ["string", "number", "boolean"]
+            }
+          },
+          "effects": {
+            "type": "object",
+            "minProperties": 1,
+            "additionalProperties": {
+              "type": ["string", "number", "boolean"]
+            }
+          }
+        }
+      }
+    },
+    "files": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["source", "target", "editable"],
+        "properties": {
+          "source": { "type": "string" },
+          "target": { "type": "string" },
+          "editable": { "type": "boolean" }
+        }
+      }
+    }
+  }
+}

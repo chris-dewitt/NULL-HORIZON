@@ -1,0 +1,7 @@
+schema_version: 1
+chapter_id: emergency_interface
+title: Emergency Interface
+region: Emergency Interface
+summary: Wake sequence and power routing for the damaged colony ship.
+mission_ids:
+  - emergency.lighting.01

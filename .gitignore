@@ -84,7 +84,5 @@ infra/terraform/**/crash.log
 infra/terraform/**/*.tfvars
 !infra/terraform/**/*.tfvars.example
 
-# Misc
-*.log
-tmp/
-.temp/
+# Content build output (Android assets hold the shipped starter bundle)
+content/build/

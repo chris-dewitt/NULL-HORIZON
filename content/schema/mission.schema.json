@@ -1,0 +1,194 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://nullhorizon.local/schema/mission.schema.json",
+  "title": "Mission",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "mission_id",
+    "version",
+    "chapter_id",
+    "title",
+    "summary",
+    "difficulty",
+    "requirements",
+    "skills",
+    "narrative",
+    "tools",
+    "environment",
+    "objectives",
+    "hints",
+    "rewards",
+    "completion"
+  ],
+  "properties": {
+    "schema_version": { "type": "integer", "const": 1 },
+    "mission_id": {
+      "type": "string",
+      "pattern": "^[a-z0-9_]+(\\.[a-z0-9_]+)+$"
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"
+    },
+    "chapter_id": { "type": "string", "minLength": 1 },
+    "title": { "type": "string", "minLength": 1 },
+    "summary": { "type": "string", "minLength": 1 },
+    "difficulty": {
+      "type": "string",
+      "enum": ["introductory", "practiced", "challenge"]
+    },
+    "requirements": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["app_version", "online"],
+      "properties": {
+        "app_version": { "type": "string" },
+        "online": { "type": "boolean" },
+        "prerequisite_skills": {
+          "type": "array",
+          "items": { "type": "string" },
+          "uniqueItems": true
+        }
+      }
+    },
+    "skills": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["primary"],
+      "properties": {
+        "primary": { "type": "string", "minLength": 1 },
+        "secondary": {
+          "type": "array",
+          "items": { "type": "string" },
+          "uniqueItems": true
+        }
+      }
+    },
+    "narrative": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["briefing_dialogue_id", "success_dialogue_id"],
+      "properties": {
+        "briefing_dialogue_id": { "type": "string" },
+        "success_dialogue_id": { "type": "string" },
+        "failure_consequence_id": { "type": "string" }
+      }
+    },
+    "tools": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "systems_panel",
+          "terminal",
+          "sql",
+          "git",
+          "python_editor",
+          "test_console",
+          "service_map"
+        ]
+      },
+      "uniqueItems": true
+    },
+    "environment": { "$ref": "environment.schema.json" },
+    "objectives": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "type", "description", "visible"],
+        "properties": {
+          "id": { "type": "string", "minLength": 1 },
+          "type": {
+            "type": "string",
+            "enum": [
+              "state_assertion",
+              "command_output",
+              "filesystem_state",
+              "process_state",
+              "git_state",
+              "sql_result",
+              "database_assertion",
+              "file_assertion",
+              "execution_tests",
+              "service_map_state",
+              "pipeline_state",
+              "mlops_state",
+              "dialogue_choice",
+              "composite"
+            ]
+          },
+          "description": { "type": "string", "minLength": 1 },
+          "visible": { "type": "boolean" },
+          "assert": {
+            "type": "object",
+            "additionalProperties": {
+              "type": ["string", "number", "boolean"]
+            }
+          }
+        },
+        "allOf": [
+          {
+            "if": {
+              "properties": { "type": { "const": "state_assertion" } }
+            },
+            "then": {
+              "required": ["assert"]
+            }
+          }
+        ]
+      }
+    },
+    "hints": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["level"],
+        "properties": {
+          "level": { "type": "integer", "minimum": 1 },
+          "text": { "type": "string" },
+          "pseudocode": { "type": "string" }
+        },
+        "anyOf": [
+          { "required": ["text"] },
+          { "required": ["pseudocode"] }
+        ]
+      }
+    },
+    "rewards": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["clearance_points"],
+      "properties": {
+        "clearance_points": { "type": "integer", "minimum": 0 },
+        "mastery": {
+          "type": "object",
+          "additionalProperties": { "type": "integer", "minimum": 1 }
+        },
+        "unlocks": {
+          "type": "array",
+          "items": { "type": "string" },
+          "uniqueItems": true
+        }
+      }
+    },
+    "completion": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["mode", "objective_ids"],
+      "properties": {
+        "mode": { "type": "string", "enum": ["all", "any"] },
+        "objective_ids": {
+          "type": "array",
+          "items": { "type": "string" },
+          "minItems": 1,
+          "uniqueItems": true
+        }
+      }
+    }
+  }
+}

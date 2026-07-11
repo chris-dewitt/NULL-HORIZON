@@ -1,0 +1,7 @@
+schema_version: 1
+skill_id: computational_thinking.hypothesis
+name: Form a hypothesis
+domain: computational_thinking
+description: Decide which control is likely responsible for a failure.
+prerequisites:
+  - computational_thinking.observe

@@ -1,0 +1,10 @@
+{
+  "chapter_id": "emergency_interface",
+  "mission_ids": [
+    "emergency.lighting.01"
+  ],
+  "region": "Emergency Interface",
+  "schema_version": 1,
+  "summary": "Wake sequence and power routing for the damaged colony ship.",
+  "title": "Emergency Interface"
+}
