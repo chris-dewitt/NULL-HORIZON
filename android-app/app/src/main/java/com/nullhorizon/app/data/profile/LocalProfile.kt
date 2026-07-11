@@ -1,11 +1,15 @@
 package com.nullhorizon.app.data.profile
 
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
+
 /**
- * Local operator profile. No cloud account is required for Epic 1.
+ * Local operator profile. No cloud account is required for the opening campaign.
  */
+@Serializable
 data class LocalProfile(
-    val displayName: String,
-    val createdAtEpochMs: Long,
+    @SerialName("display_name") val displayName: String,
+    @SerialName("created_at_epoch_ms") val createdAtEpochMs: Long,
 ) {
     val isConfigured: Boolean
         get() = displayName.isNotBlank()

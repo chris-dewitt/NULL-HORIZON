@@ -97,7 +97,14 @@
 
     <string name="settings_title">Settings</string>
     <string name="settings_profile_section">Local operator: %1$s</string>
-    <string name="settings_no_account">Cloud sync is optional and not enabled in this shell.</string>
+    <string name="settings_no_account">No account required. Opening campaign progress stays on this device unless you opt into cloud sync later.</string>
+    <string name="settings_privacy_section">Privacy</string>
+    <string name="settings_privacy_summary">Analytics and crash reporting are off by default. Online code execution transmits source only when you run an online mission. See PRIVACY.md in the project docs.</string>
+    <string name="settings_analytics">Allow analytics</string>
+    <string name="settings_crash_reporting">Allow crash reporting</string>
+    <string name="settings_data_section">Your data</string>
+    <string name="settings_export_data">Export local data</string>
+    <string name="settings_delete_data">Delete local data</string>
     <string name="settings_accessibility_section">Accessibility</string>
     <string name="settings_high_contrast">High contrast</string>
     <string name="settings_reduced_motion">Reduced motion</string>

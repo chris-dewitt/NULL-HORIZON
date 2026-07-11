@@ -28,6 +28,7 @@ def test_openapi_includes_epic7_routes() -> None:
     assert "/v1/health" in paths
     assert "/v1/content/manifest" in paths
     assert "/v1/profiles/anonymous" in paths
+    assert "/v1/profiles/me" in paths
     assert "/v1/progress" in paths
     assert "/v1/progress/sync" in paths
     assert "/v1/executions" in paths

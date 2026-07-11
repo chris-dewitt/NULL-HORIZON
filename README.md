@@ -6,7 +6,7 @@ Narrative-driven Android game that teaches backend software development by makin
 
 ## Status
 
-Epic 0: repository and standards. The monorepo, documentation skeleton, formatting/lint configuration, CI skeleton, and minimal Android + FastAPI shells are in place. Gameplay systems, mission curriculum, and the execution sandbox are not implemented yet.
+Epics 0–13 are implemented in-repo: playable curriculum through the public campaign, plus release-readiness privacy/deletion controls and ops docs. Store publish and production sandbox enablement still require explicit human approval.
 
 ## Repository layout
 
@@ -65,6 +65,8 @@ cd android-app
 | [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) | Architecture overview |
 | [docs/THREAT_MODEL.md](docs/THREAT_MODEL.md) | Security threat model skeleton |
 | [docs/API.md](docs/API.md) | API notes |
+| [docs/legal/privacy-policy.md](docs/legal/privacy-policy.md) | Privacy policy ([summary](PRIVACY.md)) |
+| [docs/store/listing.md](docs/store/listing.md) | Store listing draft and online-execution disclosure |
 | [docs/CONTENT_AUTHORING.md](docs/CONTENT_AUTHORING.md) | Mission authoring workflow |
 | [docs/CURRICULUM.md](docs/CURRICULUM.md) | Curriculum map |
 | [docs/ADR/](docs/ADR/) | Architecture decision records |

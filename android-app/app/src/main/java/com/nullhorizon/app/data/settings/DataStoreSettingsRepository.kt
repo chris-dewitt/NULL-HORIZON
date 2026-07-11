@@ -18,6 +18,13 @@ class DataStoreSettingsRepository(
         )
     }
 
+    override val privacySettings: Flow<PrivacySettings> = dataStore.data.map { prefs ->
+        PrivacySettings(
+            analyticsEnabled = prefs[Keys.AnalyticsEnabled] ?: false,
+            crashReportingEnabled = prefs[Keys.CrashReportingEnabled] ?: false,
+        )
+    }
+
     override suspend fun setHighContrast(enabled: Boolean) {
         dataStore.edit { it[Keys.HighContrast] = enabled }
     }
@@ -30,9 +37,29 @@ class DataStoreSettingsRepository(
         dataStore.edit { it[Keys.LargerText] = enabled }
     }
 
+    override suspend fun setAnalyticsEnabled(enabled: Boolean) {
+        dataStore.edit { it[Keys.AnalyticsEnabled] = enabled }
+    }
+
+    override suspend fun setCrashReportingEnabled(enabled: Boolean) {
+        dataStore.edit { it[Keys.CrashReportingEnabled] = enabled }
+    }
+
+    override suspend fun clearAll() {
+        dataStore.edit { prefs ->
+            prefs.remove(Keys.HighContrast)
+            prefs.remove(Keys.ReducedMotion)
+            prefs.remove(Keys.LargerText)
+            prefs.remove(Keys.AnalyticsEnabled)
+            prefs.remove(Keys.CrashReportingEnabled)
+        }
+    }
+
     private object Keys {
         val HighContrast = booleanPreferencesKey("a11y_high_contrast")
         val ReducedMotion = booleanPreferencesKey("a11y_reduced_motion")
         val LargerText = booleanPreferencesKey("a11y_larger_text")
+        val AnalyticsEnabled = booleanPreferencesKey("privacy_analytics_enabled")
+        val CrashReportingEnabled = booleanPreferencesKey("privacy_crash_reporting_enabled")
     }
 }

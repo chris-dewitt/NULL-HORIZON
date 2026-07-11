@@ -5,7 +5,11 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -27,6 +31,7 @@ fun SettingsScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
+            .verticalScroll(rememberScrollState())
             .padding(20.dp)
             .semantics { contentDescription = "Settings" },
         verticalArrangement = Arrangement.spacedBy(20.dp),
@@ -44,6 +49,53 @@ fun SettingsScreen(
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
         )
+
+        Text(
+            text = stringResource(R.string.settings_privacy_section),
+            style = MaterialTheme.typography.titleMedium,
+        )
+        Text(
+            text = stringResource(R.string.settings_privacy_summary),
+            style = MaterialTheme.typography.bodyMedium,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+        )
+        SettingsToggle(
+            title = stringResource(R.string.settings_analytics),
+            checked = state.privacy.analyticsEnabled,
+            contentDescription = "Analytics enabled",
+            onCheckedChange = viewModel::setAnalyticsEnabled,
+        )
+        SettingsToggle(
+            title = stringResource(R.string.settings_crash_reporting),
+            checked = state.privacy.crashReportingEnabled,
+            contentDescription = "Crash reporting enabled",
+            onCheckedChange = viewModel::setCrashReportingEnabled,
+        )
+
+        Text(
+            text = stringResource(R.string.settings_data_section),
+            style = MaterialTheme.typography.titleMedium,
+        )
+        OutlinedButton(
+            onClick = viewModel::exportLocalData,
+            modifier = Modifier.semantics { contentDescription = "Export local data" },
+        ) {
+            Text(stringResource(R.string.settings_export_data))
+        }
+        Button(
+            onClick = viewModel::deleteLocalData,
+            modifier = Modifier.semantics { contentDescription = "Delete local data" },
+        ) {
+            Text(stringResource(R.string.settings_delete_data))
+        }
+        state.dataMessage?.let { message ->
+            Text(
+                text = message,
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.tertiary,
+            )
+        }
+
         Text(
             text = stringResource(R.string.settings_accessibility_section),
             style = MaterialTheme.typography.titleMedium,

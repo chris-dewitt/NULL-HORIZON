@@ -15,9 +15,11 @@ Public API principles and initial endpoints are defined in [PRODUCT_SPEC.md](PRO
 - `GET /v1/content/manifest`
 - `GET /v1/content/bundles/{bundle_id}`
 - `POST /v1/profiles/anonymous`
+- `DELETE /v1/profiles/me` (Bearer) — deletes profile and owned cloud data
 - `GET /v1/progress` (Bearer) — missions, skill mastery, rewards, rank, review recommendations
 - `PUT /v1/progress/missions/{mission_id}` (Bearer)
 - `POST /v1/progress/sync` (Bearer + Idempotency-Key) — merges missions, skill evidence, rewards
+- `DELETE /v1/progress` (Bearer) — deletes cloud progress; keeps profile
 - `POST /v1/executions` (Bearer + Idempotency-Key; provider via `EXECUTION_PROVIDER`)
 - `GET /v1/executions/{execution_id}` (Bearer)
 - `DELETE /v1/executions/{execution_id}` (Bearer)
