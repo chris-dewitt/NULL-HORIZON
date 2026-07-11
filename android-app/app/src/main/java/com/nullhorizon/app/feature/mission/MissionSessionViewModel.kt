@@ -103,6 +103,22 @@ class MissionSessionViewModel(
         persistAndMaybeComplete(next, mission)
     }
 
+    fun runGitCommand(line: String) {
+        val machine = stateMachine ?: return
+        val mission = _uiState.value.mission ?: return
+        val next = machine.runGitCommand(_uiState.value.session, line)
+        persistAndMaybeComplete(next, mission)
+    }
+
+    fun resolveConflict(path: String, side: String) {
+        val command = when (side) {
+            "ours" -> "git checkout --ours $path"
+            "theirs" -> "git checkout --theirs $path"
+            else -> return
+        }
+        runGitCommand(command)
+    }
+
     private fun persistAndMaybeComplete(next: MissionSessionState, mission: MissionDefinition) {
         updateSession(next, mission)
         if (next.phase == MissionPhase.Completed) {

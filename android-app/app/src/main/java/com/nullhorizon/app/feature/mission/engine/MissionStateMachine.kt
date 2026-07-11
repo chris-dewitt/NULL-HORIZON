@@ -2,6 +2,7 @@ package com.nullhorizon.app.feature.mission.engine
 
 import com.nullhorizon.app.content.model.MissionDefinition
 import com.nullhorizon.app.content.toStateMap
+import com.nullhorizon.app.simulation.git.GitSimulator
 import com.nullhorizon.app.simulation.terminal.TerminalSimulator
 import com.nullhorizon.app.simulation.terminal.VirtualFileSystem
 import com.nullhorizon.app.simulation.terminal.VirtualFsEntry
@@ -23,6 +24,11 @@ class MissionStateMachine(
         TerminalSimulator(vfs)
     }
 
+    private val gitSimulator: GitSimulator? =
+        if (mission.environment.git != null) GitSimulator() else null
+
+    private val initialGitState = mission.environment.git?.let { GitSimulator.fromDefinition(it) }
+
     fun initialState(): MissionSessionState {
         val terminal = terminalSimulator?.initialState(
             mission.environment.filesystem?.cwd ?: "/",
@@ -31,6 +37,7 @@ class MissionStateMachine(
             phase = MissionPhase.Briefing,
             worldState = mission.environment.initialState.toStateMap(),
             terminal = terminal,
+            git = initialGitState,
             completedObjectiveIds = emptySet(),
             hintLevel = 0,
             lastActionMessage = null,
@@ -90,6 +97,23 @@ class MissionStateMachine(
         return evaluate(
             state.copy(
                 terminal = nextTerminal,
+                lastActionMessage = null,
+            ),
+        )
+    }
+
+    fun runGitCommand(state: MissionSessionState, line: String): MissionSessionState {
+        if (state.phase != MissionPhase.InProgress) {
+            return state.copy(lastActionMessage = "Start the mission before using Git.")
+        }
+        val simulator = gitSimulator
+            ?: return state.copy(lastActionMessage = "This mission has no Git repository.")
+        val gitState = state.git
+            ?: return state.copy(lastActionMessage = "Git repository is not initialized.")
+        val nextGit = simulator.execute(gitState, line)
+        return evaluate(
+            state.copy(
+                git = nextGit,
                 lastActionMessage = null,
             ),
         )

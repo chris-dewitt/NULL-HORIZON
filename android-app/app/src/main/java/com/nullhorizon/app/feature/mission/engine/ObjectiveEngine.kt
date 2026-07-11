@@ -18,6 +18,7 @@ class ObjectiveEngine {
                         "state_assertion" -> matches(state.worldState, expected)
                         "filesystem_state" -> matchesFilesystem(state, expected)
                         "command_output" -> matchesCommandOutput(state, expected)
+                        "git_state" -> matchesGitState(state, expected)
                         else -> false
                     }
                 }
@@ -68,6 +69,39 @@ class ObjectiveEngine {
                 "stdout_contains" -> terminal.lastStdout.contains(value)
                 "stderr_contains" -> terminal.lastStderr.contains(value)
                 "exit_code" -> terminal.lastExitCode.toString() == value
+                else -> false
+            }
+        }
+    }
+
+    private fun matchesGitState(
+        state: MissionSessionState,
+        expected: Map<String, String>,
+    ): Boolean {
+        val git = state.git ?: return false
+        return expected.all { (key, value) ->
+            when {
+                key == "branch" -> git.currentBranch == value
+                key == "working_tree_clean" -> {
+                    val clean = git.conflicts.isEmpty() &&
+                        git.workingTree == git.headTree() &&
+                        git.index == git.headTree()
+                    clean.toString() == value
+                }
+                key == "conflict_count" -> git.conflicts.size.toString() == value
+                key == "head_author" -> git.headCommit.author == value
+                key == "head_message" -> git.headCommit.message == value
+                key == "head_message_contains" -> git.headCommit.message.contains(value)
+                key == "last_command" -> git.lastCommand == value
+                key == "stdout_contains" -> git.lastStdout.contains(value)
+                key.startsWith("file_contains:") -> {
+                    val path = key.removePrefix("file_contains:")
+                    git.workingTree[path]?.contains(value) == true
+                }
+                key.startsWith("file_equals:") -> {
+                    val path = key.removePrefix("file_equals:")
+                    git.workingTree[path]?.trim() == value.trim()
+                }
                 else -> false
             }
         }
