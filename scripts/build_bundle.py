@@ -100,6 +100,13 @@ def sync_android_assets(bundle_dir: Path) -> None:
     shutil.copytree(bundle_dir, assets)
 
 
+def sync_pc_resources(bundle_dir: Path) -> None:
+    resources = ROOT / "pc-app" / "src" / "main" / "resources" / "content"
+    if resources.exists():
+        shutil.rmtree(resources)
+    shutil.copytree(bundle_dir, resources)
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--channel", default="dev", choices=["dev", "staging", "prod"])
@@ -109,10 +116,17 @@ def main() -> int:
         action="store_true",
         help="Copy the built bundle into android-app assets/content",
     )
+    parser.add_argument(
+        "--sync-pc-resources",
+        action="store_true",
+        help="Copy the built bundle into pc-app classpath resources/content",
+    )
     args = parser.parse_args()
     bundle_dir = build_bundle(args.channel, args.out)
     if args.sync_android_assets:
         sync_android_assets(bundle_dir)
+    if args.sync_pc_resources:
+        sync_pc_resources(bundle_dir)
     print(f"Built content bundle at {bundle_dir}")
     return 0
 

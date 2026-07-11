@@ -1,6 +1,6 @@
 # NULL HORIZON
 
-Narrative-driven Android game that teaches backend software development by making code the player's primary tool for surviving aboard a damaged interstellar colony ship.
+Narrative-driven game that teaches backend software development by making code the player's primary tool for surviving aboard a damaged interstellar colony ship. Primary client: Android. Separate PC client: Compose Desktop (`pc-app/`).
 
 > Working title only. Not cleared for trademark, store-name, or domain availability.
 
@@ -11,7 +11,8 @@ Epics 0–13 are implemented in-repo: playable curriculum through the public cam
 ## Repository layout
 
 ```text
-android-app/   Kotlin + Jetpack Compose client
+android-app/   Kotlin + Jetpack Compose Android client
+pc-app/        Kotlin + Compose Desktop PC client
 backend/       FastAPI API, runner contracts, shared schemas
 content/       Versioned mission and curriculum data
 shared/        OpenAPI, JSON Schema, fixtures
@@ -54,6 +55,20 @@ uvicorn api.app.main:app --reload --app-dir .
 cd android-app
 ./gradlew test
 ./gradlew assembleDebug
+```
+
+### PC (Compose Desktop) only
+
+```bash
+cd pc-app
+./gradlew test
+./gradlew run
+```
+
+Rebuild content into Android assets and PC classpath resources after YAML changes:
+
+```bash
+python scripts/build_bundle.py --channel dev --sync-android-assets --sync-pc-resources
 ```
 
 ## Documentation

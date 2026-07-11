@@ -49,6 +49,20 @@ run_android() {
   RAN_ANY=1
 }
 
+run_pc() {
+  section "PC (Compose Desktop) unit tests and compile"
+  if [[ ! -x "$ROOT_DIR/pc-app/gradlew" ]]; then
+    echo "pc-app/gradlew is missing" >&2
+    FAIL=1
+    return
+  fi
+  (
+    cd "$ROOT_DIR/pc-app"
+    ./gradlew --no-daemon test compileKotlin
+  )
+  RAN_ANY=1
+}
+
 run_secret_scan() {
   section "Basic secret scan"
   if git grep -nE 'BEGIN (RSA |OPENSSH |EC )?PRIVATE KEY|AKIA[0-9A-Z]{16}|xox[baprs]-[0-9A-Za-z-]{10,}' -- \
@@ -72,6 +86,8 @@ run_structure_checks() {
     docs/ADR/0000-template.md
     backend/api/app/main.py
     android-app/app/src/main/java/com/nullhorizon/app/MainActivity.kt
+    pc-app/src/main/kotlin/com/nullhorizon/pc/Main.kt
+    docs/ADR/0019-compose-desktop-pc-client.md
     .github/workflows/ci.yml
     infra/compose/dev.yml
     shared/openapi/openapi.json
@@ -106,6 +122,7 @@ run_structure_checks
 run_content
 run_backend
 run_android
+run_pc
 run_secret_scan
 
 if (( FAIL != 0 )); then

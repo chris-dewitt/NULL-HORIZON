@@ -13,7 +13,7 @@ ROOT = Path(__file__).resolve().parents[2]
 SCRIPTS = ROOT / "scripts"
 sys.path.insert(0, str(SCRIPTS))
 
-from build_bundle import build_bundle  # noqa: E402
+from build_bundle import build_bundle, sync_pc_resources  # noqa: E402
 from validate_content import validate  # noqa: E402
 
 
@@ -143,3 +143,13 @@ def test_build_bundle_writes_manifest_and_checksums(tmp_path: Path) -> None:
     )
     assert mission["title"] == "Emergency Lighting"
     assert mission["environment"]["seed"] == 42
+
+
+def test_sync_pc_resources_copies_manifest(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    bundle_dir = build_bundle("dev", tmp_path / "bundles")
+    fake_root = tmp_path / "repo"
+    dest = fake_root / "pc-app" / "src" / "main" / "resources" / "content"
+    monkeypatch.setattr("build_bundle.ROOT", fake_root)
+    sync_pc_resources(bundle_dir)
+    assert (dest / "manifest.json").is_file()
+    assert (dest / "missions" / "emergency.lighting.01.json").is_file()
