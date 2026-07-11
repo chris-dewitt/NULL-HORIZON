@@ -9,7 +9,8 @@ pluginManagement {
 
 plugins {
     // Auto-provision JDK 17 when the machine only has a newer JDK (e.g. Temurin 25).
-    id("org.gradle.toolchains.foojay-resolver-convention") version "0.9.0"
+    // 1.0.0+ required for Gradle 9 (removes IBM_SEMERU).
+    id("org.gradle.toolchains.foojay-resolver-convention") version "1.0.0"
 }
 
 dependencyResolutionManagement {
