@@ -292,12 +292,8 @@ def delete_progress(
     session.execute(
         delete(MissionProgress).where(MissionProgress.profile_id == profile.id)
     )
-    session.execute(
-        delete(SkillEvidence).where(SkillEvidence.profile_id == profile.id)
-    )
-    session.execute(
-        delete(RewardUnlock).where(RewardUnlock.profile_id == profile.id)
-    )
+    session.execute(delete(SkillEvidence).where(SkillEvidence.profile_id == profile.id))
+    session.execute(delete(RewardUnlock).where(RewardUnlock.profile_id == profile.id))
     session.execute(
         delete(ProgressSnapshot).where(ProgressSnapshot.profile_id == profile.id)
     )

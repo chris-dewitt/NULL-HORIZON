@@ -63,12 +63,8 @@ def _delete_profile_owned_rows(session: Session, profile_id: str) -> None:
     session.execute(
         delete(MissionProgress).where(MissionProgress.profile_id == profile_id)
     )
-    session.execute(
-        delete(SkillEvidence).where(SkillEvidence.profile_id == profile_id)
-    )
-    session.execute(
-        delete(RewardUnlock).where(RewardUnlock.profile_id == profile_id)
-    )
+    session.execute(delete(SkillEvidence).where(SkillEvidence.profile_id == profile_id))
+    session.execute(delete(RewardUnlock).where(RewardUnlock.profile_id == profile_id))
     session.execute(
         delete(ProgressSnapshot).where(ProgressSnapshot.profile_id == profile_id)
     )
