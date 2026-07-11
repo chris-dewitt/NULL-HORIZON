@@ -42,16 +42,18 @@ class ProfileSetupViewModelTest {
     }
 
     @Test
-    fun submit_invalidName_setsErrorAndDoesNotConfigure() = runTest {
+    fun clearProfile_resetsConfiguredFlagAndDisplayName() = runTest {
         val repository = InMemoryLocalProfileRepository()
+        repository.save("Operator")
         val viewModel = ProfileSetupViewModel(repository)
         advanceUntilIdle()
+        assertThat(viewModel.uiState.value.profileConfigured).isTrue()
+        assertThat(viewModel.uiState.value.displayNameInput).isEqualTo("Operator")
 
-        viewModel.onDisplayNameChanged("x")
-        viewModel.submit()
+        repository.clear()
         advanceUntilIdle()
 
         assertThat(viewModel.uiState.value.profileConfigured).isFalse()
-        assertThat(viewModel.uiState.value.errorMessage).isNotNull()
+        assertThat(viewModel.uiState.value.displayNameInput).isEmpty()
     }
 }

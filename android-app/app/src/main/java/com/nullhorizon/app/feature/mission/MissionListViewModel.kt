@@ -31,10 +31,9 @@ class MissionListViewModel(
     init {
         viewModelScope.launch {
             runCatching {
-                val missions = contentRepository.listMissions()
-                val chapters = missions.associate { mission ->
-                    mission.chapterId to contentRepository.chapter(mission.chapterId)
-                }
+                val missions = prioritizeVerticalSlice(contentRepository.listMissions())
+                val chapterIds = missions.map { it.chapterId }.distinct()
+                val chapters = chapterIds.associateWith { contentRepository.chapter(it) }
                 progressRepository.completedMissionIds.collect { completed ->
                     _uiState.update {
                         it.copy(
@@ -55,6 +54,19 @@ class MissionListViewModel(
                 }
             }
         }
+    }
+
+    private suspend fun prioritizeVerticalSlice(
+        missions: List<MissionDefinition>,
+    ): List<MissionDefinition> {
+        val sliceOrder = runCatching {
+            contentRepository.chapter("vertical_slice").missionIds
+        }.getOrDefault(emptyList())
+        if (sliceOrder.isEmpty()) return missions
+        val byId = missions.associateBy { it.missionId }
+        val prioritized = sliceOrder.mapNotNull { byId[it] }
+        val remainder = missions.filter { it.missionId !in sliceOrder }
+        return prioritized + remainder
     }
 
     private fun toSummary(
