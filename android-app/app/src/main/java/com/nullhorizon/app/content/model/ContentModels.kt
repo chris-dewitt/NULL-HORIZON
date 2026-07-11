@@ -70,6 +70,7 @@ data class EnvironmentDefinition(
     val filesystem: VirtualFilesystemDefinition? = null,
     val git: com.nullhorizon.app.simulation.git.GitRepositoryDefinition? = null,
     val databases: List<com.nullhorizon.app.simulation.sql.MissionDatabaseDefinition> = emptyList(),
+    val workspace: com.nullhorizon.app.simulation.execution.WorkspaceDefinition? = null,
 )
 
 @Serializable
