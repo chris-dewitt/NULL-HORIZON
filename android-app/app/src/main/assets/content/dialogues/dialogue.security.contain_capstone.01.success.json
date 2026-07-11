@@ -1,0 +1,14 @@
+{
+  "dialogue_id": "dialogue.security.contain_capstone.01.success",
+  "lines": [
+    {
+      "speaker": "ORION-A",
+      "text": "Mission security.contain_capstone.01 complete."
+    },
+    {
+      "speaker": "SYSTEM",
+      "text": "Progress recorded."
+    }
+  ],
+  "schema_version": 1
+}

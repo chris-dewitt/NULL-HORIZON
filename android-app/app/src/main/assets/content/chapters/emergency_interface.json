@@ -4,10 +4,12 @@
     "emergency.wake_sequence.01",
     "emergency.lighting.01",
     "emergency.fault_log.01",
-    "emergency.rogue_process.01"
+    "emergency.first_sql.01",
+    "emergency.run_test.01",
+    "emergency.power_capstone.01"
   ],
   "region": "Emergency Interface",
   "schema_version": 1,
-  "summary": "Wake sequence and power routing for the damaged colony ship.",
+  "summary": "Wake, power, and first contact with ORION.",
   "title": "Emergency Interface"
 }

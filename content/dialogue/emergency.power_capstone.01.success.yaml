@@ -1,0 +1,7 @@
+schema_version: 1
+dialogue_id: dialogue.emergency.power_capstone.01.success
+lines:
+  - speaker: ORION-A
+    text: Mission emergency.power_capstone.01 complete.
+  - speaker: SYSTEM
+    text: Progress recorded.

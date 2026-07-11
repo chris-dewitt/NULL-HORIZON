@@ -1,0 +1,11 @@
+schema_version: 1
+chapter_id: black_vault
+title: Black Vault
+region: Black Vault
+summary: Defensive cybersecurity on fictional ship systems.
+mission_ids:
+  - security.threat_model.01
+  - security.validation.01
+  - archive.unsafe_query.01
+  - security.authz.01
+  - security.contain_capstone.01

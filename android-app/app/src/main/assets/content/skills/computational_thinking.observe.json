@@ -1,7 +1,7 @@
 {
-  "description": "Read status indicators and identify what changed.",
+  "description": "Curriculum skill for Observe Systems.",
   "domain": "computational_thinking",
-  "name": "Observe system output",
+  "name": "Observe Systems",
   "prerequisites": [],
   "schema_version": 1,
   "skill_id": "computational_thinking.observe"

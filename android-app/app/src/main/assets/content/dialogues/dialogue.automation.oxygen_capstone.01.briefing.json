@@ -1,0 +1,14 @@
+{
+  "dialogue_id": "dialogue.automation.oxygen_capstone.01.briefing",
+  "lines": [
+    {
+      "speaker": "ORION-A",
+      "text": "Mission briefing for automation.oxygen_capstone.01."
+    },
+    {
+      "speaker": "SYSTEM",
+      "text": "Follow objectives and progressive hints."
+    }
+  ],
+  "schema_version": 1
+}

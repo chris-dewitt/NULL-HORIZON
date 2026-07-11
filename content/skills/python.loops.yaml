@@ -1,0 +1,7 @@
+schema_version: 1
+skill_id: python.loops
+name: Loops
+domain: python
+description: Curriculum skill for Loops.
+prerequisites:
+  - python.conditionals

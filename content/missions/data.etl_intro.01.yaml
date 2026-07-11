@@ -1,0 +1,111 @@
+schema_version: 1
+mission_id: data.etl_intro.01
+version: 1.0.0
+chapter_id: data_foundry
+title: ETL Orientation
+summary: Inspect and repair a basic extract-transform-load failure.
+difficulty: introductory
+
+requirements:
+  app_version: ">=0.1.0"
+  online: false
+  prerequisite_skills: []
+
+skills:
+  primary: data.etl
+  secondary: []
+
+narrative:
+  briefing_dialogue_id: dialogue.data.etl_intro.01.briefing
+  success_dialogue_id: dialogue.data.etl_intro.01.success
+
+tools:
+  - pipeline
+
+environment:
+  schema_version: 1
+  template_id: pipeline.dag.v1
+  seed: 141
+  pipeline:
+    run_id: data-etl_intro-01-run
+    nodes:
+      - id: extract
+        kind: extract
+        label: Extract
+        status: succeeded
+      - id: transform
+        kind: transform
+        label: Transform
+        status: failed
+        detail: "schema drift"
+      - id: load
+        kind: load
+        label: Load
+        status: pending
+    edges:
+      - id: e1
+        from: extract
+        to: transform
+        kind: data
+        status: ok
+      - id: e2
+        from: transform
+        to: load
+        kind: data
+        status: blocked
+    actions:
+      - id: inspect_transform
+        label: Inspect transform failure
+        effects:
+          inspected: "true"
+          explanation: "Transform rejects late schema versions."
+      - id: repair_schema
+        label: Align transform schema
+        requires:
+          inspected: "true"
+        effects:
+          node.transform.status: succeeded
+          node.transform.detail: "schema aligned"
+          edge.e2.status: ok
+          node.load.status: succeeded
+          repaired: "true"
+          explanation: "Schema aligned; load completed."
+
+objectives:
+  - id: inspect
+    type: pipeline_state
+    description: Inspect the failing transform stage.
+    visible: true
+    assert:
+      inspected: "true"
+  - id: repair
+    type: pipeline_state
+    description: Repair the transform and complete the load.
+    visible: true
+    assert:
+      repaired: "true"
+      node.transform.status: succeeded
+      node.load.status: succeeded
+
+hints:
+  - level: 1
+    text: Inspect transform.
+  - level: 2
+    text: Align schema.
+  - level: 3
+    text: Ensure load succeeds.
+  - level: 4
+    text: Follow the action order.
+
+rewards:
+  clearance_points: 40
+  mastery:
+    data.etl: 1
+  unlocks:
+    - lore.data.etl_intro.01
+
+completion:
+  mode: all
+  objective_ids:
+    - inspect
+    - repair

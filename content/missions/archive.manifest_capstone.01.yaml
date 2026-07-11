@@ -1,0 +1,72 @@
+schema_version: 1
+mission_id: archive.manifest_capstone.01
+version: 1.0.0
+chapter_id: archive_core
+title: Removed Colonists
+summary: Prove twelve colonists were removed by counting ghost and missing anomalies.
+difficulty: challenge
+
+requirements:
+  app_version: ">=0.1.0"
+  online: false
+  prerequisite_skills:
+    - sql.aggregate
+
+skills:
+  primary: sql.subquery
+  secondary:
+    - sql.aggregate
+    - sql.join
+
+narrative:
+  briefing_dialogue_id: dialogue.archive.manifest_capstone.01.briefing
+  success_dialogue_id: dialogue.archive.manifest_capstone.01.success
+
+tools:
+  - sql
+
+environment:
+  schema_version: 1
+  template_id: sql.sqlite.v1
+  seed: 76
+  databases:
+    - id: archive
+      policy: select_only
+      seed_sql: |
+        CREATE TABLE passengers (passenger_id INTEGER PRIMARY KEY, callsign TEXT, present INTEGER);
+        INSERT INTO passengers VALUES
+         (1,'A1',1),(2,'A2',1),(3,'A3',0),(4,'A4',0),(5,'A5',0),(6,'A6',0),
+         (7,'A7',0),(8,'A8',0),(9,'A9',0),(10,'A10',0),(11,'A11',0),(12,'A12',0),
+         (13,'A13',0),(14,'A14',0),(15,'B1',1);
+objectives:
+  - id: removed_count
+    type: sql_result
+    description: Count passengers marked not present.
+    visible: true
+    assert:
+      query_contains: present
+      columns: removed
+      row_count: "1"
+      rows: "12"
+
+hints:
+  - level: 1
+    text: Filter present = 0.
+  - level: 2
+    text: Count those rows.
+  - level: 3
+    text: Alias the count as removed.
+  - level: 4
+    text: SELECT COUNT(*) AS removed FROM passengers WHERE present = 0;
+
+rewards:
+  clearance_points: 55
+  mastery:
+    sql.subquery: 1
+  unlocks:
+    - lore.archive.manifest_capstone.01
+
+completion:
+  mode: all
+  objective_ids:
+    - removed_count

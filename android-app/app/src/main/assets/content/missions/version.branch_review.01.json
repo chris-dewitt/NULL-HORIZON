@@ -1,0 +1,135 @@
+{
+  "chapter_id": "version_vault",
+  "completion": {
+    "mode": "all",
+    "objective_ids": [
+      "branch",
+      "req",
+      "ok"
+    ]
+  },
+  "difficulty": "challenge",
+  "environment": {
+    "actions": [
+      {
+        "effects": {
+          "branch": "repair"
+        },
+        "id": "cut_branch",
+        "label": "Create repair branch"
+      },
+      {
+        "effects": {
+          "review": "requested"
+        },
+        "id": "request_review",
+        "label": "Request review",
+        "requires": {
+          "branch": "repair"
+        }
+      },
+      {
+        "effects": {
+          "approved": true,
+          "review": "approved"
+        },
+        "id": "approve",
+        "label": "Approve after checklist",
+        "requires": {
+          "review": "requested"
+        }
+      }
+    ],
+    "initial_state": {
+      "approved": false,
+      "branch": "main",
+      "review": "pending"
+    },
+    "schema_version": 1,
+    "seed": 62,
+    "template_id": "local.state.v1"
+  },
+  "hints": [
+    {
+      "level": 1,
+      "text": "Leave main; cut a repair branch."
+    },
+    {
+      "level": 2,
+      "text": "Request review next."
+    },
+    {
+      "level": 3,
+      "text": "Approve only after the checklist."
+    },
+    {
+      "level": 4,
+      "text": "Do not skip review."
+    }
+  ],
+  "mission_id": "version.branch_review.01",
+  "narrative": {
+    "briefing_dialogue_id": "dialogue.version.branch_review.01.briefing",
+    "success_dialogue_id": "dialogue.version.branch_review.01.success"
+  },
+  "objectives": [
+    {
+      "assert": {
+        "branch": "repair"
+      },
+      "description": "Create the repair branch.",
+      "id": "branch",
+      "type": "state_assertion",
+      "visible": true
+    },
+    {
+      "assert": {
+        "review": "requested"
+      },
+      "description": "Request review.",
+      "id": "req",
+      "type": "state_assertion",
+      "visible": true
+    },
+    {
+      "assert": {
+        "approved": true
+      },
+      "description": "Approve the checklist.",
+      "id": "ok",
+      "type": "state_assertion",
+      "visible": true
+    }
+  ],
+  "requirements": {
+    "app_version": ">=0.1.0",
+    "online": false,
+    "prerequisite_skills": [
+      "git.merge"
+    ]
+  },
+  "rewards": {
+    "clearance_points": 50,
+    "mastery": {
+      "git.branch": 1,
+      "git.review": 1
+    },
+    "unlocks": [
+      "lore.version.branch_review.01"
+    ]
+  },
+  "schema_version": 1,
+  "skills": {
+    "primary": "git.review",
+    "secondary": [
+      "git.branch",
+      "git.merge"
+    ]
+  },
+  "summary": "Open a repair branch and pass a code-review checklist before merge.",
+  "title": "Branch Review Gate",
+  "tools": [
+    "systems_panel"
+  ],
+  "version": "1.0.0"
+}

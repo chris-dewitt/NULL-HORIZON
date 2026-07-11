@@ -1,0 +1,87 @@
+{
+  "chapter_id": "archive_core",
+  "completion": {
+    "mode": "all",
+    "objective_ids": [
+      "counts"
+    ]
+  },
+  "difficulty": "practiced",
+  "environment": {
+    "databases": [
+      {
+        "id": "archive",
+        "policy": "select_only",
+        "seed_sql": "CREATE TABLE crew (crew_id INTEGER PRIMARY KEY, callsign TEXT, role TEXT, status TEXT, deck TEXT);\nCREATE TABLE pods (pod_id INTEGER PRIMARY KEY, deck TEXT, occupied INTEGER);\nINSERT INTO pods VALUES (1,'A',1),(2,'A',1),(3,'B',1),(4,'B',0);\nINSERT INTO crew VALUES\n (1,'ORION','navigator','active','A'),\n (2,'VEGA','engineer','active','A'),\n (3,'KELL','medic','missing','B'),\n (4,'RIN','engineer','missing','B'),\n (5,'NYX','unknown','ghost','B');\n"
+      }
+    ],
+    "schema_version": 1,
+    "seed": 72,
+    "template_id": "sql.sqlite.v1"
+  },
+  "hints": [
+    {
+      "level": 1,
+      "text": "Use COUNT and GROUP BY."
+    },
+    {
+      "level": 2,
+      "text": "Select status and the count."
+    },
+    {
+      "level": 3,
+      "text": "Alias the count column as count."
+    },
+    {
+      "level": 4,
+      "text": "SELECT status, COUNT(*) AS count FROM crew GROUP BY status;"
+    }
+  ],
+  "mission_id": "archive.aggregate.01",
+  "narrative": {
+    "briefing_dialogue_id": "dialogue.archive.aggregate.01.briefing",
+    "success_dialogue_id": "dialogue.archive.aggregate.01.success"
+  },
+  "objectives": [
+    {
+      "assert": {
+        "columns": "status,count",
+        "query_contains": "GROUP",
+        "row_count": "3"
+      },
+      "description": "Count crew rows grouped by status.",
+      "id": "counts",
+      "type": "sql_result",
+      "visible": true
+    }
+  ],
+  "requirements": {
+    "app_version": ">=0.1.0",
+    "online": false,
+    "prerequisite_skills": [
+      "sql.filter"
+    ]
+  },
+  "rewards": {
+    "clearance_points": 35,
+    "mastery": {
+      "sql.aggregate": 1
+    },
+    "unlocks": [
+      "lore.archive.aggregate.01"
+    ]
+  },
+  "schema_version": 1,
+  "skills": {
+    "primary": "sql.aggregate",
+    "secondary": [
+      "sql.group"
+    ]
+  },
+  "summary": "Aggregate how many crew rows exist per status.",
+  "title": "Count by Status",
+  "tools": [
+    "sql"
+  ],
+  "version": "1.0.0"
+}

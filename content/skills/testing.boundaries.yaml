@@ -1,0 +1,7 @@
+schema_version: 1
+skill_id: testing.boundaries
+name: Boundary Conditions
+domain: testing
+description: Curriculum skill for Boundary Conditions.
+prerequisites:
+  - testing.unit

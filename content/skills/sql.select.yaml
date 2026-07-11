@@ -1,6 +1,6 @@
 schema_version: 1
 skill_id: sql.select
-name: Query with SELECT
+name: Select
 domain: sql
-description: Retrieve rows with SELECT, WHERE, and ORDER BY against a mission database.
+description: Curriculum skill for Select.
 prerequisites: []

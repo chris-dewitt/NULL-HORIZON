@@ -1,0 +1,5 @@
+schema_version: 1
+reward_id: lore.testing.doubles.01
+kind: lore
+name: Lore testing.doubles.01
+description: Unlock for completing testing.doubles.01.

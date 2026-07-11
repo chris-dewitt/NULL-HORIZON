@@ -1,0 +1,7 @@
+schema_version: 1
+skill_id: data.etl
+name: Extract Transform Load
+domain: data
+description: Curriculum skill for Extract Transform Load.
+prerequisites:
+  - data.pipeline.validate

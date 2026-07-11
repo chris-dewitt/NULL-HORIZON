@@ -1,0 +1,5 @@
+schema_version: 1
+reward_id: lore.security.authz.01
+kind: lore
+name: Lore security.authz.01
+description: Unlock for completing security.authz.01.

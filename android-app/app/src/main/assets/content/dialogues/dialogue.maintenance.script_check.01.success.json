@@ -1,0 +1,14 @@
+{
+  "dialogue_id": "dialogue.maintenance.script_check.01.success",
+  "lines": [
+    {
+      "speaker": "ORION-A",
+      "text": "Mission maintenance.script_check.01 complete."
+    },
+    {
+      "speaker": "SYSTEM",
+      "text": "Progress recorded."
+    }
+  ],
+  "schema_version": 1
+}

@@ -1,0 +1,7 @@
+schema_version: 1
+skill_id: dsa.lists
+name: Lists and Arrays
+domain: dsa
+description: Curriculum skill for Lists and Arrays.
+prerequisites:
+  - python.collections

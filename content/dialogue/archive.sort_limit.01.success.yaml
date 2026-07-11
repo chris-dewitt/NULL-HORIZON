@@ -1,0 +1,7 @@
+schema_version: 1
+dialogue_id: dialogue.archive.sort_limit.01.success
+lines:
+  - speaker: ORION-A
+    text: Mission archive.sort_limit.01 complete.
+  - speaker: SYSTEM
+    text: Progress recorded.

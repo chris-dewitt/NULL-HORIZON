@@ -1,0 +1,8 @@
+{
+  "description": "Curriculum skill for Values and Types.",
+  "domain": "python",
+  "name": "Values and Types",
+  "prerequisites": [],
+  "schema_version": 1,
+  "skill_id": "python.types"
+}

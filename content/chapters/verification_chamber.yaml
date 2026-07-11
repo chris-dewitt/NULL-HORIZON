@@ -1,0 +1,11 @@
+schema_version: 1
+chapter_id: verification_chamber
+title: Verification Chamber
+region: Verification Chamber
+summary: Testing discipline for life-support patches.
+mission_ids:
+  - testing.aaa.01
+  - automation.regression_guard.01
+  - testing.doubles.01
+  - testing.integration.01
+  - testing.boundary_capstone.01

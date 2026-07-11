@@ -1,0 +1,7 @@
+schema_version: 1
+dialogue_id: dialogue.comms.auth_concept.01.success
+lines:
+  - speaker: ORION-A
+    text: Mission comms.auth_concept.01 complete.
+  - speaker: SYSTEM
+    text: Progress recorded.

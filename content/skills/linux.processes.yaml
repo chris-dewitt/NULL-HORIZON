@@ -2,6 +2,6 @@ schema_version: 1
 skill_id: linux.processes
 name: Process Control
 domain: linux
-description: Inspect and stop processes with ps and kill in a constrained shell.
+description: Curriculum skill for Process Control.
 prerequisites:
   - linux.navigation

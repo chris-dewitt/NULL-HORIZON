@@ -16,6 +16,6 @@
   ],
   "region": "Campaign Path",
   "schema_version": 1,
-  "summary": "Ordered twelve-mission path that proves the playable platform.",
+  "summary": "Ordered twelve-mission onboarding path that proves the playable platform.",
   "title": "Vertical Slice"
 }

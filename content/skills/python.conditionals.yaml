@@ -1,7 +1,7 @@
 schema_version: 1
 skill_id: python.conditionals
-name: Use comparisons
+name: Conditions
 domain: python
-description: Choose the correct comparison and threshold in a safety check.
+description: Curriculum skill for Conditions.
 prerequisites:
-  - python.functions
+  - python.types

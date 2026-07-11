@@ -1,0 +1,7 @@
+schema_version: 1
+skill_id: python.exceptions
+name: Exceptions
+domain: python
+description: Curriculum skill for Exceptions.
+prerequisites:
+  - python.functions

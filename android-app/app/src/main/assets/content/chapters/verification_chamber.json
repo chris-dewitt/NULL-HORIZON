@@ -1,0 +1,14 @@
+{
+  "chapter_id": "verification_chamber",
+  "mission_ids": [
+    "testing.aaa.01",
+    "automation.regression_guard.01",
+    "testing.doubles.01",
+    "testing.integration.01",
+    "testing.boundary_capstone.01"
+  ],
+  "region": "Verification Chamber",
+  "schema_version": 1,
+  "summary": "Testing discipline for life-support patches.",
+  "title": "Verification Chamber"
+}

@@ -5,24 +5,19 @@ chapter_id: version_vault
 title: Recover a Safe Commit
 summary: Move HEAD back to the last signed thruster routing commit.
 difficulty: introductory
-
 requirements:
-  app_version: ">=0.1.0"
+  app_version: '>=0.1.0'
   online: false
   prerequisite_skills: []
-
 skills:
   primary: git.recover
   secondary:
-    - git.inspect
-
+  - git.inspect
 narrative:
   briefing_dialogue_id: dialogue.version.recover_commit.briefing
   success_dialogue_id: dialogue.version.recover_commit.success
-
 tools:
-  - git
-
+- git
 environment:
   schema_version: 1
   template_id: git.repo.v1
@@ -32,70 +27,74 @@ environment:
     branches:
       main: c2
     commits:
-      - id: c0
-        message: Initial vault seed
-        author: crew
-        files:
-          routing.conf: |
-            thruster_a=nominal
-            thruster_b=nominal
-      - id: c1
-        message: Sign thruster routing
-        author: orion
-        parent: c0
-        files:
-          routing.conf: |
-            thruster_a=nominal
-            thruster_b=standby
-      - id: c2
-        message: Unsigned thruster override
-        author: unknown
-        parent: c1
-        files:
-          routing.conf: |
-            thruster_a=override
-            thruster_b=standby
+    - id: c0
+      message: Initial vault seed
+      author: crew
+      files:
+        routing.conf: 'thruster_a=nominal
 
+          thruster_b=nominal
+
+          '
+    - id: c1
+      message: Sign thruster routing
+      author: orion
+      parent: c0
+      files:
+        routing.conf: 'thruster_a=nominal
+
+          thruster_b=standby
+
+          '
+    - id: c2
+      message: Unsigned thruster override
+      author: unknown
+      parent: c1
+      files:
+        routing.conf: 'thruster_a=override
+
+          thruster_b=standby
+
+          '
 objectives:
-  - id: inspect_log
-    type: git_state
-    description: Run git log and find the signed thruster routing commit.
-    visible: true
-    assert:
-      last_command: git log
-      stdout_contains: Sign thruster routing
-  - id: recover_signed
-    type: git_state
-    description: Check out commit c1 to restore the signed routing.conf.
-    visible: true
-    assert:
-      head_hash: c1
-      head_message: Sign thruster routing
-      working_tree_clean: true
-      file_equals:routing.conf: |
-        thruster_a=nominal
-        thruster_b=standby
+- id: inspect_log
+  type: git_state
+  description: Run git log and find the signed thruster routing commit.
+  visible: true
+  assert:
+    last_command: git log
+    stdout_contains: Sign thruster routing
+- id: recover_signed
+  type: git_state
+  description: Check out commit c1 to restore the signed routing.conf.
+  visible: true
+  assert:
+    head_hash: c1
+    head_message: Sign thruster routing
+    working_tree_clean: true
+    file_equals:routing.conf: 'thruster_a=nominal
 
+      thruster_b=standby
+
+      '
 hints:
-  - level: 1
-    text: Use git log to review recent commits.
-  - level: 2
-    text: The safe commit message is Sign thruster routing.
-  - level: 3
-    text: That commit id is c1.
-  - level: 4
-    text: Run git checkout c1 to restore the signed tree.
-
+- level: 1
+  text: Use git log to review recent commits.
+- level: 2
+  text: The safe commit message is Sign thruster routing.
+- level: 3
+  text: That commit id is c1.
+- level: 4
+  text: Run git checkout c1 to restore the signed tree.
 rewards:
   clearance_points: 35
   mastery:
     git.recover: 1
     git.inspect: 1
   unlocks:
-    - lore.version.recover_commit.01
-
+  - lore.version.recover_commit.01
 completion:
   mode: all
   objective_ids:
-    - inspect_log
-    - recover_signed
+  - inspect_log
+  - recover_signed

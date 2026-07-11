@@ -1,7 +1,7 @@
 schema_version: 1
 skill_id: git.recover
-name: Discard unauthorized changes
+name: Recover and Revert
 domain: git
-description: Restore tracked files from HEAD with git checkout -- path.
+description: Curriculum skill for Recover and Revert.
 prerequisites:
   - git.inspect

@@ -1,0 +1,7 @@
+schema_version: 1
+skill_id: sql.sort
+name: Sort and Limit
+domain: sql
+description: Curriculum skill for Sort and Limit.
+prerequisites:
+  - sql.filter

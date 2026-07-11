@@ -1,11 +1,17 @@
 {
   "chapter_id": "automation_lab",
   "mission_ids": [
+    "automation.types.01",
     "automation.pressure_threshold.01",
-    "automation.regression_guard.01"
+    "automation.loops.01",
+    "automation.collections.01",
+    "automation.exceptions.01",
+    "automation.files.01",
+    "automation.modules.01",
+    "automation.oxygen_capstone.01"
   ],
   "region": "Automation Lab",
   "schema_version": 1,
-  "summary": "Repair Python automation and lock behavior with regression tests.",
+  "summary": "Python automation for life-support systems.",
   "title": "Automation Lab"
 }

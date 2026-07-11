@@ -1,0 +1,7 @@
+schema_version: 1
+skill_id: mlops.repro
+name: Reproducible Training
+domain: mlops
+description: Curriculum skill for Reproducible Training.
+prerequisites:
+  - mlops.registry

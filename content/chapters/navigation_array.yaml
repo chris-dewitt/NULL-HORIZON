@@ -1,0 +1,13 @@
+schema_version: 1
+chapter_id: navigation_array
+title: Navigation Array
+region: Navigation Array
+summary: Data structures and algorithms for debris routing.
+mission_ids:
+  - nav.lists.01
+  - nav.stacks.01
+  - nav.maps.01
+  - nav.search.01
+  - nav.trees.01
+  - nav.graphs.01
+  - nav.path_capstone.01

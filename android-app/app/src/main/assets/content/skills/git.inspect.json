@@ -1,7 +1,7 @@
 {
-  "description": "Use git status and git diff to understand working-tree and staged changes.",
+  "description": "Curriculum skill for Inspect Working Tree.",
   "domain": "git",
-  "name": "Inspect repository state",
+  "name": "Inspect Working Tree",
   "prerequisites": [],
   "schema_version": 1,
   "skill_id": "git.inspect"

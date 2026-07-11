@@ -3,11 +3,13 @@
   "mission_ids": [
     "version.inspect_status.01",
     "version.unsigned_change.01",
+    "version.stage_commit.01",
     "version.recover_commit.01",
-    "version.merge_conflict.01"
+    "version.merge_conflict.01",
+    "version.branch_review.01"
   ],
   "region": "Version Vault",
   "schema_version": 1,
-  "summary": "Inspect unsigned changes and recover safe configuration history.",
+  "summary": "Git history, branches, and recovery of signed configs.",
   "title": "Version Vault"
 }

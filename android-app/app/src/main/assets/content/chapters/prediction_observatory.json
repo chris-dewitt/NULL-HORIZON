@@ -1,10 +1,14 @@
 {
   "chapter_id": "prediction_observatory",
   "mission_ids": [
+    "mlops.features.01",
+    "mlops.registry.01",
+    "mlops.monitoring.01",
+    "mlops.repro.01",
     "mlops.nav_risk_rollback.01"
   ],
   "region": "Prediction Observatory",
   "schema_version": 1,
-  "summary": "Training, registry, deployment, and monitoring for navigation-risk models.",
+  "summary": "ML infrastructure for navigation risk models.",
   "title": "Prediction Observatory"
 }

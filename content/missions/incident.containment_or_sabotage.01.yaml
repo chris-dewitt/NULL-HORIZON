@@ -1,0 +1,115 @@
+schema_version: 1
+mission_id: incident.containment_or_sabotage.01
+version: 1.0.0
+chapter_id: horizon_core
+title: Containment or Sabotage
+summary: Combine pipeline, model, and thermal evidence to decide if changes were containment.
+difficulty: challenge
+
+requirements:
+  app_version: ">=0.1.0"
+  online: false
+  prerequisite_skills:
+    - incident.triage
+    - data.pipeline.validate
+    - mlops.rollback
+
+skills:
+  primary: incident.triage
+  secondary:
+    - data.lineage
+    - mlops.monitoring
+    - cpp.raii
+    - dsa.complexity
+
+narrative:
+  briefing_dialogue_id: dialogue.incident.containment_or_sabotage.01.briefing
+  success_dialogue_id: dialogue.incident.containment_or_sabotage.01.success
+
+tools:
+  - systems_panel
+
+environment:
+  schema_version: 1
+  template_id: local.state.v1
+  seed: 171
+  initial_state:
+    telemetry: inconsistent
+    model: skewed
+    thermal: leak
+    verdict: unknown
+  actions:
+    - id: fix_pipeline
+      label: Repair telemetry lineage drop
+      effects:
+        telemetry: consistent
+    - id: rollback_model
+      label: Roll back skewed risk model
+      requires:
+        telemetry: consistent
+      effects:
+        model: stable
+    - id: seal_thermal
+      label: Seal thermal lifetime leak
+      requires:
+        model: stable
+      effects:
+        thermal: sealed
+    - id: conclude
+      label: Record containment verdict
+      requires:
+        thermal: sealed
+      effects:
+        verdict: containment
+
+objectives:
+  - id: tel
+    type: state_assertion
+    description: Restore telemetry consistency.
+    visible: true
+    assert:
+      telemetry: consistent
+  - id: mod
+    type: state_assertion
+    description: Stabilize the risk model.
+    visible: true
+    assert:
+      model: stable
+  - id: thm
+    type: state_assertion
+    description: Seal the thermal leak.
+    visible: true
+    assert:
+      thermal: sealed
+  - id: ver
+    type: state_assertion
+    description: Record the containment verdict.
+    visible: true
+    assert:
+      verdict: containment
+
+hints:
+  - level: 1
+    text: Fix telemetry first.
+  - level: 2
+    text: Then roll back the model.
+  - level: 3
+    text: Seal thermal next.
+  - level: 4
+    text: Conclude containment, not sabotage.
+
+rewards:
+  clearance_points: 70
+  mastery:
+    incident.triage: 1
+    data.lineage: 1
+  unlocks:
+    - lore.incident.containment_or_sabotage.01
+
+completion:
+  mode: all
+  objective_ids:
+    - tel
+    - mod
+    - thm
+    - ver

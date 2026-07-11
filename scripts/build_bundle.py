@@ -70,7 +70,7 @@ def build_bundle(channel: str, out_root: Path) -> Path:
     manifest = {
         "schema_version": 1,
         "bundle_id": "null-horizon-starter",
-        "version": "0.3.0",
+        "version": "0.4.0",
         "min_app_version": "0.1.0",
         "content_schema_version": 1,
         "locale": "en",

@@ -1,0 +1,7 @@
+schema_version: 1
+skill_id: dsa.stacks
+name: Stacks and Queues
+domain: dsa
+description: Curriculum skill for Stacks and Queues.
+prerequisites:
+  - dsa.lists

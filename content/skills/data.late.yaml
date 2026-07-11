@@ -1,0 +1,7 @@
+schema_version: 1
+skill_id: data.late
+name: Late-Arriving Data
+domain: data
+description: Curriculum skill for Late-Arriving Data.
+prerequisites:
+  - data.quality

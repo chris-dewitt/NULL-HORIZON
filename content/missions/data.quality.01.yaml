@@ -1,0 +1,112 @@
+schema_version: 1
+mission_id: data.quality.01
+version: 1.0.0
+chapter_id: data_foundry
+title: Quality Gate
+summary: Restore a quality gate that failed on schema drift.
+difficulty: practiced
+
+requirements:
+  app_version: ">=0.1.0"
+  online: false
+  prerequisite_skills:
+    - data.etl
+
+skills:
+  primary: data.quality
+  secondary: []
+
+narrative:
+  briefing_dialogue_id: dialogue.data.quality.01.briefing
+  success_dialogue_id: dialogue.data.quality.01.success
+
+tools:
+  - pipeline
+
+environment:
+  schema_version: 1
+  template_id: pipeline.dag.v1
+  seed: 142
+  pipeline:
+    run_id: data-quality-01-run
+    nodes:
+      - id: extract
+        kind: extract
+        label: Extract
+        status: succeeded
+      - id: transform
+        kind: transform
+        label: Transform
+        status: failed
+        detail: "schema drift"
+      - id: load
+        kind: load
+        label: Load
+        status: pending
+    edges:
+      - id: e1
+        from: extract
+        to: transform
+        kind: data
+        status: ok
+      - id: e2
+        from: transform
+        to: load
+        kind: data
+        status: blocked
+    actions:
+      - id: inspect_transform
+        label: Inspect transform failure
+        effects:
+          inspected: "true"
+          explanation: "Transform rejects late schema versions."
+      - id: repair_schema
+        label: Align transform schema
+        requires:
+          inspected: "true"
+        effects:
+          node.transform.status: succeeded
+          node.transform.detail: "schema aligned"
+          edge.e2.status: ok
+          node.load.status: succeeded
+          repaired: "true"
+          explanation: "Schema aligned; load completed."
+
+objectives:
+  - id: inspect
+    type: pipeline_state
+    description: Inspect the failing transform stage.
+    visible: true
+    assert:
+      inspected: "true"
+  - id: repair
+    type: pipeline_state
+    description: Repair the transform and complete the load.
+    visible: true
+    assert:
+      repaired: "true"
+      node.transform.status: succeeded
+      node.load.status: succeeded
+
+hints:
+  - level: 1
+    text: Inspect the failure.
+  - level: 2
+    text: Repair schema alignment.
+  - level: 3
+    text: Load should succeed.
+  - level: 4
+    text: Quality before publish.
+
+rewards:
+  clearance_points: 40
+  mastery:
+    data.quality: 1
+  unlocks:
+    - lore.data.quality.01
+
+completion:
+  mode: all
+  objective_ids:
+    - inspect
+    - repair

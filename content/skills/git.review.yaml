@@ -1,0 +1,7 @@
+schema_version: 1
+skill_id: git.review
+name: Code Review Concepts
+domain: git
+description: Curriculum skill for Code Review Concepts.
+prerequisites:
+  - git.merge

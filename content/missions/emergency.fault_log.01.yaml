@@ -5,24 +5,19 @@ chapter_id: emergency_interface
 title: Locate the Fault Log
 summary: Use the simulated terminal to find and inspect the life-support fault log.
 difficulty: introductory
-
 requirements:
-  app_version: ">=0.1.0"
+  app_version: '>=0.1.0'
   online: false
   prerequisite_skills: []
-
 skills:
   primary: linux.navigation
   secondary:
-    - linux.inspection
-
+  - linux.inspection
 narrative:
   briefing_dialogue_id: dialogue.emergency.fault_log.briefing
   success_dialogue_id: dialogue.emergency.fault_log.success
-
 tools:
-  - terminal
-
+- terminal
 environment:
   schema_version: 1
   template_id: terminal.vfs.v1
@@ -30,84 +25,90 @@ environment:
   filesystem:
     cwd: /home/operator
     entries:
-      - path: /home/operator
-        type: dir
-      - path: /home/operator/README.txt
-        type: file
-        content: |
-          Emergency operator notes.
-          Check /var/log for subsystem diagnostics.
-      - path: /var
-        type: dir
-      - path: /var/log
-        type: dir
-      - path: /var/log/comms
-        type: dir
-      - path: /var/log/comms/link.status
-        type: file
-        content: |
-          uplink=degraded
-          retries=3
-      - path: /var/log/life_support
-        type: dir
-      - path: /var/log/life_support/fault.log
-        type: file
-        content: |
-          INFO valve-1 nominal
-          ERROR valve-3 pressure unstable
-          INFO pump-a cycling
-      - path: /var/log/life_support/heartbeat.log
-        type: file
-        content: |
-          ok
-          ok
-          ok
+    - path: /home/operator
+      type: dir
+    - path: /home/operator/README.txt
+      type: file
+      content: 'Emergency operator notes.
 
+        Check /var/log for subsystem diagnostics.
+
+        '
+    - path: /var
+      type: dir
+    - path: /var/log
+      type: dir
+    - path: /var/log/comms
+      type: dir
+    - path: /var/log/comms/link.status
+      type: file
+      content: 'uplink=degraded
+
+        retries=3
+
+        '
+    - path: /var/log/life_support
+      type: dir
+    - path: /var/log/life_support/fault.log
+      type: file
+      content: 'INFO valve-1 nominal
+
+        ERROR valve-3 pressure unstable
+
+        INFO pump-a cycling
+
+        '
+    - path: /var/log/life_support/heartbeat.log
+      type: file
+      content: 'ok
+
+        ok
+
+        ok
+
+        '
 objectives:
-  - id: reach_log_dir
-    type: filesystem_state
-    description: Navigate to /var/log/life_support.
-    visible: true
-    assert:
-      cwd: /var/log/life_support
-  - id: read_fault_log
-    type: command_output
-    description: Read fault.log and confirm the valve-3 error.
-    visible: true
-    assert:
-      last_command: cat fault.log
-      stdout_contains: valve-3 pressure unstable
-      exit_code: 0
-  - id: confirm_with_grep
-    type: command_output
-    description: Search the fault log for valve-3.
-    visible: true
-    assert:
-      last_command: grep valve-3 fault.log
-      stdout_contains: valve-3 pressure unstable
-      exit_code: 0
-
+- id: reach_log_dir
+  type: filesystem_state
+  description: Navigate to /var/log/life_support.
+  visible: true
+  assert:
+    cwd: /var/log/life_support
+- id: read_fault_log
+  type: command_output
+  description: Read fault.log and confirm the valve-3 error.
+  visible: true
+  assert:
+    last_command: cat fault.log
+    stdout_contains: valve-3 pressure unstable
+    exit_code: 0
+- id: confirm_with_grep
+  type: command_output
+  description: Search the fault log for valve-3.
+  visible: true
+  assert:
+    last_command: grep valve-3 fault.log
+    stdout_contains: valve-3 pressure unstable
+    exit_code: 0
 hints:
-  - level: 1
-    text: Start with pwd and ls to orient yourself.
-  - level: 2
-    text: The briefing points at /var/log. Use cd to move there.
-  - level: 3
-    text: Life-support logs are under /var/log/life_support.
-  - level: 4
-    text: Use cat fault.log, then grep valve-3 fault.log.
-
+- level: 1
+  text: Start with pwd and ls to orient yourself.
+- level: 2
+  text: The briefing points at /var/log. Use cd to move there.
+- level: 3
+  text: Life-support logs are under /var/log/life_support.
+- level: 4
+  text: Use cat fault.log, then grep valve-3 fault.log.
 rewards:
   clearance_points: 30
   mastery:
     linux.navigation: 1
     linux.inspection: 1
   unlocks:
-    - lore.emergency.fault_log.01
-
+  - lore.emergency.fault_log.01
 completion:
   mode: all
   objective_ids:
-    - reach_log_dir
-    - read_fault_log
-    - confirm_with_grep
+  - reach_log_dir
+  - read_fault_log
+  - confirm_with_grep

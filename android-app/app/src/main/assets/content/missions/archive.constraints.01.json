@@ -1,0 +1,115 @@
+{
+  "chapter_id": "archive_core",
+  "completion": {
+    "mode": "all",
+    "objective_ids": [
+      "pk",
+      "uq"
+    ]
+  },
+  "difficulty": "practiced",
+  "environment": {
+    "actions": [
+      {
+        "effects": {
+          "reviewed_pk": true
+        },
+        "id": "check_pk",
+        "label": "Review primary key on passenger_id"
+      },
+      {
+        "effects": {
+          "constraint_ok": true,
+          "reviewed_unique": true
+        },
+        "id": "check_unique",
+        "label": "Review unique callsign constraint",
+        "requires": {
+          "reviewed_pk": true
+        }
+      }
+    ],
+    "initial_state": {
+      "constraint_ok": false,
+      "reviewed_pk": false,
+      "reviewed_unique": false
+    },
+    "schema_version": 1,
+    "seed": 75,
+    "template_id": "local.state.v1"
+  },
+  "hints": [
+    {
+      "level": 1,
+      "text": "Start with the primary key."
+    },
+    {
+      "level": 2,
+      "text": "Then review uniqueness."
+    },
+    {
+      "level": 3,
+      "text": "Both reviews are required."
+    },
+    {
+      "level": 4,
+      "text": "Mark constraints OK only after both."
+    }
+  ],
+  "mission_id": "archive.constraints.01",
+  "narrative": {
+    "briefing_dialogue_id": "dialogue.archive.constraints.01.briefing",
+    "success_dialogue_id": "dialogue.archive.constraints.01.success"
+  },
+  "objectives": [
+    {
+      "assert": {
+        "reviewed_pk": true
+      },
+      "description": "Review the primary key.",
+      "id": "pk",
+      "type": "state_assertion",
+      "visible": true
+    },
+    {
+      "assert": {
+        "constraint_ok": true,
+        "reviewed_unique": true
+      },
+      "description": "Review the unique constraint.",
+      "id": "uq",
+      "type": "state_assertion",
+      "visible": true
+    }
+  ],
+  "requirements": {
+    "app_version": ">=0.1.0",
+    "online": false,
+    "prerequisite_skills": [
+      "sql.select"
+    ]
+  },
+  "rewards": {
+    "clearance_points": 25,
+    "mastery": {
+      "sql.constraints": 1,
+      "sql.select": 1
+    },
+    "unlocks": [
+      "lore.archive.constraints.01"
+    ]
+  },
+  "schema_version": 1,
+  "skills": {
+    "primary": "sql.constraints",
+    "secondary": [
+      "sql.select"
+    ]
+  },
+  "summary": "Confirm which constraint prevents duplicate passenger ids.",
+  "title": "Constraint Review",
+  "tools": [
+    "systems_panel"
+  ],
+  "version": "1.0.0"
+}

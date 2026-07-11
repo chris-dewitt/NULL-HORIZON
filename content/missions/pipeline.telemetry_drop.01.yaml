@@ -3,25 +3,21 @@ mission_id: pipeline.telemetry_drop.01
 version: 1.0.0
 chapter_id: data_foundry
 title: Dropped Telemetry Frames
-summary: Repair a batch pipeline that reports success while silently dropping sensor frames.
-difficulty: practiced
-
+summary: Repair a batch pipeline that reports success while silently dropping sensor
+  frames.
+difficulty: challenge
 requirements:
-  app_version: ">=0.1.0"
+  app_version: '>=0.1.0'
   online: false
   prerequisite_skills: []
-
 skills:
   primary: data.pipeline.validate
   secondary: []
-
 narrative:
   briefing_dialogue_id: dialogue.pipeline.telemetry_drop.briefing
   success_dialogue_id: dialogue.pipeline.telemetry_drop.success
-
 tools:
-  - pipeline
-
+- pipeline
 environment:
   schema_version: 1
   template_id: pipeline.dag.v1
@@ -29,119 +25,116 @@ environment:
   pipeline:
     run_id: telemetry-batch-42
     nodes:
-      - id: extract
-        kind: extract
-        label: Extract sensor frames
-        status: succeeded
-        detail: "1200 frames read"
-      - id: validate
-        kind: validate
-        label: Validate schema
-        status: failed
-        detail: "dropping malformed frames as success"
-      - id: transform
-        kind: transform
-        label: Normalize units
-        status: pending
-      - id: load
-        kind: load
-        label: Load forecast store
-        status: pending
-      - id: publish
-        kind: publish
-        label: Publish reactor forecast
-        status: pending
+    - id: extract
+      kind: extract
+      label: Extract sensor frames
+      status: succeeded
+      detail: 1200 frames read
+    - id: validate
+      kind: validate
+      label: Validate schema
+      status: failed
+      detail: dropping malformed frames as success
+    - id: transform
+      kind: transform
+      label: Normalize units
+      status: pending
+    - id: load
+      kind: load
+      label: Load forecast store
+      status: pending
+    - id: publish
+      kind: publish
+      label: Publish reactor forecast
+      status: pending
     edges:
-      - id: e1
-        from: extract
-        to: validate
-        kind: data
-        status: ok
-      - id: e2
-        from: validate
-        to: transform
-        kind: data
-        status: blocked
-      - id: e3
-        from: transform
-        to: load
-        kind: data
-        status: idle
-      - id: e4
-        from: load
-        to: publish
-        kind: data
-        status: idle
+    - id: e1
+      from: extract
+      to: validate
+      kind: data
+      status: ok
+    - id: e2
+      from: validate
+      to: transform
+      kind: data
+      status: blocked
+    - id: e3
+      from: transform
+      to: load
+      kind: data
+      status: idle
+    - id: e4
+      from: load
+      to: publish
+      kind: data
+      status: idle
     actions:
-      - id: inspect_validate
-        label: Inspect validate stage
-        description: Read the quality gate that marks drops as success.
-        effects:
-          inspected_validate: "true"
-          explanation: "Validate treats schema failures as soft drops and still exits 0."
-      - id: fix_quality_gate
-        label: Enforce hard fail on schema errors
-        requires:
-          inspected_validate: "true"
-        effects:
-          node.validate.status: succeeded
-          node.validate.detail: "schema gate rejects malformed frames"
-          quality_gate: hard_fail
-          explanation: "Quality gate now fails the stage instead of dropping frames quietly."
-      - id: rerun_pipeline
-        label: Rerun pipeline
-        requires:
-          quality_gate: hard_fail
-        effects:
-          node.transform.status: succeeded
-          node.load.status: succeeded
-          node.publish.status: succeeded
-          edge.e2.status: ok
-          edge.e3.status: ok
-          edge.e4.status: ok
-          run_outcome: succeeded
-          explanation: "Full DAG completed. Forecast store received all valid frames."
-
+    - id: inspect_validate
+      label: Inspect validate stage
+      description: Read the quality gate that marks drops as success.
+      effects:
+        inspected_validate: 'true'
+        explanation: Validate treats schema failures as soft drops and still exits
+          0.
+    - id: fix_quality_gate
+      label: Enforce hard fail on schema errors
+      requires:
+        inspected_validate: 'true'
+      effects:
+        node.validate.status: succeeded
+        node.validate.detail: schema gate rejects malformed frames
+        quality_gate: hard_fail
+        explanation: Quality gate now fails the stage instead of dropping frames quietly.
+    - id: rerun_pipeline
+      label: Rerun pipeline
+      requires:
+        quality_gate: hard_fail
+      effects:
+        node.transform.status: succeeded
+        node.load.status: succeeded
+        node.publish.status: succeeded
+        edge.e2.status: ok
+        edge.e3.status: ok
+        edge.e4.status: ok
+        run_outcome: succeeded
+        explanation: Full DAG completed. Forecast store received all valid frames.
 objectives:
-  - id: inspect_drop
-    type: pipeline_state
-    description: Inspect the validate stage that drops frames.
-    visible: true
-    assert:
-      inspected_validate: "true"
-  - id: repair_gate
-    type: pipeline_state
-    description: Make validate fail hard on schema errors.
-    visible: true
-    assert:
-      node.validate.status: succeeded
-      quality_gate: hard_fail
-  - id: green_run
-    type: pipeline_state
-    description: Rerun until publish succeeds.
-    visible: true
-    assert:
-      run_outcome: succeeded
-      node.publish.status: succeeded
-
+- id: inspect_drop
+  type: pipeline_state
+  description: Inspect the validate stage that drops frames.
+  visible: true
+  assert:
+    inspected_validate: 'true'
+- id: repair_gate
+  type: pipeline_state
+  description: Make validate fail hard on schema errors.
+  visible: true
+  assert:
+    node.validate.status: succeeded
+    quality_gate: hard_fail
+- id: green_run
+  type: pipeline_state
+  description: Rerun until publish succeeds.
+  visible: true
+  assert:
+    run_outcome: succeeded
+    node.publish.status: succeeded
 hints:
-  - level: 1
-    text: Start by inspecting the validate stage that still exits successfully.
-  - level: 2
-    text: Soft drops hide data loss. Enforce a hard quality gate.
-  - level: 3
-    text: After the gate is fixed, rerun the DAG so transform through publish can finish.
-
+- level: 1
+  text: Start by inspecting the validate stage that still exits successfully.
+- level: 2
+  text: Soft drops hide data loss. Enforce a hard quality gate.
+- level: 3
+  text: After the gate is fixed, rerun the DAG so transform through publish can finish.
 rewards:
   clearance_points: 40
   mastery:
     data.pipeline.validate: 1
   unlocks:
-    - lore.pipeline.telemetry_drop.01
-
+  - lore.pipeline.telemetry_drop.01
 completion:
   mode: all
   objective_ids:
-    - inspect_drop
-    - repair_gate
-    - green_run
+  - inspect_drop
+  - repair_gate
+  - green_run

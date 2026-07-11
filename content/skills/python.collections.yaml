@@ -1,0 +1,7 @@
+schema_version: 1
+skill_id: python.collections
+name: Collections
+domain: python
+description: Curriculum skill for Collections.
+prerequisites:
+  - python.functions

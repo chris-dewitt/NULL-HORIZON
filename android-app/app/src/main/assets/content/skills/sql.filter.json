@@ -1,7 +1,7 @@
 {
-  "description": "Narrow result sets with WHERE predicates on status and related columns.",
+  "description": "Curriculum skill for Filter.",
   "domain": "sql",
-  "name": "Filter rows",
+  "name": "Filter",
   "prerequisites": [
     "sql.select"
   ],

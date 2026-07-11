@@ -1,0 +1,85 @@
+schema_version: 1
+mission_id: archive.constraints.01
+version: 1.0.0
+chapter_id: archive_core
+title: Constraint Review
+summary: Confirm which constraint prevents duplicate passenger ids.
+difficulty: practiced
+
+requirements:
+  app_version: ">=0.1.0"
+  online: false
+  prerequisite_skills:
+    - sql.select
+
+skills:
+  primary: sql.constraints
+  secondary:
+    - sql.select
+
+narrative:
+  briefing_dialogue_id: dialogue.archive.constraints.01.briefing
+  success_dialogue_id: dialogue.archive.constraints.01.success
+
+tools:
+  - systems_panel
+
+environment:
+  schema_version: 1
+  template_id: local.state.v1
+  seed: 75
+  initial_state:
+    reviewed_pk: False
+    reviewed_unique: False
+    constraint_ok: False
+  actions:
+    - id: check_pk
+      label: Review primary key on passenger_id
+      effects:
+        reviewed_pk: True
+    - id: check_unique
+      label: Review unique callsign constraint
+      requires:
+        reviewed_pk: True
+      effects:
+        reviewed_unique: True
+        constraint_ok: True
+
+objectives:
+  - id: pk
+    type: state_assertion
+    description: Review the primary key.
+    visible: true
+    assert:
+      reviewed_pk: True
+  - id: uq
+    type: state_assertion
+    description: Review the unique constraint.
+    visible: true
+    assert:
+      reviewed_unique: True
+      constraint_ok: True
+
+hints:
+  - level: 1
+    text: Start with the primary key.
+  - level: 2
+    text: Then review uniqueness.
+  - level: 3
+    text: Both reviews are required.
+  - level: 4
+    text: Mark constraints OK only after both.
+
+rewards:
+  clearance_points: 25
+  mastery:
+    sql.constraints: 1
+    sql.select: 1
+  unlocks:
+    - lore.archive.constraints.01
+
+completion:
+  mode: all
+  objective_ids:
+    - pk
+    - uq

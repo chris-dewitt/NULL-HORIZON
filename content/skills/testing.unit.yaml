@@ -1,0 +1,7 @@
+schema_version: 1
+skill_id: testing.unit
+name: Unit Tests
+domain: testing
+description: Curriculum skill for Unit Tests.
+prerequisites:
+  - python.testing

@@ -1,0 +1,7 @@
+schema_version: 1
+dialogue_id: dialogue.data.quality.01.success
+lines:
+  - speaker: ORION-A
+    text: Mission data.quality.01 complete.
+  - speaker: SYSTEM
+    text: Progress recorded.

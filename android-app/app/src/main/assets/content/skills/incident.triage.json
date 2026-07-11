@@ -1,8 +1,10 @@
 {
-  "description": "Combine terminal, SQL, and Git evidence to close a multi-tool incident.",
+  "description": "Curriculum skill for Incident Triage.",
   "domain": "systems",
   "name": "Incident Triage",
-  "prerequisites": [],
+  "prerequisites": [
+    "computational_thinking.incident"
+  ],
   "schema_version": 1,
   "skill_id": "incident.triage"
 }

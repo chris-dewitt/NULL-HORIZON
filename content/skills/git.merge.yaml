@@ -1,7 +1,7 @@
 schema_version: 1
 skill_id: git.merge
-name: Merge and resolve conflicts
+name: Merge and Conflicts
 domain: git
-description: Merge branches, resolve conflicted paths, stage, and commit the result.
+description: Curriculum skill for Merge and Conflicts.
 prerequisites:
-  - git.inspect
+  - git.branch

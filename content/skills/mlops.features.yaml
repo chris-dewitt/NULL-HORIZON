@@ -1,0 +1,7 @@
+schema_version: 1
+skill_id: mlops.features
+name: Feature Versioning
+domain: mlops
+description: Curriculum skill for Feature Versioning.
+prerequisites:
+  - mlops.rollback

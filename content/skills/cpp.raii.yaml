@@ -1,0 +1,7 @@
+schema_version: 1
+skill_id: cpp.raii
+name: RAII and Lifetime
+domain: cpp
+description: Curriculum skill for RAII and Lifetime.
+prerequisites:
+  - cpp.classes

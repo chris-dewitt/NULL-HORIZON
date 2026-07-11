@@ -1,0 +1,113 @@
+schema_version: 1
+mission_id: cpp.raii_capstone.01
+version: 1.0.0
+chapter_id: reactor_kernel
+title: RAII Lifetime Fix
+summary: Ensure a resource guard releases on scope exit.
+difficulty: challenge
+
+requirements:
+  app_version: ">=0.1.0"
+  online: false
+  prerequisite_skills: []
+
+skills:
+  primary: cpp.raii
+  secondary: []
+
+narrative:
+  briefing_dialogue_id: dialogue.cpp.raii_capstone.01.briefing
+  success_dialogue_id: dialogue.cpp.raii_capstone.01.success
+
+tools:
+  - python_editor
+  - test_console
+
+environment:
+  schema_version: 1
+  template_id: python.editor.fake.v1
+  seed: 154
+  workspace:
+    files:
+      - path: /workspace/thermal.py
+        editable: true
+        content: |
+          def solve() -> bool:
+              acquired = True
+              released = False
+              return acquired and released
+      - path: /workspace/test_solve.py
+        editable: false
+        content: |
+          from thermal import solve
+
+
+          def test_solve():
+              assert solve() is True
+    execution:
+      provider: fake
+      fixtures:
+        - id: fixed
+          match:
+            file_contains:
+              /workspace/thermal.py: "released = True"
+          result:
+            status: completed
+            tests:
+              - id: test_solve
+                status: passed
+        - id: broken
+          match:
+            file_contains:
+              /workspace/thermal.py: "released = False"
+          result:
+            status: completed
+            tests:
+              - id: test_solve
+                status: failed
+                message: Behavior still incorrect
+        - id: default_fail
+          result:
+            status: completed
+            tests:
+              - id: test_solve
+                status: failed
+                message: Unexpected workspace state
+
+objectives:
+  - id: apply_fix
+    type: file_assertion
+    description: Apply the required C++ concept fix.
+    visible: true
+    assert:
+      file_contains:/workspace/thermal.py: "released = True"
+  - id: tests_pass
+    type: execution_tests
+    description: Run tests and make them pass.
+    visible: true
+    assert:
+      all_passed: "true"
+      test_count: "1"
+
+hints:
+  - level: 1
+    text: Release on scope exit.
+  - level: 2
+    text: Call release().
+  - level: 3
+    text: RAII means automatic cleanup.
+  - level: 4
+    text: Return true after release.
+
+rewards:
+  clearance_points: 50
+  mastery:
+    cpp.raii: 1
+  unlocks:
+    - lore.cpp.raii_capstone.01
+
+completion:
+  mode: all
+  objective_ids:
+    - apply_fix
+    - tests_pass

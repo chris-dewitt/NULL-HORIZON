@@ -1,0 +1,85 @@
+schema_version: 1
+mission_id: security.authz.01
+version: 1.0.0
+chapter_id: black_vault
+title: Authn versus Authz
+summary: Separate authentication success from authorization to vault records.
+difficulty: practiced
+
+requirements:
+  app_version: ">=0.1.0"
+  online: false
+  prerequisite_skills:
+    - security.threat_model
+
+skills:
+  primary: security.authz
+  secondary:
+    - security.threat_model
+
+narrative:
+  briefing_dialogue_id: dialogue.security.authz.01.briefing
+  success_dialogue_id: dialogue.security.authz.01.success
+
+tools:
+  - systems_panel
+
+environment:
+  schema_version: 1
+  template_id: local.state.v1
+  seed: 133
+  initial_state:
+    authenticated: False
+    authorized: False
+    access: denied
+  actions:
+    - id: authenticate
+      label: Authenticate operator
+      effects:
+        authenticated: True
+    - id: authorize
+      label: Authorize vault.read
+      requires:
+        authenticated: True
+      effects:
+        authorized: True
+        access: allowed
+
+objectives:
+  - id: authn
+    type: state_assertion
+    description: Authenticate the operator.
+    visible: true
+    assert:
+      authenticated: True
+  - id: authz
+    type: state_assertion
+    description: Authorize vault.read separately.
+    visible: true
+    assert:
+      authorized: True
+      access: allowed
+
+hints:
+  - level: 1
+    text: Authentication is not authorization.
+  - level: 2
+    text: Authenticate first.
+  - level: 3
+    text: Then grant vault.read.
+  - level: 4
+    text: Keep duties separate.
+
+rewards:
+  clearance_points: 25
+  mastery:
+    security.authz: 1
+    security.threat_model: 1
+  unlocks:
+    - lore.security.authz.01
+
+completion:
+  mode: all
+  objective_ids:
+    - authn
+    - authz

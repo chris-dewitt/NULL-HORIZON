@@ -1,0 +1,7 @@
+schema_version: 1
+skill_id: oop.polymorphism
+name: Interfaces and Polymorphism
+domain: oop
+description: Curriculum skill for Interfaces and Polymorphism.
+prerequisites:
+  - oop.composition

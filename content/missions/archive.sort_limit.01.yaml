@@ -1,0 +1,75 @@
+schema_version: 1
+mission_id: archive.sort_limit.01
+version: 1.0.0
+chapter_id: archive_core
+title: Sort and Limit
+summary: Return the first active crew callsign in alphabetical order.
+difficulty: introductory
+
+requirements:
+  app_version: ">=0.1.0"
+  online: false
+  prerequisite_skills:
+    - sql.filter
+
+skills:
+  primary: sql.sort
+  secondary:
+    - sql.filter
+
+narrative:
+  briefing_dialogue_id: dialogue.archive.sort_limit.01.briefing
+  success_dialogue_id: dialogue.archive.sort_limit.01.success
+
+tools:
+  - sql
+
+environment:
+  schema_version: 1
+  template_id: sql.sqlite.v1
+  seed: 71
+  databases:
+    - id: archive
+      policy: select_only
+      seed_sql: |
+        CREATE TABLE crew (crew_id INTEGER PRIMARY KEY, callsign TEXT, role TEXT, status TEXT, deck TEXT);
+        CREATE TABLE pods (pod_id INTEGER PRIMARY KEY, deck TEXT, occupied INTEGER);
+        INSERT INTO pods VALUES (1,'A',1),(2,'A',1),(3,'B',1),(4,'B',0);
+        INSERT INTO crew VALUES
+         (1,'ORION','navigator','active','A'),
+         (2,'VEGA','engineer','active','A'),
+         (3,'KELL','medic','missing','B'),
+         (4,'RIN','engineer','missing','B'),
+         (5,'NYX','unknown','ghost','B');
+objectives:
+  - id: sorted
+    type: sql_result
+    description: Select the first active callsign alphabetically.
+    visible: true
+    assert:
+      query_contains: ORDER
+      columns: callsign
+      row_count: "1"
+      rows: ORION
+
+hints:
+  - level: 1
+    text: Filter status = active.
+  - level: 2
+    text: Order by callsign.
+  - level: 3
+    text: Limit to 1.
+  - level: 4
+    text: SELECT callsign FROM crew WHERE status = 'active' ORDER BY callsign LIMIT 1;
+
+rewards:
+  clearance_points: 35
+  mastery:
+    sql.sort: 1
+  unlocks:
+    - lore.archive.sort_limit.01
+
+completion:
+  mode: all
+  objective_ids:
+    - sorted

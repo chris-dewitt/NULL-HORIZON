@@ -1,0 +1,7 @@
+schema_version: 1
+dialogue_id: dialogue.version.stage_commit.01.success
+lines:
+  - speaker: ORION-A
+    text: Mission version.stage_commit.01 complete.
+  - speaker: SYSTEM
+    text: Progress recorded.

@@ -1,0 +1,8 @@
+schema_version: 1
+skill_id: linux.scripts
+name: Simple Scripts
+domain: linux
+description: Curriculum skill for Simple Scripts.
+prerequisites:
+  - linux.search
+  - linux.processes

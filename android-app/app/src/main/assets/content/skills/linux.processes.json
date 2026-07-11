@@ -1,5 +1,5 @@
 {
-  "description": "Inspect and stop processes with ps and kill in a constrained shell.",
+  "description": "Curriculum skill for Process Control.",
   "domain": "linux",
   "name": "Process Control",
   "prerequisites": [

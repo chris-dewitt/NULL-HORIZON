@@ -1,0 +1,8 @@
+schema_version: 1
+chapter_id: horizon_core
+title: Horizon Core
+region: Horizon Core
+summary: Integrated incidents that combine earlier domains.
+mission_ids:
+  - incident.ghost_registry.01
+  - incident.containment_or_sabotage.01

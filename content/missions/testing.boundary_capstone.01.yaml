@@ -1,0 +1,115 @@
+schema_version: 1
+mission_id: testing.boundary_capstone.01
+version: 1.0.0
+chapter_id: verification_chamber
+title: Hidden Boundary Defect
+summary: Fix an inclusive upper-bound defect caught by a boundary test.
+difficulty: challenge
+
+requirements:
+  app_version: ">=0.1.0"
+  online: false
+  prerequisite_skills:
+    - testing.boundaries
+
+skills:
+  primary: testing.boundaries
+  secondary:
+    - python.testing
+
+narrative:
+  briefing_dialogue_id: dialogue.testing.boundary_capstone.01.briefing
+  success_dialogue_id: dialogue.testing.boundary_capstone.01.success
+
+tools:
+  - python_editor
+  - test_console
+
+environment:
+  schema_version: 1
+  template_id: python.editor.fake.v1
+  seed: 124
+  workspace:
+    files:
+      - path: /workspace/bound.py
+        editable: true
+        content: |
+          def solve() -> bool:
+              limit = 100
+              value = 100
+              return value < limit
+      - path: /workspace/test_solve.py
+        editable: false
+        content: |
+          from bound import solve
+
+
+          def test_solve():
+              assert solve() is True
+    execution:
+      provider: fake
+      fixtures:
+        - id: fixed
+          match:
+            file_contains:
+              /workspace/bound.py: "value <= limit"
+          result:
+            status: completed
+            tests:
+              - id: test_solve
+                status: passed
+        - id: broken
+          match:
+            file_contains:
+              /workspace/bound.py: "value < limit"
+          result:
+            status: completed
+            tests:
+              - id: test_solve
+                status: failed
+                message: Behavior still incorrect
+        - id: default_fail
+          result:
+            status: completed
+            tests:
+              - id: test_solve
+                status: failed
+                message: Unexpected workspace state
+
+objectives:
+  - id: apply_fix
+    type: file_assertion
+    description: Apply the required Python fix.
+    visible: true
+    assert:
+      file_contains:/workspace/bound.py: "value <= limit"
+  - id: tests_pass
+    type: execution_tests
+    description: Run tests and make them pass.
+    visible: true
+    assert:
+      all_passed: "true"
+      test_count: "1"
+
+hints:
+  - level: 1
+    text: 100 should be allowed.
+  - level: 2
+    text: Use <= not <.
+  - level: 3
+    text: Inclusive upper bound.
+  - level: 4
+    text: Run tests.
+
+rewards:
+  clearance_points: 55
+  mastery:
+    testing.boundaries: 1
+  unlocks:
+    - lore.testing.boundary_capstone.01
+
+completion:
+  mode: all
+  objective_ids:
+    - apply_fix
+    - tests_pass

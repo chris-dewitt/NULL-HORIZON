@@ -1,0 +1,7 @@
+schema_version: 1
+skill_id: oop.refactor
+name: Responsibility Refactoring
+domain: oop
+description: Curriculum skill for Responsibility Refactoring.
+prerequisites:
+  - oop.polymorphism

@@ -1,5 +1,5 @@
 {
-  "description": "Avoid unsafe string-built queries when looking up records.",
+  "description": "Curriculum skill for Safe Query Construction.",
   "domain": "sql",
   "name": "Safe Query Construction",
   "prerequisites": [

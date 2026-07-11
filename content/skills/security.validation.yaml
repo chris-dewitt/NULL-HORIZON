@@ -1,0 +1,7 @@
+schema_version: 1
+skill_id: security.validation
+name: Input Validation
+domain: security
+description: Curriculum skill for Input Validation.
+prerequisites:
+  - security.threat_model

@@ -1,0 +1,7 @@
+{
+  "description": "Unlock for completing maintenance.script_check.01.",
+  "kind": "lore",
+  "name": "Lore maintenance.script_check.01",
+  "reward_id": "lore.maintenance.script_check.01",
+  "schema_version": 1
+}

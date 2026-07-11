@@ -1,0 +1,6 @@
+schema_version: 1
+skill_id: python.types
+name: Values and Types
+domain: python
+description: Curriculum skill for Values and Types.
+prerequisites: []

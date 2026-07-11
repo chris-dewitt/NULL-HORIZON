@@ -1,0 +1,7 @@
+schema_version: 1
+skill_id: cpp.containers
+name: Standard Containers
+domain: cpp
+description: Curriculum skill for Standard Containers.
+prerequisites:
+  - cpp.classes

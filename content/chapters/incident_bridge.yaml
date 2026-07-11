@@ -1,7 +1,0 @@
-schema_version: 1
-chapter_id: incident_bridge
-title: Incident Bridge
-region: Incident Bridge
-summary: Multi-tool incidents that stitch earlier skills together.
-mission_ids:
-  - incident.ghost_registry.01

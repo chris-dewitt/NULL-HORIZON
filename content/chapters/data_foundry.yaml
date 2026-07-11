@@ -2,6 +2,10 @@ schema_version: 1
 chapter_id: data_foundry
 title: Data Foundry
 region: Data Foundry
-summary: Batch telemetry pipelines that keep reactor forecasts honest.
+summary: Data engineering for telemetry and forecasts.
 mission_ids:
+  - data.etl_intro.01
+  - data.quality.01
+  - data.lineage.01
+  - data.late.01
   - pipeline.telemetry_drop.01

@@ -1,0 +1,102 @@
+schema_version: 1
+mission_id: mlops.features.01
+version: 1.0.0
+chapter_id: prediction_observatory
+title: Feature Skew Check
+summary: Inspect drift and roll back after feature skew.
+difficulty: introductory
+
+requirements:
+  app_version: ">=0.1.0"
+  online: false
+  prerequisite_skills: []
+
+skills:
+  primary: mlops.features
+  secondary: []
+
+narrative:
+  briefing_dialogue_id: dialogue.mlops.features.01.briefing
+  success_dialogue_id: dialogue.mlops.features.01.success
+
+tools:
+  - mlops
+
+environment:
+  schema_version: 1
+  template_id: mlops.lifecycle.v1
+  seed: 161
+  mlops:
+    artifacts:
+      - id: model_current
+        kind: model
+        label: Risk model
+        stage: production
+        status: degraded
+        version: "v2"
+      - id: model_stable
+        kind: model
+        label: Stable risk model
+        stage: staging
+        status: healthy
+        version: "v1"
+      - id: dataset
+        kind: dataset
+        label: Feature set
+        stage: training
+        status: healthy
+        version: "2026.07"
+    actions:
+      - id: inspect_drift
+        label: Inspect production drift
+        effects:
+          inspected: "true"
+          explanation: "Production v2 shows feature skew."
+      - id: rollback_stable
+        label: Roll back to stable model
+        requires:
+          inspected: "true"
+        effects:
+          artifact.model_current.status: healthy
+          artifact.model_current.version: "v1"
+          artifact.model_current.stage: production
+          rolled_back: "true"
+          explanation: "Stable v1 restored to production."
+
+objectives:
+  - id: inspect
+    type: mlops_state
+    description: Inspect production drift.
+    visible: true
+    assert:
+      inspected: "true"
+  - id: rollback
+    type: mlops_state
+    description: Roll back to the stable model.
+    visible: true
+    assert:
+      rolled_back: "true"
+      artifact.model_current.version: "v1"
+
+hints:
+  - level: 1
+    text: Inspect drift.
+  - level: 2
+    text: Roll back to stable.
+  - level: 3
+    text: Confirm version v1.
+  - level: 4
+    text: Follow actions in order.
+
+rewards:
+  clearance_points: 40
+  mastery:
+    mlops.features: 1
+  unlocks:
+    - lore.mlops.features.01
+
+completion:
+  mode: all
+  objective_ids:
+    - inspect
+    - rollback

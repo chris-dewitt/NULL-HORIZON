@@ -1,0 +1,7 @@
+schema_version: 1
+skill_id: python.files
+name: File Processing
+domain: python
+description: Curriculum skill for File Processing.
+prerequisites:
+  - python.collections

@@ -1,0 +1,14 @@
+{
+  "chapter_id": "reactor_kernel",
+  "mission_ids": [
+    "cpp.types.01",
+    "cpp.const.01",
+    "cpp.classes.01",
+    "cpp.containers.01",
+    "cpp.raii_capstone.01"
+  ],
+  "region": "Reactor Kernel",
+  "schema_version": 1,
+  "summary": "C++ thermal-control and resource lifetime concepts.",
+  "title": "Reactor Kernel"
+}

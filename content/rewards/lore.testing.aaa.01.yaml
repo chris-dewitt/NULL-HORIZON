@@ -1,0 +1,5 @@
+schema_version: 1
+reward_id: lore.testing.aaa.01
+kind: lore
+name: Lore testing.aaa.01
+description: Unlock for completing testing.aaa.01.

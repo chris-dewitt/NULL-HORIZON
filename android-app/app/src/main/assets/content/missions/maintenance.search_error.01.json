@@ -1,0 +1,94 @@
+{
+  "chapter_id": "maintenance_deck",
+  "completion": {
+    "mode": "all",
+    "objective_ids": [
+      "grep_error"
+    ]
+  },
+  "difficulty": "practiced",
+  "environment": {
+    "filesystem": {
+      "cwd": "/var/log",
+      "entries": [
+        {
+          "path": "/var/log",
+          "type": "dir"
+        },
+        {
+          "content": "INFO boot\nWARN retry\nERROR seal leak\nINFO idle\n",
+          "path": "/var/log/diag.txt",
+          "type": "file"
+        }
+      ]
+    },
+    "schema_version": 1,
+    "seed": 53,
+    "template_id": "terminal.vfs.v1"
+  },
+  "hints": [
+    {
+      "level": 1,
+      "text": "Stay in /var/log."
+    },
+    {
+      "level": 2,
+      "text": "Use grep with pattern ERROR."
+    },
+    {
+      "level": 3,
+      "text": "Target diag.txt."
+    },
+    {
+      "level": 4,
+      "text": "grep ERROR diag.txt"
+    }
+  ],
+  "mission_id": "maintenance.search_error.01",
+  "narrative": {
+    "briefing_dialogue_id": "dialogue.maintenance.search_error.01.briefing",
+    "success_dialogue_id": "dialogue.maintenance.search_error.01.success"
+  },
+  "objectives": [
+    {
+      "assert": {
+        "exit_code": 0,
+        "last_command": "grep ERROR diag.txt",
+        "stdout_contains": "seal leak"
+      },
+      "description": "Grep for ERROR in diag.txt.",
+      "id": "grep_error",
+      "type": "command_output",
+      "visible": true
+    }
+  ],
+  "requirements": {
+    "app_version": ">=0.1.0",
+    "online": false,
+    "prerequisite_skills": [
+      "linux.inspection"
+    ]
+  },
+  "rewards": {
+    "clearance_points": 30,
+    "mastery": {
+      "linux.search": 1
+    },
+    "unlocks": [
+      "lore.maintenance.search_error.01"
+    ]
+  },
+  "schema_version": 1,
+  "skills": {
+    "primary": "linux.search",
+    "secondary": [
+      "linux.inspection"
+    ]
+  },
+  "summary": "Use grep to locate ERROR lines in a diagnostics file.",
+  "title": "Search for Errors",
+  "tools": [
+    "terminal"
+  ],
+  "version": "1.0.0"
+}

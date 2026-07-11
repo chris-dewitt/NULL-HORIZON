@@ -1,0 +1,7 @@
+schema_version: 1
+dialogue_id: dialogue.security.authz.01.success
+lines:
+  - speaker: ORION-A
+    text: Mission security.authz.01 complete.
+  - speaker: SYSTEM
+    text: Progress recorded.

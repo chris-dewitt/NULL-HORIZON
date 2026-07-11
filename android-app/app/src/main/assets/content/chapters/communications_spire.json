@@ -1,0 +1,14 @@
+{
+  "chapter_id": "communications_spire",
+  "mission_ids": [
+    "comms.http_methods.01",
+    "comms.api_trace.01",
+    "comms.json_validate.01",
+    "comms.auth_concept.01",
+    "comms.idempotent_capstone.01"
+  ],
+  "region": "Communications Spire",
+  "schema_version": 1,
+  "summary": "APIs and backend fundamentals for ship comms.",
+  "title": "Communications Spire"
+}

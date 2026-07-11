@@ -1,0 +1,7 @@
+schema_version: 1
+dialogue_id: dialogue.security.contain_capstone.01.briefing
+lines:
+  - speaker: ORION-A
+    text: Mission briefing for security.contain_capstone.01.
+  - speaker: SYSTEM
+    text: Follow objectives and progressive hints.

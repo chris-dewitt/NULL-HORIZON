@@ -1,0 +1,10 @@
+{
+  "description": "Curriculum skill for Idempotency and Rate Limits.",
+  "domain": "api",
+  "name": "Idempotency and Rate Limits",
+  "prerequisites": [
+    "api.json"
+  ],
+  "schema_version": 1,
+  "skill_id": "api.reliability"
+}

@@ -1,0 +1,7 @@
+schema_version: 1
+skill_id: api.http
+name: HTTP Methods and Status
+domain: api
+description: Curriculum skill for HTTP Methods and Status.
+prerequisites:
+  - systems.api_trace

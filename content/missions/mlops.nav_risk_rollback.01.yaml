@@ -3,190 +3,185 @@ mission_id: mlops.nav_risk_rollback.01
 version: 1.0.0
 chapter_id: prediction_observatory
 title: Navigation Risk Rollback
-summary: Roll back a skewed navigation-risk model and restore the stable registry stage.
-difficulty: practiced
-
+summary: Roll back a skewed navigation-risk model and restore the stable registry
+  stage.
+difficulty: challenge
 requirements:
-  app_version: ">=0.1.0"
+  app_version: '>=0.1.0'
   online: false
   prerequisite_skills: []
-
 skills:
   primary: mlops.rollback
   secondary: []
-
 narrative:
   briefing_dialogue_id: dialogue.mlops.nav_risk_rollback.briefing
   success_dialogue_id: dialogue.mlops.nav_risk_rollback.success
-
 tools:
-  - service_map
-  - mlops
-
+- service_map
+- mlops
 environment:
   schema_version: 1
   template_id: mlops.lifecycle.v1
   seed: 202
   service_map:
     nodes:
-      - id: client
-        kind: client
-        label: Nav console
-        status: degraded
-        detail: "risk scores oscillating"
-      - id: inference
-        kind: inference
-        label: Risk inference
-        status: degraded
-        detail: "serving model v7"
-      - id: monitoring
-        kind: monitoring
-        label: Drift monitor
-        status: alert
-        detail: "feature skew on bearing_rate"
-      - id: registry
-        kind: model_registry
-        label: Model registry
-        status: healthy
+    - id: client
+      kind: client
+      label: Nav console
+      status: degraded
+      detail: risk scores oscillating
+    - id: inference
+      kind: inference
+      label: Risk inference
+      status: degraded
+      detail: serving model v7
+    - id: monitoring
+      kind: monitoring
+      label: Drift monitor
+      status: alert
+      detail: feature skew on bearing_rate
+    - id: registry
+      kind: model_registry
+      label: Model registry
+      status: healthy
     edges:
-      - id: c_to_i
-        from: client
-        to: inference
-        kind: request
-        status: degraded
-      - id: i_to_m
-        from: inference
-        to: monitoring
-        kind: metrics
-        status: alert
+    - id: c_to_i
+      from: client
+      to: inference
+      kind: request
+      status: degraded
+    - id: i_to_m
+      from: inference
+      to: monitoring
+      kind: metrics
+      status: alert
     actions:
-      - id: acknowledge_alert
-        label: Acknowledge drift alert
-        effects:
-          node.monitoring.status: degraded
-          node.monitoring.detail: "alert acknowledged; rollback required"
-          alert_acked: "true"
-          explanation: "Monitoring confirms bearing_rate skew after the ungated v7 promotion."
-      - id: route_stable
-        label: Point inference at stable model
-        requires:
-          rollback_ready: "true"
-        effects:
-          node.inference.status: healthy
-          node.inference.detail: "serving model v3"
-          node.client.status: healthy
-          node.client.detail: "risk scores stable"
-          edge.c_to_i.status: ok
-          edge.i_to_m.status: ok
-          node.monitoring.status: healthy
-          node.monitoring.detail: "skew cleared"
-          explanation: "Traffic now hits registry stage Production on v3."
+    - id: acknowledge_alert
+      label: Acknowledge drift alert
+      effects:
+        node.monitoring.status: degraded
+        node.monitoring.detail: alert acknowledged; rollback required
+        alert_acked: 'true'
+        explanation: Monitoring confirms bearing_rate skew after the ungated v7 promotion.
+    - id: route_stable
+      label: Point inference at stable model
+      requires:
+        rollback_ready: 'true'
+      effects:
+        node.inference.status: healthy
+        node.inference.detail: serving model v3
+        node.client.status: healthy
+        node.client.detail: risk scores stable
+        edge.c_to_i.status: ok
+        edge.i_to_m.status: ok
+        node.monitoring.status: healthy
+        node.monitoring.detail: skew cleared
+        explanation: Traffic now hits registry stage Production on v3.
   mlops:
     artifacts:
-      - id: dataset_nav
-        kind: dataset
-        label: Nav features
-        stage: production
-        status: healthy
-        version: "12"
-      - id: model_v7
-        kind: model
-        label: Risk model v7
-        stage: production
-        status: failing
-        version: "7"
-        detail: "ungated promotion"
-      - id: model_v3
-        kind: model
-        label: Risk model v3
-        stage: staging
-        status: healthy
-        version: "3"
-        detail: "last known good"
-      - id: deploy_live
-        kind: deployment
-        label: Live inference deploy
-        stage: production
-        status: failing
-        version: "7"
-      - id: drift_alert
-        kind: monitoring
-        label: Feature skew alert
-        stage: active
-        status: alert
-        detail: "bearing_rate"
+    - id: dataset_nav
+      kind: dataset
+      label: Nav features
+      stage: production
+      status: healthy
+      version: '12'
+    - id: model_v7
+      kind: model
+      label: Risk model v7
+      stage: production
+      status: failing
+      version: '7'
+      detail: ungated promotion
+    - id: model_v3
+      kind: model
+      label: Risk model v3
+      stage: staging
+      status: healthy
+      version: '3'
+      detail: last known good
+    - id: deploy_live
+      kind: deployment
+      label: Live inference deploy
+      stage: production
+      status: failing
+      version: '7'
+    - id: drift_alert
+      kind: monitoring
+      label: Feature skew alert
+      stage: active
+      status: alert
+      detail: bearing_rate
     actions:
-      - id: inspect_skew
-        label: Inspect skew report
-        effects:
-          inspected_skew: "true"
-          explanation: "bearing_rate distribution shifted after v7; v3 remains within bounds."
-      - id: rollback_registry
-        label: Roll registry Production to v3
-        requires:
-          inspected_skew: "true"
-          alert_acked: "true"
-        effects:
-          artifact.model_v7.stage: archived
-          artifact.model_v7.status: quarantined
-          artifact.model_v3.stage: production
-          artifact.model_v3.status: healthy
-          artifact.deploy_live.version: "3"
-          artifact.deploy_live.status: healthy
-          artifact.drift_alert.stage: cleared
-          artifact.drift_alert.status: healthy
-          rollback_ready: "true"
-          explanation: "Registry Production now points at v3. Ready to retarget inference."
-
+    - id: inspect_skew
+      label: Inspect skew report
+      effects:
+        inspected_skew: 'true'
+        explanation: bearing_rate distribution shifted after v7; v3 remains within
+          bounds.
+    - id: rollback_registry
+      label: Roll registry Production to v3
+      requires:
+        inspected_skew: 'true'
+        alert_acked: 'true'
+      effects:
+        artifact.model_v7.stage: archived
+        artifact.model_v7.status: quarantined
+        artifact.model_v3.stage: production
+        artifact.model_v3.status: healthy
+        artifact.deploy_live.version: '3'
+        artifact.deploy_live.status: healthy
+        artifact.drift_alert.stage: cleared
+        artifact.drift_alert.status: healthy
+        rollback_ready: 'true'
+        explanation: Registry Production now points at v3. Ready to retarget inference.
 objectives:
-  - id: ack_monitor
-    type: service_map_state
-    description: Acknowledge the drift alert on the service map.
-    visible: true
-    assert:
-      alert_acked: "true"
-  - id: inspect_report
-    type: mlops_state
-    description: Inspect the skew report before changing registry state.
-    visible: true
-    assert:
-      inspected_skew: "true"
-  - id: rollback_model
-    type: mlops_state
-    description: Move Production registry stage back to model v3.
-    visible: true
-    assert:
-      artifact.model_v3.stage: production
-      artifact.deploy_live.version: "3"
-      artifact.drift_alert.status: healthy
-  - id: healthy_path
-    type: service_map_state
-    description: Retarget inference so the client path is healthy.
-    visible: true
-    assert:
-      node.inference.status: healthy
-      node.client.status: healthy
-      node.monitoring.status: healthy
-
+- id: ack_monitor
+  type: service_map_state
+  description: Acknowledge the drift alert on the service map.
+  visible: true
+  assert:
+    alert_acked: 'true'
+- id: inspect_report
+  type: mlops_state
+  description: Inspect the skew report before changing registry state.
+  visible: true
+  assert:
+    inspected_skew: 'true'
+- id: rollback_model
+  type: mlops_state
+  description: Move Production registry stage back to model v3.
+  visible: true
+  assert:
+    artifact.model_v3.stage: production
+    artifact.deploy_live.version: '3'
+    artifact.drift_alert.status: healthy
+- id: healthy_path
+  type: service_map_state
+  description: Retarget inference so the client path is healthy.
+  visible: true
+  assert:
+    node.inference.status: healthy
+    node.client.status: healthy
+    node.monitoring.status: healthy
 hints:
-  - level: 1
-    text: Acknowledge the monitoring alert, then read the skew report.
-  - level: 2
-    text: Roll the registry Production stage to the last known good model before retargeting traffic.
-  - level: 3
-    text: After rollback_ready is set, point inference at the stable model on the service map.
-
+- level: 1
+  text: Acknowledge the monitoring alert, then read the skew report.
+- level: 2
+  text: Roll the registry Production stage to the last known good model before retargeting
+    traffic.
+- level: 3
+  text: After rollback_ready is set, point inference at the stable model on the service
+    map.
 rewards:
   clearance_points: 45
   mastery:
     mlops.rollback: 1
   unlocks:
-    - lore.mlops.nav_risk_rollback.01
-
+  - lore.mlops.nav_risk_rollback.01
 completion:
   mode: all
   objective_ids:
-    - ack_monitor
-    - inspect_report
-    - rollback_model
-    - healthy_path
+  - ack_monitor
+  - inspect_report
+  - rollback_model
+  - healthy_path

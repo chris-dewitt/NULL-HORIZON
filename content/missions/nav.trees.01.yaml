@@ -1,0 +1,113 @@
+schema_version: 1
+mission_id: nav.trees.01
+version: 1.0.0
+chapter_id: navigation_array
+title: Tree Depth Check
+summary: Compute whether a tiny tree depth is valid.
+difficulty: practiced
+
+requirements:
+  app_version: ">=0.1.0"
+  online: false
+  prerequisite_skills:
+    - dsa.maps
+
+skills:
+  primary: dsa.trees
+  secondary: []
+
+narrative:
+  briefing_dialogue_id: dialogue.nav.trees.01.briefing
+  success_dialogue_id: dialogue.nav.trees.01.success
+
+tools:
+  - python_editor
+  - test_console
+
+environment:
+  schema_version: 1
+  template_id: python.editor.fake.v1
+  seed: 104
+  workspace:
+    files:
+      - path: /workspace/nav.py
+        editable: true
+        content: |
+          def solve() -> bool:
+              depth = 2
+              return False
+      - path: /workspace/test_solve.py
+        editable: false
+        content: |
+          from nav import solve
+
+
+          def test_solve():
+              assert solve() is True
+    execution:
+      provider: fake
+      fixtures:
+        - id: fixed
+          match:
+            file_contains:
+              /workspace/nav.py: "depth == 2"
+          result:
+            status: completed
+            tests:
+              - id: test_solve
+                status: passed
+        - id: broken
+          match:
+            file_contains:
+              /workspace/nav.py: "return False"
+          result:
+            status: completed
+            tests:
+              - id: test_solve
+                status: failed
+                message: Behavior still incorrect
+        - id: default_fail
+          result:
+            status: completed
+            tests:
+              - id: test_solve
+                status: failed
+                message: Unexpected workspace state
+
+objectives:
+  - id: apply_fix
+    type: file_assertion
+    description: Apply the required Python fix.
+    visible: true
+    assert:
+      file_contains:/workspace/nav.py: "depth == 2"
+  - id: tests_pass
+    type: execution_tests
+    description: Run tests and make them pass.
+    visible: true
+    assert:
+      all_passed: "true"
+      test_count: "1"
+
+hints:
+  - level: 1
+    text: Use the depth value.
+  - level: 2
+    text: Return depth == 2.
+  - level: 3
+    text: depth check
+  - level: 4
+    text: Run tests.
+
+rewards:
+  clearance_points: 35
+  mastery:
+    dsa.trees: 1
+  unlocks:
+    - lore.nav.trees.01
+
+completion:
+  mode: all
+  objective_ids:
+    - apply_fix
+    - tests_pass

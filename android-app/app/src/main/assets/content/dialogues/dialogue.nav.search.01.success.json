@@ -1,0 +1,14 @@
+{
+  "dialogue_id": "dialogue.nav.search.01.success",
+  "lines": [
+    {
+      "speaker": "ORION-A",
+      "text": "Mission nav.search.01 complete."
+    },
+    {
+      "speaker": "SYSTEM",
+      "text": "Progress recorded."
+    }
+  ],
+  "schema_version": 1
+}

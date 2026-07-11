@@ -1,0 +1,85 @@
+schema_version: 1
+mission_id: data.lineage.01
+version: 1.0.0
+chapter_id: data_foundry
+title: Lineage Map
+summary: Trace lineage from sensor extract to forecast publish.
+difficulty: practiced
+
+requirements:
+  app_version: ">=0.1.0"
+  online: false
+  prerequisite_skills:
+    - data.quality
+
+skills:
+  primary: data.lineage
+  secondary:
+    - data.quality
+
+narrative:
+  briefing_dialogue_id: dialogue.data.lineage.01.briefing
+  success_dialogue_id: dialogue.data.lineage.01.success
+
+tools:
+  - systems_panel
+
+environment:
+  schema_version: 1
+  template_id: local.state.v1
+  seed: 143
+  initial_state:
+    extract: unknown
+    forecast: unknown
+    mapped: False
+  actions:
+    - id: mark_extract
+      label: Mark extract lineage
+      effects:
+        extract: sensors.raw
+    - id: mark_forecast
+      label: Mark forecast consumer
+      requires:
+        extract: sensors.raw
+      effects:
+        forecast: reactor.forecast
+        mapped: True
+
+objectives:
+  - id: e
+    type: state_assertion
+    description: Identify extract source.
+    visible: true
+    assert:
+      extract: sensors.raw
+  - id: f
+    type: state_assertion
+    description: Identify forecast consumer.
+    visible: true
+    assert:
+      forecast: reactor.forecast
+      mapped: True
+
+hints:
+  - level: 1
+    text: Start at extract.
+  - level: 2
+    text: Then name the forecast consumer.
+  - level: 3
+    text: Lineage connects both.
+  - level: 4
+    text: Map both ends.
+
+rewards:
+  clearance_points: 25
+  mastery:
+    data.lineage: 1
+    data.quality: 1
+  unlocks:
+    - lore.data.lineage.01
+
+completion:
+  mode: all
+  objective_ids:
+    - e
+    - f

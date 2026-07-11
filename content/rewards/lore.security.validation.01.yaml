@@ -1,0 +1,5 @@
+schema_version: 1
+reward_id: lore.security.validation.01
+kind: lore
+name: Lore security.validation.01
+description: Unlock for completing security.validation.01.

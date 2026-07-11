@@ -1,0 +1,159 @@
+{
+  "chapter_id": "horizon_core",
+  "completion": {
+    "mode": "all",
+    "objective_ids": [
+      "tel",
+      "mod",
+      "thm",
+      "ver"
+    ]
+  },
+  "difficulty": "challenge",
+  "environment": {
+    "actions": [
+      {
+        "effects": {
+          "telemetry": "consistent"
+        },
+        "id": "fix_pipeline",
+        "label": "Repair telemetry lineage drop"
+      },
+      {
+        "effects": {
+          "model": "stable"
+        },
+        "id": "rollback_model",
+        "label": "Roll back skewed risk model",
+        "requires": {
+          "telemetry": "consistent"
+        }
+      },
+      {
+        "effects": {
+          "thermal": "sealed"
+        },
+        "id": "seal_thermal",
+        "label": "Seal thermal lifetime leak",
+        "requires": {
+          "model": "stable"
+        }
+      },
+      {
+        "effects": {
+          "verdict": "containment"
+        },
+        "id": "conclude",
+        "label": "Record containment verdict",
+        "requires": {
+          "thermal": "sealed"
+        }
+      }
+    ],
+    "initial_state": {
+      "model": "skewed",
+      "telemetry": "inconsistent",
+      "thermal": "leak",
+      "verdict": "unknown"
+    },
+    "schema_version": 1,
+    "seed": 171,
+    "template_id": "local.state.v1"
+  },
+  "hints": [
+    {
+      "level": 1,
+      "text": "Fix telemetry first."
+    },
+    {
+      "level": 2,
+      "text": "Then roll back the model."
+    },
+    {
+      "level": 3,
+      "text": "Seal thermal next."
+    },
+    {
+      "level": 4,
+      "text": "Conclude containment, not sabotage."
+    }
+  ],
+  "mission_id": "incident.containment_or_sabotage.01",
+  "narrative": {
+    "briefing_dialogue_id": "dialogue.incident.containment_or_sabotage.01.briefing",
+    "success_dialogue_id": "dialogue.incident.containment_or_sabotage.01.success"
+  },
+  "objectives": [
+    {
+      "assert": {
+        "telemetry": "consistent"
+      },
+      "description": "Restore telemetry consistency.",
+      "id": "tel",
+      "type": "state_assertion",
+      "visible": true
+    },
+    {
+      "assert": {
+        "model": "stable"
+      },
+      "description": "Stabilize the risk model.",
+      "id": "mod",
+      "type": "state_assertion",
+      "visible": true
+    },
+    {
+      "assert": {
+        "thermal": "sealed"
+      },
+      "description": "Seal the thermal leak.",
+      "id": "thm",
+      "type": "state_assertion",
+      "visible": true
+    },
+    {
+      "assert": {
+        "verdict": "containment"
+      },
+      "description": "Record the containment verdict.",
+      "id": "ver",
+      "type": "state_assertion",
+      "visible": true
+    }
+  ],
+  "requirements": {
+    "app_version": ">=0.1.0",
+    "online": false,
+    "prerequisite_skills": [
+      "incident.triage",
+      "data.pipeline.validate",
+      "mlops.rollback"
+    ]
+  },
+  "rewards": {
+    "clearance_points": 70,
+    "mastery": {
+      "data.lineage": 1,
+      "incident.triage": 1
+    },
+    "unlocks": [
+      "lore.incident.containment_or_sabotage.01"
+    ]
+  },
+  "schema_version": 1,
+  "skills": {
+    "primary": "incident.triage",
+    "secondary": [
+      "data.lineage",
+      "mlops.monitoring",
+      "cpp.raii",
+      "dsa.complexity"
+    ]
+  },
+  "summary": "Combine pipeline, model, and thermal evidence to decide if changes were containment.",
+  "title": "Containment or Sabotage",
+  "tools": [
+    "systems_panel"
+  ],
+  "version": "1.0.0"
+}

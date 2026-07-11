@@ -1,0 +1,135 @@
+{
+  "chapter_id": "communications_spire",
+  "completion": {
+    "mode": "all",
+    "objective_ids": [
+      "get",
+      "healthy"
+    ]
+  },
+  "difficulty": "introductory",
+  "environment": {
+    "schema_version": 1,
+    "seed": 111,
+    "service_map": {
+      "actions": [
+        {
+          "effects": {
+            "inspected": "true",
+            "method": "GET"
+          },
+          "id": "prefer_get",
+          "label": "Use GET /health"
+        },
+        {
+          "effects": {
+            "edge.c_to_a.status": "ok",
+            "node.client.status": "healthy",
+            "ok": "true"
+          },
+          "id": "confirm",
+          "label": "Confirm 200 health",
+          "requires": {
+            "inspected": "true"
+          }
+        }
+      ],
+      "edges": [
+        {
+          "from": "client",
+          "id": "c_to_a",
+          "kind": "request",
+          "status": "degraded",
+          "to": "api"
+        }
+      ],
+      "nodes": [
+        {
+          "id": "client",
+          "kind": "client",
+          "label": "Console",
+          "status": "degraded"
+        },
+        {
+          "id": "api",
+          "kind": "api",
+          "label": "Comms API",
+          "status": "healthy"
+        }
+      ]
+    },
+    "template_id": "service_map.v1"
+  },
+  "hints": [
+    {
+      "level": 1,
+      "text": "Health checks should be GET."
+    },
+    {
+      "level": 2,
+      "text": "Select GET /health."
+    },
+    {
+      "level": 3,
+      "text": "Confirm a 200-style healthy path."
+    },
+    {
+      "level": 4,
+      "text": "Avoid POST for health."
+    }
+  ],
+  "mission_id": "comms.http_methods.01",
+  "narrative": {
+    "briefing_dialogue_id": "dialogue.comms.http_methods.01.briefing",
+    "success_dialogue_id": "dialogue.comms.http_methods.01.success"
+  },
+  "objectives": [
+    {
+      "assert": {
+        "method": "GET"
+      },
+      "description": "Prefer GET for health checks.",
+      "id": "get",
+      "type": "service_map_state",
+      "visible": true
+    },
+    {
+      "assert": {
+        "ok": "true"
+      },
+      "description": "Confirm the health path is healthy.",
+      "id": "healthy",
+      "type": "service_map_state",
+      "visible": true
+    }
+  ],
+  "requirements": {
+    "app_version": ">=0.1.0",
+    "online": false,
+    "prerequisite_skills": [
+      "systems.api_trace"
+    ]
+  },
+  "rewards": {
+    "clearance_points": 40,
+    "mastery": {
+      "api.http": 1
+    },
+    "unlocks": [
+      "lore.comms.http_methods.01"
+    ]
+  },
+  "schema_version": 1,
+  "skills": {
+    "primary": "api.http",
+    "secondary": [
+      "systems.api_trace"
+    ]
+  },
+  "summary": "Route a safe GET health check away from a mutating POST.",
+  "title": "HTTP Method Gate",
+  "tools": [
+    "service_map"
+  ],
+  "version": "1.0.0"
+}

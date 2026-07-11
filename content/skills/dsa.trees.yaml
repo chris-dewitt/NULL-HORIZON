@@ -1,0 +1,7 @@
+schema_version: 1
+skill_id: dsa.trees
+name: Trees
+domain: dsa
+description: Curriculum skill for Trees.
+prerequisites:
+  - dsa.maps

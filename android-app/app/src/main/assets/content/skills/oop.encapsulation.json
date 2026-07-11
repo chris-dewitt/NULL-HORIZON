@@ -1,0 +1,10 @@
+{
+  "description": "Curriculum skill for Encapsulation.",
+  "domain": "oop",
+  "name": "Encapsulation",
+  "prerequisites": [
+    "oop.classes"
+  ],
+  "schema_version": 1,
+  "skill_id": "oop.encapsulation"
+}

@@ -1,0 +1,7 @@
+schema_version: 1
+skill_id: dsa.complexity
+name: Big-O Reasoning
+domain: dsa
+description: Curriculum skill for Big-O Reasoning.
+prerequisites:
+  - dsa.search

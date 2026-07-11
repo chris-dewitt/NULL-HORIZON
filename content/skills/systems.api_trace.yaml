@@ -2,5 +2,5 @@ schema_version: 1
 skill_id: systems.api_trace
 name: API Failure Tracing
 domain: systems
-description: Follow request paths across services to locate a failing hop.
+description: Curriculum skill for API Failure Tracing.
 prerequisites: []

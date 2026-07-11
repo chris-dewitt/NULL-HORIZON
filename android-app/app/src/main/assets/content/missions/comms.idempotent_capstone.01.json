@@ -1,0 +1,156 @@
+{
+  "chapter_id": "communications_spire",
+  "completion": {
+    "mode": "all",
+    "objective_ids": [
+      "key",
+      "stable"
+    ]
+  },
+  "difficulty": "challenge",
+  "environment": {
+    "schema_version": 1,
+    "seed": 114,
+    "service_map": {
+      "actions": [
+        {
+          "effects": {
+            "explanation": "Requests without keys are rejected.",
+            "keyed": "true"
+          },
+          "id": "add_key",
+          "label": "Require idempotency key"
+        },
+        {
+          "effects": {
+            "edge.a_q.status": "ok",
+            "edge.c_a.status": "ok",
+            "explanation": "Duplicate distress sends suppressed.",
+            "node.api.status": "healthy",
+            "node.client.status": "healthy",
+            "node.queue.status": "healthy",
+            "stable": "true"
+          },
+          "id": "dedupe",
+          "label": "Deduplicate outbox",
+          "requires": {
+            "keyed": "true"
+          }
+        }
+      ],
+      "edges": [
+        {
+          "from": "client",
+          "id": "c_a",
+          "kind": "request",
+          "status": "degraded",
+          "to": "api"
+        },
+        {
+          "from": "api",
+          "id": "a_q",
+          "kind": "request",
+          "status": "alert",
+          "to": "queue"
+        }
+      ],
+      "nodes": [
+        {
+          "detail": "duplicate sends",
+          "id": "client",
+          "kind": "client",
+          "label": "Beacon",
+          "status": "degraded"
+        },
+        {
+          "id": "api",
+          "kind": "api",
+          "label": "Distress API",
+          "status": "degraded"
+        },
+        {
+          "detail": "no idempotency key",
+          "id": "queue",
+          "kind": "queue",
+          "label": "Outbox",
+          "status": "alert"
+        }
+      ]
+    },
+    "template_id": "service_map.v1"
+  },
+  "hints": [
+    {
+      "level": 1,
+      "text": "Add idempotency keys first."
+    },
+    {
+      "level": 2,
+      "text": "Then dedupe the outbox."
+    },
+    {
+      "level": 3,
+      "text": "Client should return to healthy."
+    },
+    {
+      "level": 4,
+      "text": "No duplicate distress sends."
+    }
+  ],
+  "mission_id": "comms.idempotent_capstone.01",
+  "narrative": {
+    "briefing_dialogue_id": "dialogue.comms.idempotent_capstone.01.briefing",
+    "success_dialogue_id": "dialogue.comms.idempotent_capstone.01.success"
+  },
+  "objectives": [
+    {
+      "assert": {
+        "keyed": "true"
+      },
+      "description": "Require idempotency keys.",
+      "id": "key",
+      "type": "service_map_state",
+      "visible": true
+    },
+    {
+      "assert": {
+        "node.api.status": "healthy",
+        "stable": "true"
+      },
+      "description": "Deduplicate and stabilize the path.",
+      "id": "stable",
+      "type": "service_map_state",
+      "visible": true
+    }
+  ],
+  "requirements": {
+    "app_version": ">=0.1.0",
+    "online": false,
+    "prerequisite_skills": [
+      "api.json"
+    ]
+  },
+  "rewards": {
+    "clearance_points": 55,
+    "mastery": {
+      "api.reliability": 1
+    },
+    "unlocks": [
+      "lore.comms.idempotent_capstone.01"
+    ]
+  },
+  "schema_version": 1,
+  "skills": {
+    "primary": "api.reliability",
+    "secondary": [
+      "api.json",
+      "api.auth"
+    ]
+  },
+  "summary": "Restore the distress API without duplicating transmissions.",
+  "title": "Idempotent Distress API",
+  "tools": [
+    "service_map"
+  ],
+  "version": "1.0.0"
+}

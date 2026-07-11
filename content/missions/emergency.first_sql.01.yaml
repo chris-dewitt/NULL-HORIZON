@@ -1,0 +1,65 @@
+schema_version: 1
+mission_id: emergency.first_sql.01
+version: 1.0.0
+chapter_id: emergency_interface
+title: First SQL Request
+summary: Run a first SELECT against the emergency crew roster.
+difficulty: introductory
+
+requirements:
+  app_version: ">=0.1.0"
+  online: false
+  prerequisite_skills: []
+
+skills:
+  primary: sql.select
+  secondary: []
+
+narrative:
+  briefing_dialogue_id: dialogue.emergency.first_sql.01.briefing
+  success_dialogue_id: dialogue.emergency.first_sql.01.success
+
+tools:
+  - sql
+
+environment:
+  schema_version: 1
+  template_id: sql.sqlite.v1
+  seed: 41
+  databases:
+    - id: archive
+      policy: select_only
+      seed_sql: |
+        CREATE TABLE roster (id INTEGER PRIMARY KEY, callsign TEXT, status TEXT);
+        INSERT INTO roster VALUES (1, 'ORION', 'fragment'), (2, 'VEGA', 'active');
+objectives:
+  - id: select_all
+    type: sql_result
+    description: Select callsign and status for all roster rows.
+    visible: true
+    assert:
+      query_contains: roster
+      columns: callsign,status
+      row_count: "2"
+
+hints:
+  - level: 1
+    text: Open the SQL console.
+  - level: 2
+    text: Select from roster.
+  - level: 3
+    text: Return callsign and status columns.
+  - level: 4
+    text: SELECT callsign, status FROM roster;
+
+rewards:
+  clearance_points: 35
+  mastery:
+    sql.select: 1
+  unlocks:
+    - lore.emergency.first_sql.01
+
+completion:
+  mode: all
+  objective_ids:
+    - select_all

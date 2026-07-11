@@ -1,0 +1,7 @@
+schema_version: 1
+skill_id: git.history
+name: History
+domain: git
+description: Curriculum skill for History.
+prerequisites:
+  - git.stage

@@ -1,0 +1,10 @@
+{
+  "description": "Curriculum skill for Lineage and Orchestration.",
+  "domain": "data",
+  "name": "Lineage and Orchestration",
+  "prerequisites": [
+    "data.quality"
+  ],
+  "schema_version": 1,
+  "skill_id": "data.lineage"
+}
