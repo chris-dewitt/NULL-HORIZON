@@ -9,7 +9,7 @@ Public API principles and initial endpoints are defined in [PRODUCT_SPEC.md](PRO
 - Use structured error responses; never return raw internal stack traces.
 - Keep learner execution out of the API process.
 
-## Epic 7 surface
+## Epic 7–8 surface
 
 - `GET /v1/health`
 - `GET /v1/content/manifest`
@@ -18,9 +18,11 @@ Public API principles and initial endpoints are defined in [PRODUCT_SPEC.md](PRO
 - `GET /v1/progress` (Bearer)
 - `PUT /v1/progress/missions/{mission_id}` (Bearer)
 - `POST /v1/progress/sync` (Bearer + Idempotency-Key)
-- `POST /v1/executions` (Bearer + Idempotency-Key, fake provider)
+- `POST /v1/executions` (Bearer + Idempotency-Key; provider via `EXECUTION_PROVIDER`)
 - `GET /v1/executions/{execution_id}` (Bearer)
 - `DELETE /v1/executions/{execution_id}` (Bearer)
+
+`EXECUTION_PROVIDER` defaults to `fake`. `local_trusted` uses `backend/runner` workers outside the API trust model. `hardened` returns 503 until security review (ADR-0011).
 
 OpenAPI is served at `/openapi.json` and mirrored to `shared/openapi/openapi.json` by tests.
 

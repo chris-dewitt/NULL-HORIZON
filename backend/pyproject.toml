@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "null-horizon-backend"
 version = "0.1.0"
-description = "NULL HORIZON FastAPI backend (Epic 7 foundation)"
+description = "NULL HORIZON FastAPI backend and trusted execution runner"
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
@@ -49,6 +49,8 @@ select = ["E", "F", "I", "B", "UP", "S"]
 "**/tests/**" = ["S101"]
 "api/alembic/**" = ["I001"]
 "api/alembic/versions/**" = ["I001", "UP035"]
+"runner/workers/sitecustomize.py" = ["I001"]
+"runner/workers/network_guard.py" = ["S104"]
 
 [tool.mypy]
 python_version = "3.12"

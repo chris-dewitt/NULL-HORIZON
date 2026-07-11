@@ -13,7 +13,7 @@ from fastapi import FastAPI
 
 from api.app.core.config import Settings, get_settings
 from api.app.db.base import Base, create_db_engine, create_session_factory
-from api.app.providers.fake import FakeExecutionProvider
+from api.app.providers.factory import build_api_execution_provider
 from api.app.redis.client import create_kv_store
 from api.app.routers import content, executions, health, profiles, progress
 
@@ -25,7 +25,7 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     engine = create_db_engine(resolved.database_url)
     session_factory = create_session_factory(engine)
     kv_store = create_kv_store(resolved.redis_url)
-    provider = FakeExecutionProvider()
+    provider = build_api_execution_provider(resolved.execution_provider)
 
     @asynccontextmanager
     async def lifespan(application: FastAPI):

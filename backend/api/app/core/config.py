@@ -25,9 +25,11 @@ class Settings(BaseSettings):
     api_version: str = "0.1.0"
     execution_provider: str = Field(
         default="fake",
+        validation_alias="EXECUTION_PROVIDER",
         description=(
-            "Execution backend selector. The API process never runs learner code; "
-            "providers are adapters to isolated runners."
+            "Execution backend: fake | local_trusted | hardened. "
+            "API never runs learner code; adapters call isolated runners. "
+            "hardened remains blocked until security review."
         ),
     )
     database_url: str = Field(

@@ -11,7 +11,7 @@ from sqlalchemy.orm import Session
 from api.app.core.idempotency import IdempotencyService
 from api.app.core.security import require_profile
 from api.app.db.models import Profile
-from api.app.providers.fake import FakeExecutionProvider
+from api.app.providers.base import ExecutionProvider
 from api.app.redis.client import KeyValueStore
 
 
@@ -39,7 +39,7 @@ def get_idempotency(request: Request) -> IdempotencyService:
     )
 
 
-def get_execution_provider(request: Request) -> FakeExecutionProvider:
+def get_execution_provider(request: Request) -> ExecutionProvider:
     return request.app.state.execution_provider
 
 
