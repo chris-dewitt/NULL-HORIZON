@@ -5,7 +5,6 @@ import java.sql.DriverManager
 import java.sql.ResultSet
 import java.sql.SQLException
 import java.sql.Statement
-import java.util.Properties
 
 /**
  * Mission-scoped SQLite console. Connection is private to the mission instance
@@ -89,11 +88,7 @@ class SqlSimulator(
 
     private fun openFreshConnection(): Connection {
         Class.forName("org.sqlite.JDBC")
-        val props = Properties().apply {
-            // Keep mission DB fully isolated from any filesystem app DB.
-            setProperty("open_mode", "memory")
-        }
-        val connection = DriverManager.getConnection("jdbc:sqlite::memory:", props)
+        val connection = DriverManager.getConnection("jdbc:sqlite::memory:")
         connection.autoCommit = true
         connection.createStatement().use { statement ->
             runCatching { statement.execute("PRAGMA trusted_schema = OFF") }
