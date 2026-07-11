@@ -46,6 +46,7 @@ Operating rules for human and agentic contributors working in this monorepo.
 ## Epic boundaries
 
 - Epic 0 establishes repository standards, documentation, CI skeleton, and minimal compilable Android and FastAPI shells.
+- Epic 1 delivers the Android application shell: navigation, design tokens, local profile, ship-map and mission placeholders, and accessibility settings.
 - Do not begin the production execution sandbox, production infrastructure, or full mission curriculum until their epics begin.
 - Learner-authored code must remain completely separated from the API process at every stage.
 

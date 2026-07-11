@@ -1,17 +1,24 @@
 # NULL HORIZON Android app
 
-Minimal Jetpack Compose shell for Epic 0.
+Jetpack Compose client. Epic 1 delivers the application shell: navigation, design tokens,
+local profile, ship-map placeholder, mission list placeholder, and accessibility settings.
 
 ## Build
 
 ```bash
 cd android-app
 ./gradlew test
+./gradlew lintDebug
 ./gradlew assembleDebug
 ```
 
 Requires JDK 17+ and an Android SDK with platform 35 installed. Set `ANDROID_HOME` or create `local.properties` with `sdk.dir`.
 
-## Scope
+## Epic 1 surfaces
 
-Epic 0 includes a boot screen only. Navigation, design tokens, ship map, and settings arrive in Epic 1.
+- Local profile setup (no account)
+- Bottom navigation: Ship Map, Missions, Settings
+- Accessibility toggles: high contrast, reduced motion, larger text
+- Placeholder mission list for Emergency Interface
+
+Mission content loading and simulators arrive in later epics.

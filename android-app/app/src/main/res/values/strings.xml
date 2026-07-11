@@ -2,4 +2,34 @@
 <resources>
     <string name="app_name">NULL HORIZON</string>
     <string name="boot_status">Systems offline. Awaiting emergency interface.</string>
+
+    <string name="profile_setup_subtitle">Create a local operator profile. No account is required.</string>
+    <string name="profile_display_name_label">Operator callsign</string>
+    <string name="profile_no_account_required">Stored on this device only.</string>
+    <string name="profile_continue">Enter emergency interface</string>
+
+    <string name="nav_ship_map">Ship Map</string>
+    <string name="nav_missions">Missions</string>
+    <string name="nav_settings">Settings</string>
+    <string name="nav_ship_map_a11y">Navigate to ship map</string>
+    <string name="nav_missions_a11y">Navigate to mission list</string>
+    <string name="nav_settings_a11y">Navigate to settings</string>
+
+    <string name="ship_map_title">Ship Map</string>
+    <string name="ship_map_subtitle">Schematic placeholder. Region systems unlock with later chapters.</string>
+    <string name="ship_map_selected">Selected: %1$s (%2$s)</string>
+
+    <string name="missions_title">Missions</string>
+    <string name="missions_subtitle">Emergency Interface placeholders. Content engine arrives in Epic 2.</string>
+    <string name="mission_status_available">Available</string>
+    <string name="mission_status_locked">Locked</string>
+    <string name="mission_status_completed">Completed</string>
+
+    <string name="settings_title">Settings</string>
+    <string name="settings_profile_section">Local operator: %1$s</string>
+    <string name="settings_no_account">Cloud sync is optional and not enabled in this shell.</string>
+    <string name="settings_accessibility_section">Accessibility</string>
+    <string name="settings_high_contrast">High contrast</string>
+    <string name="settings_reduced_motion">Reduced motion</string>
+    <string name="settings_larger_text">Larger text</string>
 </resources>
