@@ -84,7 +84,24 @@ run_structure_checks() {
   RAN_ANY=1
 }
 
+run_content() {
+  section "Content validation and tests"
+  if [[ ! -d "$ROOT_DIR/backend/.venv" ]]; then
+    echo "backend/.venv missing; run ./scripts/bootstrap.sh first" >&2
+    FAIL=1
+    return
+  fi
+  # shellcheck disable=SC1091
+  source "$ROOT_DIR/backend/.venv/bin/activate"
+  python -m pip install -q -r "$ROOT_DIR/scripts/requirements-content.txt"
+  python "$ROOT_DIR/scripts/validate_content.py"
+  python "$ROOT_DIR/scripts/build_bundle.py" --channel dev
+  pytest -q "$ROOT_DIR/scripts/tests"
+  RAN_ANY=1
+}
+
 run_structure_checks
+run_content
 run_backend
 run_android
 run_secret_scan

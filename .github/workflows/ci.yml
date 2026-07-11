@@ -37,6 +37,27 @@ jobs:
       - name: Pytest
         run: pytest -q
 
+  content:
+    name: Content
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: scripts/requirements-content.txt
+      - name: Install content tooling
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r scripts/requirements-content.txt
+      - name: Validate and build bundle
+        run: |
+          python scripts/validate_content.py
+          python scripts/build_bundle.py --channel dev
+      - name: Content tests
+        run: pytest -q scripts/tests
+
   android:
     name: Android
     runs-on: ubuntu-latest
@@ -70,6 +91,9 @@ jobs:
           test -f scripts/check.sh
           test -f backend/api/app/main.py
           test -f android-app/app/src/main/java/com/nullhorizon/app/MainActivity.kt
+          test -f content/schema/mission.schema.json
+          test -f scripts/validate_content.py
+          test -f android-app/app/src/main/assets/content/manifest.json
       - name: Basic secret scan
         run: |
           if git grep -nE 'BEGIN (RSA |OPENSSH |EC )?PRIVATE KEY|AKIA[0-9A-Z]{16}|xox[baprs]-[0-9A-Za-z-]{10,}' -- \
