@@ -1,0 +1,128 @@
+{
+  "chapter_id": "emergency_interface",
+  "completion": {
+    "mode": "all",
+    "objective_ids": [
+      "list_processes",
+      "stop_rogue"
+    ]
+  },
+  "difficulty": "introductory",
+  "environment": {
+    "filesystem": {
+      "cwd": "/home/operator",
+      "entries": [
+        {
+          "path": "/home/operator",
+          "type": "dir"
+        },
+        {
+          "content": "Maintenance host process policy:\nKeep life_support_monitor running.\nTerminate unexpected network writers.\n",
+          "path": "/home/operator/NOTES.txt",
+          "type": "file"
+        },
+        {
+          "path": "/var/run",
+          "type": "dir"
+        },
+        {
+          "content": "allow=life_support_monitor\ndeny=rogue_exfil.sh\n",
+          "path": "/var/run/process.policy",
+          "type": "file"
+        }
+      ],
+      "processes": [
+        {
+          "command": "life_support_monitor",
+          "name": "life_support_monitor",
+          "pid": 101,
+          "status": "running"
+        },
+        {
+          "command": "rogue_exfil.sh",
+          "name": "rogue_exfil.sh",
+          "pid": 204,
+          "status": "running"
+        }
+      ]
+    },
+    "schema_version": 1,
+    "seed": 9,
+    "template_id": "terminal.vfs.v1"
+  },
+  "hints": [
+    {
+      "level": 1,
+      "text": "Use ps to list running processes."
+    },
+    {
+      "level": 2,
+      "text": "Look for a process name that matches the deny policy."
+    },
+    {
+      "level": 3,
+      "text": "Stop a process with kill PID using the pid from ps."
+    },
+    {
+      "level": 4,
+      "text": "kill 204 stops rogue_exfil.sh. Leave pid 101 alone."
+    }
+  ],
+  "mission_id": "emergency.rogue_process.01",
+  "narrative": {
+    "briefing_dialogue_id": "dialogue.emergency.rogue_process.briefing",
+    "success_dialogue_id": "dialogue.emergency.rogue_process.success"
+  },
+  "objectives": [
+    {
+      "assert": {
+        "exit_code": 0,
+        "last_command": "ps",
+        "stdout_contains": "rogue_exfil.sh"
+      },
+      "description": "Run ps and locate the rogue process.",
+      "id": "list_processes",
+      "type": "command_output",
+      "visible": true
+    },
+    {
+      "assert": {
+        "running:life_support_monitor": "true",
+        "running:rogue_exfil.sh": "false",
+        "status:204": "stopped"
+      },
+      "description": "Stop rogue_exfil.sh without killing life_support_monitor.",
+      "id": "stop_rogue",
+      "type": "process_state",
+      "visible": true
+    }
+  ],
+  "requirements": {
+    "app_version": ">=0.1.0",
+    "online": false,
+    "prerequisite_skills": []
+  },
+  "rewards": {
+    "clearance_points": 30,
+    "mastery": {
+      "linux.inspection": 1,
+      "linux.processes": 1
+    },
+    "unlocks": [
+      "lore.emergency.rogue_process.01"
+    ]
+  },
+  "schema_version": 1,
+  "skills": {
+    "primary": "linux.processes",
+    "secondary": [
+      "linux.inspection"
+    ]
+  },
+  "summary": "Identify and stop a rogue exfiltration process on the maintenance host.",
+  "title": "Stop a Bad Process",
+  "tools": [
+    "terminal"
+  ],
+  "version": "1.0.0"
+}

@@ -1,0 +1,10 @@
+{
+  "description": "Avoid unsafe string-built queries when looking up records.",
+  "domain": "sql",
+  "name": "Safe Query Construction",
+  "prerequisites": [
+    "sql.select"
+  ],
+  "schema_version": 1,
+  "skill_id": "sql.safe_queries"
+}

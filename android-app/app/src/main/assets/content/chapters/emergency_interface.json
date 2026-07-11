@@ -1,8 +1,10 @@
 {
   "chapter_id": "emergency_interface",
   "mission_ids": [
+    "emergency.wake_sequence.01",
     "emergency.lighting.01",
-    "emergency.fault_log.01"
+    "emergency.fault_log.01",
+    "emergency.rogue_process.01"
   ],
   "region": "Emergency Interface",
   "schema_version": 1,

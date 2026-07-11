@@ -1,0 +1,14 @@
+{
+  "dialogue_id": "dialogue.version.recover_commit.briefing",
+  "lines": [
+    {
+      "speaker": "ORION-A",
+      "text": "HEAD advanced onto an unsigned thruster override commit."
+    },
+    {
+      "speaker": "SYSTEM",
+      "text": "Use git log, then check out the last signed commit to restore the tree."
+    }
+  ],
+  "schema_version": 1
+}

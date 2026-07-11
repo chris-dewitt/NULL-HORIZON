@@ -2,7 +2,9 @@ schema_version: 1
 chapter_id: version_vault
 title: Version Vault
 region: Version Vault
-summary: Source history, unauthorized changes, and merge discipline for the colony ship.
+summary: Inspect unsigned changes and recover safe configuration history.
 mission_ids:
+  - version.inspect_status.01
   - version.unsigned_change.01
+  - version.recover_commit.01
   - version.merge_conflict.01

@@ -126,6 +126,11 @@ def referential_errors(docs: dict[str, list[tuple[Path, dict[str, Any]]]]) -> li
             errors.append(f"{path}: briefing dialogue '{briefing}' does not exist")
         if success not in dialogue_ids:
             errors.append(f"{path}: success dialogue '{success}' does not exist")
+        offline_fallback = mission["narrative"].get("offline_fallback_dialogue_id")
+        if offline_fallback and offline_fallback not in dialogue_ids:
+            errors.append(f"{path}: offline fallback dialogue '{offline_fallback}' does not exist")
+        if mission["requirements"]["online"] and not offline_fallback:
+            errors.append(f"{path}: online mission requires offline_fallback_dialogue_id")
 
         objective_ids = [objective["id"] for objective in mission["objectives"]]
         if len(objective_ids) != len(set(objective_ids)):

@@ -1,0 +1,209 @@
+{
+  "chapter_id": "comms_relay",
+  "completion": {
+    "mode": "all",
+    "objective_ids": [
+      "trace_gateway",
+      "locate_registry_fault",
+      "restore_path"
+    ]
+  },
+  "difficulty": "practiced",
+  "environment": {
+    "schema_version": 1,
+    "seed": 31,
+    "service_map": {
+      "actions": [
+        {
+          "effects": {
+            "explanation": "Gateway forwards /crew/lookup after auth. Downstream registry returns 502.",
+            "inspected_gateway": "true"
+          },
+          "id": "inspect_gateway",
+          "label": "Inspect gateway logs"
+        },
+        {
+          "effects": {
+            "explanation": "Registry panics when pod_id is null for ghost records.",
+            "inspected_registry": "true",
+            "node.registry.detail": "null pod_id crashes serializer"
+          },
+          "id": "inspect_registry",
+          "label": "Inspect registry handler",
+          "requires": {
+            "inspected_gateway": "true"
+          }
+        },
+        {
+          "effects": {
+            "edge.c_to_g.status": "ok",
+            "edge.g_to_r.status": "ok",
+            "edge.r_to_c.status": "ok",
+            "explanation": "Null-safe handling stops the 502 and clears stale cache entries.",
+            "node.cache.detail": "negative cache cleared",
+            "node.cache.status": "healthy",
+            "node.client.detail": "crew lookup recovers",
+            "node.client.status": "healthy",
+            "node.registry.detail": "null pod_id returns 404",
+            "node.registry.status": "healthy",
+            "patch_deployed": "true"
+          },
+          "id": "patch_null_guard",
+          "label": "Deploy null-safe serializer patch",
+          "requires": {
+            "inspected_registry": "true"
+          }
+        }
+      ],
+      "edges": [
+        {
+          "from": "client",
+          "id": "c_to_g",
+          "kind": "request",
+          "status": "degraded",
+          "to": "gateway"
+        },
+        {
+          "from": "gateway",
+          "id": "g_to_a",
+          "kind": "auth",
+          "status": "ok",
+          "to": "auth"
+        },
+        {
+          "from": "gateway",
+          "id": "g_to_r",
+          "kind": "request",
+          "status": "failed",
+          "to": "registry"
+        },
+        {
+          "from": "registry",
+          "id": "r_to_c",
+          "kind": "data",
+          "status": "degraded",
+          "to": "cache"
+        }
+      ],
+      "nodes": [
+        {
+          "detail": "crew lookup returns 502",
+          "id": "client",
+          "kind": "client",
+          "label": "Operator console",
+          "status": "degraded"
+        },
+        {
+          "detail": "routing /crew/lookup",
+          "id": "gateway",
+          "kind": "gateway",
+          "label": "Comms gateway",
+          "status": "healthy"
+        },
+        {
+          "detail": "token ok",
+          "id": "auth",
+          "kind": "auth",
+          "label": "Auth broker",
+          "status": "healthy"
+        },
+        {
+          "detail": "handler panic on missing pod_id",
+          "id": "registry",
+          "kind": "registry",
+          "label": "Crew registry API",
+          "status": "failed"
+        },
+        {
+          "detail": "stale negative entries",
+          "id": "cache",
+          "kind": "cache",
+          "label": "Lookup cache",
+          "status": "degraded"
+        }
+      ]
+    },
+    "template_id": "service_map.v1"
+  },
+  "hints": [
+    {
+      "level": 1,
+      "text": "Start at the gateway. It sits between the console and downstream services."
+    },
+    {
+      "level": 2,
+      "text": "Auth looks healthy. Follow the failed edge into the registry."
+    },
+    {
+      "level": 3,
+      "text": "The registry panics on null pod_id for ghost records."
+    },
+    {
+      "level": 4,
+      "text": "Deploy the null-safe serializer patch after inspecting the registry."
+    }
+  ],
+  "mission_id": "comms.api_trace.01",
+  "narrative": {
+    "briefing_dialogue_id": "dialogue.comms.api_trace.briefing",
+    "success_dialogue_id": "dialogue.comms.api_trace.success"
+  },
+  "objectives": [
+    {
+      "assert": {
+        "inspected_gateway": "true"
+      },
+      "description": "Inspect the gateway hop on the failing path.",
+      "id": "trace_gateway",
+      "type": "service_map_state",
+      "visible": true
+    },
+    {
+      "assert": {
+        "inspected_registry": "true"
+      },
+      "description": "Confirm the registry handler is the failing hop.",
+      "id": "locate_registry_fault",
+      "type": "service_map_state",
+      "visible": true
+    },
+    {
+      "assert": {
+        "node.client.status": "healthy",
+        "node.registry.status": "healthy",
+        "patch_deployed": "true"
+      },
+      "description": "Deploy the null-safe patch and restore the request path.",
+      "id": "restore_path",
+      "type": "service_map_state",
+      "visible": true
+    }
+  ],
+  "requirements": {
+    "app_version": ">=0.1.0",
+    "online": false,
+    "prerequisite_skills": []
+  },
+  "rewards": {
+    "clearance_points": 40,
+    "mastery": {
+      "systems.api_trace": 1
+    },
+    "unlocks": [
+      "lore.comms.api_trace.01"
+    ]
+  },
+  "schema_version": 1,
+  "skills": {
+    "primary": "systems.api_trace",
+    "secondary": [
+      "computational_thinking.observe"
+    ]
+  },
+  "summary": "Follow a failing crew-lookup request across the Comms Relay service map.",
+  "title": "Trace an API Failure",
+  "tools": [
+    "service_map"
+  ],
+  "version": "1.0.0"
+}

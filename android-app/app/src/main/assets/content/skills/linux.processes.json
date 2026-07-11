@@ -1,0 +1,10 @@
+{
+  "description": "Inspect and stop processes with ps and kill in a constrained shell.",
+  "domain": "linux",
+  "name": "Process Control",
+  "prerequisites": [
+    "linux.navigation"
+  ],
+  "schema_version": 1,
+  "skill_id": "linux.processes"
+}

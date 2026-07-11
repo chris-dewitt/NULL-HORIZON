@@ -1,0 +1,7 @@
+schema_version: 1
+dialogue_id: dialogue.comms.api_trace.briefing
+lines:
+  - speaker: ORION-A
+    text: Crew lookup returns 502 through the Comms Relay.
+  - speaker: SYSTEM
+    text: Trace the service map from gateway to registry and deploy the null-safe patch.

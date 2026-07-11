@@ -1,0 +1,5 @@
+schema_version: 1
+dialogue_id: dialogue.emergency.rogue_process.success
+lines:
+  - speaker: ORION-A
+    text: Exfiltration writer stopped. Life-support monitor remains online.

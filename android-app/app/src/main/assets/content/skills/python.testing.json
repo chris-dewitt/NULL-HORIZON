@@ -1,0 +1,10 @@
+{
+  "description": "Author a failing test that locks in expected behavior before a fix.",
+  "domain": "python",
+  "name": "Regression Testing",
+  "prerequisites": [
+    "python.functions"
+  ],
+  "schema_version": 1,
+  "skill_id": "python.testing"
+}

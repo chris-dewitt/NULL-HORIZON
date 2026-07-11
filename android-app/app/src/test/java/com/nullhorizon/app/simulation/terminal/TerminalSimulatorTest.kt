@@ -36,6 +36,32 @@ class TerminalSimulatorTest {
     }
 
     @Test
+    fun psAndKill_updateProcessTable() {
+        val fs = VirtualFileSystem.fromEntries(
+            listOf(VirtualFsEntry("/home/operator", "dir")),
+        )
+        val simulator = TerminalSimulator(fs)
+        var state = simulator.initialState(
+            "/home/operator",
+            processes = listOf(
+                VirtualProcess(pid = 101, name = "life_support_monitor", command = "life_support_monitor"),
+                VirtualProcess(pid = 204, name = "rogue_exfil.sh", command = "rogue_exfil.sh"),
+            ),
+        )
+        state = simulator.execute(state, "ps")
+        assertThat(state.lastStdout).contains("rogue_exfil.sh")
+        assertThat(state.lastStdout).contains("life_support_monitor")
+
+        state = simulator.execute(state, "kill 204")
+        assertThat(state.lastExitCode).isEqualTo(0)
+        assertThat(state.processes.first { it.pid == 204 }.status).isEqualTo("stopped")
+
+        state = simulator.execute(state, "ps")
+        assertThat(state.lastStdout).doesNotContain("rogue_exfil.sh")
+        assertThat(state.lastStdout).contains("life_support_monitor")
+    }
+
+    @Test
     fun unsupportedSyntax_returnsClearError() {
         var state = simulator.initialState("/home/operator")
         state = simulator.execute(state, "ls | cat")

@@ -1,0 +1,10 @@
+{
+  "dialogue_id": "dialogue.automation.regression_guard.success",
+  "lines": [
+    {
+      "speaker": "ORION-A",
+      "text": "Regression locked. Future clamp regressions will fail loudly."
+    }
+  ],
+  "schema_version": 1
+}

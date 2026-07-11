@@ -1,0 +1,5 @@
+schema_version: 1
+reward_id: lore.emergency.rogue_process.01
+kind: lore
+name: Stopped Exfil
+description: Evidence that a rogue writer was terminated on the maintenance host.

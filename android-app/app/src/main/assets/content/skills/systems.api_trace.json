@@ -1,0 +1,8 @@
+{
+  "description": "Follow request paths across services to locate a failing hop.",
+  "domain": "systems",
+  "name": "API Failure Tracing",
+  "prerequisites": [],
+  "schema_version": 1,
+  "skill_id": "systems.api_trace"
+}

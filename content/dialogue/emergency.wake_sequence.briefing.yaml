@@ -1,0 +1,7 @@
+schema_version: 1
+dialogue_id: dialogue.emergency.wake_sequence.briefing
+lines:
+  - speaker: SYSTEM
+    text: Emergency reconstruction complete. Operator profile is dormant.
+  - speaker: ORION-A
+    text: If you can hear this fragment, energize the emergency bus and acknowledge wake.

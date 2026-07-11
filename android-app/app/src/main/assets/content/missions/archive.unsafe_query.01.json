@@ -1,0 +1,159 @@
+{
+  "chapter_id": "archive_core",
+  "completion": {
+    "mode": "all",
+    "objective_ids": [
+      "use_placeholder",
+      "tests_pass"
+    ]
+  },
+  "difficulty": "practiced",
+  "environment": {
+    "schema_version": 1,
+    "seed": 33,
+    "template_id": "python.editor.fake.v1",
+    "workspace": {
+      "execution": {
+        "fixtures": [
+          {
+            "id": "fixed",
+            "match": {
+              "file_contains": {
+                "/workspace/lookup.py": "callsign = ?"
+              }
+            },
+            "result": {
+              "status": "completed",
+              "tests": [
+                {
+                  "id": "test_uses_placeholder",
+                  "status": "passed"
+                }
+              ]
+            }
+          },
+          {
+            "id": "still_concat",
+            "match": {
+              "file_contains": {
+                "/workspace/lookup.py": "callsign = '"
+              }
+            },
+            "result": {
+              "status": "completed",
+              "tests": [
+                {
+                  "actual": "string concat",
+                  "expected": "placeholder ?",
+                  "id": "test_uses_placeholder",
+                  "message": "Query still concatenates untrusted input",
+                  "status": "failed"
+                }
+              ]
+            }
+          },
+          {
+            "id": "default_fail",
+            "result": {
+              "status": "completed",
+              "tests": [
+                {
+                  "id": "test_uses_placeholder",
+                  "message": "Query must use a ? placeholder",
+                  "status": "failed"
+                }
+              ]
+            }
+          }
+        ],
+        "provider": "fake"
+      },
+      "files": [
+        {
+          "content": "def find_crew_sql(callsign: str) -> str:\n    \"\"\"Return SQL that looks up a crew row by callsign.\"\"\"\n    return \"SELECT * FROM crew WHERE callsign = '\" + callsign + \"'\"\n",
+          "editable": true,
+          "path": "/workspace/lookup.py"
+        },
+        {
+          "content": "from lookup import find_crew_sql\n\n\ndef test_uses_placeholder():\n    sql = find_crew_sql(\"ORION\")\n    assert \"?\" in sql\n    assert \"'\" not in sql\n",
+          "editable": false,
+          "path": "/workspace/test_lookup.py"
+        }
+      ]
+    }
+  },
+  "hints": [
+    {
+      "level": 1,
+      "text": "The current helper concatenates callsign into SQL text."
+    },
+    {
+      "level": 2,
+      "text": "Prefer a placeholder such as callsign = ?."
+    },
+    {
+      "level": 3,
+      "text": "Remove the single-quoted concatenation entirely."
+    },
+    {
+      "level": 4,
+      "text": "Return SELECT * FROM crew WHERE callsign = ? and run tests."
+    }
+  ],
+  "mission_id": "archive.unsafe_query.01",
+  "narrative": {
+    "briefing_dialogue_id": "dialogue.archive.unsafe_query.briefing",
+    "success_dialogue_id": "dialogue.archive.unsafe_query.success"
+  },
+  "objectives": [
+    {
+      "assert": {
+        "file_contains:/workspace/lookup.py": "callsign = ?",
+        "file_not_contains:/workspace/lookup.py": "callsign = '"
+      },
+      "description": "Build the lookup with a ? placeholder instead of string concat.",
+      "id": "use_placeholder",
+      "type": "file_assertion",
+      "visible": true
+    },
+    {
+      "assert": {
+        "all_passed": "true",
+        "test_count": "1"
+      },
+      "description": "Run tests and confirm the safe query helper passes.",
+      "id": "tests_pass",
+      "type": "execution_tests",
+      "visible": true
+    }
+  ],
+  "requirements": {
+    "app_version": ">=0.1.0",
+    "online": false,
+    "prerequisite_skills": []
+  },
+  "rewards": {
+    "clearance_points": 40,
+    "mastery": {
+      "python.functions": 1,
+      "sql.safe_queries": 1
+    },
+    "unlocks": [
+      "lore.archive.unsafe_query.01"
+    ]
+  },
+  "schema_version": 1,
+  "skills": {
+    "primary": "sql.safe_queries",
+    "secondary": [
+      "python.functions"
+    ]
+  },
+  "summary": "Replace a string-built crew lookup with a parameterized query helper.",
+  "title": "Fix an Unsafe Query",
+  "tools": [
+    "python_editor",
+    "test_console"
+  ],
+  "version": "1.0.0"
+}

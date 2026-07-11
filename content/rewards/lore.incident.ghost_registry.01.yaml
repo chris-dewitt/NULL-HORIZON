@@ -1,0 +1,5 @@
+schema_version: 1
+reward_id: lore.incident.ghost_registry.01
+kind: lore
+name: Ghost Incident Log
+description: Multi-tool evidence closing the NYX-0 ghost registry incident.

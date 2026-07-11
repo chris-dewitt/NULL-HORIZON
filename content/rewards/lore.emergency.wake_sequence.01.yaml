@@ -1,0 +1,5 @@
+schema_version: 1
+reward_id: lore.emergency.wake_sequence.01
+kind: lore
+name: Wake Fragment
+description: First ORION fragment response after emergency reconstruction.

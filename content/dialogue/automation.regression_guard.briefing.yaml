@@ -1,0 +1,7 @@
+schema_version: 1
+dialogue_id: dialogue.automation.regression_guard.briefing
+lines:
+  - speaker: ORION-A
+    text: Clamp helper returns 99 above range. Existing tests never caught it.
+  - speaker: SYSTEM
+    text: Write a regression assertion for 150 psi, then repair the helper.

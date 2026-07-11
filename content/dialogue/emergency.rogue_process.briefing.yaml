@@ -1,0 +1,7 @@
+schema_version: 1
+dialogue_id: dialogue.emergency.rogue_process.briefing
+lines:
+  - speaker: ORION-A
+    text: A maintenance host is writing outbound packets it should not send.
+  - speaker: SYSTEM
+    text: Use ps to identify the rogue process, then stop it without harming life support.

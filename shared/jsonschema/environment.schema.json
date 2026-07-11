@@ -179,6 +179,23 @@
               }
             ]
           }
+        },
+        "processes": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["pid", "name"],
+            "properties": {
+              "pid": { "type": "integer", "minimum": 1 },
+              "name": { "type": "string", "minLength": 1 },
+              "status": {
+                "type": "string",
+                "enum": ["running", "stopped"]
+              },
+              "command": { "type": "string" }
+            }
+          }
         }
       }
     },

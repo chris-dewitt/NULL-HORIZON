@@ -1,0 +1,7 @@
+{
+  "description": "Service-map notes locating the registry null pod_id panic.",
+  "kind": "lore",
+  "name": "502 Trace",
+  "reward_id": "lore.comms.api_trace.01",
+  "schema_version": 1
+}

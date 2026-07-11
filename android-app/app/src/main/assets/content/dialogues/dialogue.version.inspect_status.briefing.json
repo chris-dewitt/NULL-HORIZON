@@ -1,0 +1,14 @@
+{
+  "dialogue_id": "dialogue.version.inspect_status.briefing",
+  "lines": [
+    {
+      "speaker": "ORION-A",
+      "text": "The Version Vault reports an unsigned thruster edit."
+    },
+    {
+      "speaker": "SYSTEM",
+      "text": "Inspect with git status and git diff. Do not change files yet."
+    }
+  ],
+  "schema_version": 1
+}
