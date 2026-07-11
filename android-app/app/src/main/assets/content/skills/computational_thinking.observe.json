@@ -1,0 +1,8 @@
+{
+  "description": "Read status indicators and identify what changed.",
+  "domain": "computational_thinking",
+  "name": "Observe system output",
+  "prerequisites": [],
+  "schema_version": 1,
+  "skill_id": "computational_thinking.observe"
+}

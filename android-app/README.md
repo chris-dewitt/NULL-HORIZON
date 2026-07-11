@@ -14,11 +14,17 @@ cd android-app
 
 Requires JDK 17+ and an Android SDK with platform 35 installed. Set `ANDROID_HOME` or create `local.properties` with `sdk.dir`.
 
-## Epic 1 surfaces
+## Epic 1 / Epic 2 surfaces
 
 - Local profile setup (no account)
 - Bottom navigation: Ship Map, Missions, Settings
 - Accessibility toggles: high contrast, reduced motion, larger text
-- Placeholder mission list for Emergency Interface
+- Data-driven missions loaded from `assets/content` (Emergency Lighting)
 
-Mission content loading and simulators arrive in later epics.
+Rebuild content into assets after YAML changes:
+
+```bash
+python scripts/build_bundle.py --channel dev --sync-android-assets
+```
+
+Simulators and additional domains arrive in later epics.

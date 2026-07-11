@@ -1,0 +1,12 @@
+{
+  "files": {
+    "chapters/emergency_interface.json": "2dcc6f33550885a393a43553785fb36c45a65c4cc09c0d1fd93d2bc4604585d3",
+    "dialogues/dialogue.emergency.lighting.briefing.json": "8b2b757cd8ad65cd917aaa6131de73e5262ae59c9a6e572ec807c05f13951574",
+    "dialogues/dialogue.emergency.lighting.success.json": "91fd9e47847cbfeb1e7c675cf1334609ff619138ae89a1dffab1fd08beef1629",
+    "manifest.json": "08dfaae5374db3a8df5491aa021e28e512d6004e9a445dd51ed9157beec88920",
+    "missions/emergency.lighting.01.json": "d1063ae240d0487a41ef6c7e25262cf326cfd7e11638e930e27c64e408258095",
+    "rewards/lore.emergency.lighting.01.json": "f29add96be4a269bd24c5eace0271a2648b2a0c6c3f96ac4bee930670ef94343",
+    "skills/computational_thinking.hypothesis.json": "9bffa595306764cbae67bdf7cfc8976564b80b618315304c32eaf1e7e199c455",
+    "skills/computational_thinking.observe.json": "ba966ab413074392d3a58269f03e519bbfdd455babb18135a143a64ae7c9ddc6"
+  }
+}

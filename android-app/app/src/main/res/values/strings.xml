@@ -20,10 +20,20 @@
     <string name="ship_map_selected">Selected: %1$s (%2$s)</string>
 
     <string name="missions_title">Missions</string>
-    <string name="missions_subtitle">Emergency Interface placeholders. Content engine arrives in Epic 2.</string>
+    <string name="missions_subtitle">Loaded from the starter content bundle. Select a mission to begin.</string>
+    <string name="missions_loading">Loading missions…</string>
     <string name="mission_status_available">Available</string>
     <string name="mission_status_locked">Locked</string>
     <string name="mission_status_completed">Completed</string>
+    <string name="mission_back">Back to missions</string>
+    <string name="mission_begin">Begin repair</string>
+    <string name="mission_systems_panel">Systems panel</string>
+    <string name="mission_objectives">Objectives</string>
+    <string name="mission_request_hint">Request hint</string>
+    <string name="mission_hint_item">Hint %1$d: %2$s</string>
+    <string name="mission_reset">Reset mission</string>
+    <string name="mission_completed">Mission complete</string>
+    <string name="mission_phase">Phase: %1$s</string>
 
     <string name="settings_title">Settings</string>
     <string name="settings_profile_section">Local operator: %1$s</string>

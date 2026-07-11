@@ -1,6 +1,7 @@
 package com.nullhorizon.app.feature.mission
 
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -25,6 +26,7 @@ import com.nullhorizon.app.data.mission.MissionSummary
 @Composable
 fun MissionListScreen(
     viewModel: MissionListViewModel,
+    onMissionSelected: (String) -> Unit,
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
 
@@ -44,22 +46,31 @@ fun MissionListScreen(
             color = MaterialTheme.colorScheme.onSurfaceVariant,
             modifier = Modifier.padding(top = 8.dp, bottom = 16.dp),
         )
-        LazyColumn(
-            verticalArrangement = Arrangement.spacedBy(12.dp),
-        ) {
-            items(state.missions, key = { it.id }) { mission ->
-                MissionRow(mission)
+        when {
+            state.isLoading -> Text(stringResource(R.string.missions_loading))
+            state.errorMessage != null -> Text(state.errorMessage.orEmpty())
+            else -> LazyColumn(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+                items(state.missions, key = { it.id }) { mission ->
+                    MissionRow(
+                        mission = mission,
+                        onClick = { onMissionSelected(mission.id) },
+                    )
+                }
             }
         }
     }
 }
 
 @Composable
-private fun MissionRow(mission: MissionSummary) {
+private fun MissionRow(
+    mission: MissionSummary,
+    onClick: () -> Unit,
+) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
             .border(1.dp, MaterialTheme.colorScheme.outline)
+            .clickable(onClick = onClick)
             .padding(12.dp)
             .semantics {
                 contentDescription =
