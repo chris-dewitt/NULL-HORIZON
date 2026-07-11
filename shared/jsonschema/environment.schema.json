@@ -53,6 +53,47 @@
           "editable": { "type": "boolean" }
         }
       }
+    },
+    "filesystem": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["cwd", "entries"],
+      "properties": {
+        "cwd": {
+          "type": "string",
+          "pattern": "^/"
+        },
+        "entries": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["path", "type"],
+            "properties": {
+              "path": {
+                "type": "string",
+                "pattern": "^/"
+              },
+              "type": {
+                "type": "string",
+                "enum": ["dir", "file"]
+              },
+              "content": { "type": "string" }
+            },
+            "allOf": [
+              {
+                "if": {
+                  "properties": { "type": { "const": "file" } }
+                },
+                "then": {
+                  "required": ["content"]
+                }
+              }
+            ]
+          }
+        }
+      }
     }
   }
 }

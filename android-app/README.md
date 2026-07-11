@@ -27,4 +27,6 @@ Rebuild content into assets after YAML changes:
 python scripts/build_bundle.py --channel dev --sync-android-assets
 ```
 
-Simulators and additional domains arrive in later epics.
+Epic 3 adds the simulated terminal (`pwd`, `ls`, `cd`, `cat`, `grep`) and Locate the Fault Log.
+
+Additional simulators arrive in later epics.

@@ -13,17 +13,23 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.nullhorizon.app.R
 import com.nullhorizon.app.feature.mission.engine.MissionPhase
+import com.nullhorizon.app.simulation.terminal.TerminalSessionState
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
@@ -82,36 +88,23 @@ fun MissionSessionScreen(
                 if (state.session.phase == MissionPhase.InProgress ||
                     state.session.phase == MissionPhase.Completed
                 ) {
-                    Text(
-                        text = stringResource(R.string.mission_systems_panel),
-                        style = MaterialTheme.typography.titleMedium,
-                    )
-                    state.session.worldState.entries.sortedBy { it.key }.forEach { (key, value) ->
-                        Text(
-                            text = "$key = $value",
-                            style = MaterialTheme.typography.bodyMedium,
-                            modifier = Modifier.semantics {
-                                contentDescription = "State $key $value"
-                            },
+                    if (mission.tools.contains("systems_panel") &&
+                        mission.environment.actions.isNotEmpty()
+                    ) {
+                        SystemsPanel(
+                            worldState = state.session.worldState,
+                            actionsEnabled = state.session.phase == MissionPhase.InProgress,
+                            actions = mission.environment.actions.map { it.id to it.label },
+                            onAction = viewModel::applyAction,
                         )
                     }
 
-                    if (state.session.phase == MissionPhase.InProgress) {
-                        FlowRow(
-                            horizontalArrangement = Arrangement.spacedBy(8.dp),
-                            verticalArrangement = Arrangement.spacedBy(8.dp),
-                        ) {
-                            mission.environment.actions.forEach { action ->
-                                Button(
-                                    onClick = { viewModel.applyAction(action.id) },
-                                    modifier = Modifier.semantics {
-                                        contentDescription = "Action ${action.label}"
-                                    },
-                                ) {
-                                    Text(action.label)
-                                }
-                            }
-                        }
+                    if (mission.tools.contains("terminal") && state.session.terminal != null) {
+                        TerminalPanel(
+                            terminal = state.session.terminal!!,
+                            enabled = state.session.phase == MissionPhase.InProgress,
+                            onSubmit = viewModel::runCommand,
+                        )
                     }
 
                     Text(
@@ -162,6 +155,124 @@ fun MissionSessionScreen(
                     )
                 }
             }
+        }
+    }
+}
+
+@OptIn(ExperimentalLayoutApi::class)
+@Composable
+private fun SystemsPanel(
+    worldState: Map<String, String>,
+    actionsEnabled: Boolean,
+    actions: List<Pair<String, String>>,
+    onAction: (String) -> Unit,
+) {
+    Text(
+        text = stringResource(R.string.mission_systems_panel),
+        style = MaterialTheme.typography.titleMedium,
+    )
+    worldState.entries.sortedBy { it.key }.forEach { (key, value) ->
+        Text(
+            text = "$key = $value",
+            style = MaterialTheme.typography.bodyMedium,
+            modifier = Modifier.semantics { contentDescription = "State $key $value" },
+        )
+    }
+    if (actionsEnabled) {
+        FlowRow(
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp),
+        ) {
+            actions.forEach { (id, label) ->
+                Button(
+                    onClick = { onAction(id) },
+                    modifier = Modifier.semantics { contentDescription = "Action $label" },
+                ) {
+                    Text(label)
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun TerminalPanel(
+    terminal: TerminalSessionState,
+    enabled: Boolean,
+    onSubmit: (String) -> Unit,
+) {
+    var input by rememberSaveable { mutableStateOf("") }
+
+    Text(
+        text = stringResource(R.string.mission_terminal),
+        style = MaterialTheme.typography.titleMedium,
+    )
+    Text(
+        text = stringResource(R.string.mission_terminal_cwd, terminal.cwd),
+        style = MaterialTheme.typography.labelLarge,
+        fontFamily = FontFamily.Monospace,
+        modifier = Modifier.semantics { contentDescription = "Terminal cwd ${terminal.cwd}" },
+    )
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .border(1.dp, MaterialTheme.colorScheme.outline)
+            .padding(12.dp)
+            .semantics { contentDescription = "Terminal history" },
+        verticalArrangement = Arrangement.spacedBy(8.dp),
+    ) {
+        if (terminal.history.isEmpty()) {
+            Text(
+                text = stringResource(R.string.mission_terminal_empty),
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+            )
+        } else {
+            terminal.history.takeLast(12).forEach { entry ->
+                Text(
+                    text = "$ ${entry.command}",
+                    fontFamily = FontFamily.Monospace,
+                    style = MaterialTheme.typography.bodyMedium,
+                )
+                if (entry.stdout.isNotBlank()) {
+                    Text(
+                        text = entry.stdout,
+                        fontFamily = FontFamily.Monospace,
+                        style = MaterialTheme.typography.bodySmall,
+                    )
+                }
+                if (entry.stderr.isNotBlank()) {
+                    Text(
+                        text = entry.stderr,
+                        fontFamily = FontFamily.Monospace,
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.error,
+                    )
+                }
+            }
+        }
+    }
+    if (enabled) {
+        OutlinedTextField(
+            value = input,
+            onValueChange = { input = it },
+            modifier = Modifier
+                .fillMaxWidth()
+                .semantics { contentDescription = "Terminal input" },
+            singleLine = true,
+            label = { Text(stringResource(R.string.mission_terminal_input)) },
+        )
+        Button(
+            onClick = {
+                val command = input.trim()
+                if (command.isNotEmpty()) {
+                    onSubmit(command)
+                    input = ""
+                }
+            },
+            modifier = Modifier.semantics { contentDescription = "Run terminal command" },
+        ) {
+            Text(stringResource(R.string.mission_terminal_run))
         }
     }
 }

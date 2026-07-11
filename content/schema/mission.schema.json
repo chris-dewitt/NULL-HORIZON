@@ -138,6 +138,22 @@
             "then": {
               "required": ["assert"]
             }
+          },
+          {
+            "if": {
+              "properties": { "type": { "const": "command_output" } }
+            },
+            "then": {
+              "required": ["assert"]
+            }
+          },
+          {
+            "if": {
+              "properties": { "type": { "const": "filesystem_state" } }
+            },
+            "then": {
+              "required": ["assert"]
+            }
           }
         ]
       }

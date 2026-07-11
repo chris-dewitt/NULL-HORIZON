@@ -28,6 +28,11 @@
     <string name="mission_back">Back to missions</string>
     <string name="mission_begin">Begin repair</string>
     <string name="mission_systems_panel">Systems panel</string>
+    <string name="mission_terminal">Terminal</string>
+    <string name="mission_terminal_cwd">cwd: %1$s</string>
+    <string name="mission_terminal_empty">No commands yet. Try pwd or ls.</string>
+    <string name="mission_terminal_input">Command</string>
+    <string name="mission_terminal_run">Run</string>
     <string name="mission_objectives">Objectives</string>
     <string name="mission_request_hint">Request hint</string>
     <string name="mission_hint_item">Hint %1$d: %2$s</string>

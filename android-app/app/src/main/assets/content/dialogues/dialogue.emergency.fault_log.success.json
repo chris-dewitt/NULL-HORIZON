@@ -1,0 +1,14 @@
+{
+  "dialogue_id": "dialogue.emergency.fault_log.success",
+  "lines": [
+    {
+      "speaker": "ORION",
+      "text": "Fault signature confirmed. Valve-3 is unstable. Maintenance Deck access can proceed later."
+    },
+    {
+      "speaker": "MICA",
+      "text": "You stayed inside the virtual filesystem. Policy satisfied."
+    }
+  ],
+  "schema_version": 1
+}

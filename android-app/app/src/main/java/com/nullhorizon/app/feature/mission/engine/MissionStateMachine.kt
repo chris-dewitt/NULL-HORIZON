@@ -2,6 +2,9 @@ package com.nullhorizon.app.feature.mission.engine
 
 import com.nullhorizon.app.content.model.MissionDefinition
 import com.nullhorizon.app.content.toStateMap
+import com.nullhorizon.app.simulation.terminal.TerminalSimulator
+import com.nullhorizon.app.simulation.terminal.VirtualFileSystem
+import com.nullhorizon.app.simulation.terminal.VirtualFsEntry
 
 /**
  * Deterministic mission lifecycle. Reset always restores environment.seed initial state.
@@ -11,10 +14,23 @@ class MissionStateMachine(
     private val objectiveEngine: ObjectiveEngine = ObjectiveEngine(),
     private val hintEngine: HintEngine = HintEngine(),
 ) {
+    private val terminalSimulator: TerminalSimulator? = mission.environment.filesystem?.let { fsDef ->
+        val vfs = VirtualFileSystem.fromEntries(
+            fsDef.entries.map { entry ->
+                VirtualFsEntry(path = entry.path, type = entry.type, content = entry.content)
+            },
+        )
+        TerminalSimulator(vfs)
+    }
+
     fun initialState(): MissionSessionState {
+        val terminal = terminalSimulator?.initialState(
+            mission.environment.filesystem?.cwd ?: "/",
+        )
         return MissionSessionState(
             phase = MissionPhase.Briefing,
             worldState = mission.environment.initialState.toStateMap(),
+            terminal = terminal,
             completedObjectiveIds = emptySet(),
             hintLevel = 0,
             lastActionMessage = null,
@@ -62,8 +78,25 @@ class MissionStateMachine(
         )
     }
 
+    fun runCommand(state: MissionSessionState, line: String): MissionSessionState {
+        if (state.phase != MissionPhase.InProgress) {
+            return state.copy(lastActionMessage = "Start the mission before using the terminal.")
+        }
+        val simulator = terminalSimulator
+            ?: return state.copy(lastActionMessage = "This mission has no terminal.")
+        val terminalState = state.terminal
+            ?: return state.copy(lastActionMessage = "Terminal is not initialized.")
+        val nextTerminal = simulator.execute(terminalState, line)
+        return evaluate(
+            state.copy(
+                terminal = nextTerminal,
+                lastActionMessage = null,
+            ),
+        )
+    }
+
     private fun evaluate(state: MissionSessionState): MissionSessionState {
-        val completed = objectiveEngine.completedObjectiveIds(mission, state.worldState)
+        val completed = objectiveEngine.completedObjectiveIds(mission, state)
         val isComplete = objectiveEngine.isMissionComplete(mission, completed)
         return state.copy(
             completedObjectiveIds = completed,

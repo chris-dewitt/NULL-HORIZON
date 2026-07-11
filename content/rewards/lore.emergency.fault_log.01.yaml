@@ -1,0 +1,5 @@
+schema_version: 1
+reward_id: lore.emergency.fault_log.01
+kind: lore
+name: Fault Log Excerpt
+description: A recovered note identifying valve-3 pressure instability.

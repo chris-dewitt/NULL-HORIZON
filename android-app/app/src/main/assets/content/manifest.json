@@ -6,21 +6,27 @@
   ],
   "content_schema_version": 1,
   "dialogues": [
+    "dialogue.emergency.fault_log.briefing",
+    "dialogue.emergency.fault_log.success",
     "dialogue.emergency.lighting.briefing",
     "dialogue.emergency.lighting.success"
   ],
   "locale": "en",
   "min_app_version": "0.1.0",
   "missions": [
+    "emergency.fault_log.01",
     "emergency.lighting.01"
   ],
   "rewards": [
+    "lore.emergency.fault_log.01",
     "lore.emergency.lighting.01"
   ],
   "schema_version": 1,
   "skills": [
     "computational_thinking.hypothesis",
-    "computational_thinking.observe"
+    "computational_thinking.observe",
+    "linux.inspection",
+    "linux.navigation"
   ],
   "version": "0.2.0"
 }
