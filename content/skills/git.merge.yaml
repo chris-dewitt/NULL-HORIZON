@@ -1,0 +1,7 @@
+schema_version: 1
+skill_id: git.merge
+name: Merge and resolve conflicts
+domain: git
+description: Merge branches, resolve conflicted paths, stage, and commit the result.
+prerequisites:
+  - git.inspect

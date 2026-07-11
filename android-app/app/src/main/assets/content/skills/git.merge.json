@@ -1,0 +1,10 @@
+{
+  "description": "Merge branches, resolve conflicted paths, stage, and commit the result.",
+  "domain": "git",
+  "name": "Merge and resolve conflicts",
+  "prerequisites": [
+    "git.inspect"
+  ],
+  "schema_version": 1,
+  "skill_id": "git.merge"
+}

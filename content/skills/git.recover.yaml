@@ -1,0 +1,7 @@
+schema_version: 1
+skill_id: git.recover
+name: Discard unauthorized changes
+domain: git
+description: Restore tracked files from HEAD with git checkout -- path.
+prerequisites:
+  - git.inspect

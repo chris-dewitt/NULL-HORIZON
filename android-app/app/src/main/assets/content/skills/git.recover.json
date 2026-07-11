@@ -1,0 +1,10 @@
+{
+  "description": "Restore tracked files from HEAD with git checkout -- path.",
+  "domain": "git",
+  "name": "Discard unauthorized changes",
+  "prerequisites": [
+    "git.inspect"
+  ],
+  "schema_version": 1,
+  "skill_id": "git.recover"
+}

@@ -1,0 +1,5 @@
+schema_version: 1
+reward_id: lore.version.unsigned_change.01
+kind: lore
+name: Unsigned Diff Fragment
+description: A recovered note that an unsigned edit briefly rewrote thruster routing.

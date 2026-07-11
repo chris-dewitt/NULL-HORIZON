@@ -1,0 +1,7 @@
+{
+  "description": "A short ledger entry recording how power.policy was resolved during a repair merge.",
+  "kind": "lore",
+  "name": "Merge Conflict Ledger",
+  "reward_id": "lore.version.merge_conflict.01",
+  "schema_version": 1
+}

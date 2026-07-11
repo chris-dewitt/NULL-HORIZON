@@ -1,0 +1,8 @@
+{
+  "description": "Use git status and git diff to understand working-tree and staged changes.",
+  "domain": "git",
+  "name": "Inspect repository state",
+  "prerequisites": [],
+  "schema_version": 1,
+  "skill_id": "git.inspect"
+}

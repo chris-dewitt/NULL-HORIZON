@@ -1,0 +1,7 @@
+schema_version: 1
+dialogue_id: dialogue.version.merge_conflict.briefing
+lines:
+  - speaker: ORION
+    text: Two repair branches diverge on power.policy. Merge repair into main and resolve the conflict.
+  - speaker: MICA
+    text: Prefer the repair branch values for power.policy, then stage and commit the merge.

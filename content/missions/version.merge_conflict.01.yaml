@@ -1,0 +1,119 @@
+schema_version: 1
+mission_id: version.merge_conflict.01
+version: 1.0.0
+chapter_id: version_vault
+title: Conflicting Repair
+summary: Merge the repair branch into main and resolve the power.policy conflict.
+difficulty: practiced
+
+requirements:
+  app_version: ">=0.1.0"
+  online: false
+  prerequisite_skills: []
+
+skills:
+  primary: git.merge
+  secondary:
+    - git.inspect
+
+narrative:
+  briefing_dialogue_id: dialogue.version.merge_conflict.briefing
+  success_dialogue_id: dialogue.version.merge_conflict.success
+
+tools:
+  - git
+
+environment:
+  schema_version: 1
+  template_id: git.repo.v1
+  seed: 13
+  git:
+    initial_branch: main
+    branches:
+      main: main1
+      repair: repair1
+    commits:
+      - id: base
+        message: Baseline power policy
+        author: crew
+        files:
+          power.policy: |
+            bus_a=online
+            bus_b=online
+          NOTES.md: |
+            Shared baseline.
+      - id: main1
+        message: Main keeps bus_a online
+        author: orion
+        parent: base
+        files:
+          power.policy: |
+            bus_a=online
+            bus_b=degraded
+          NOTES.md: |
+            Shared baseline.
+      - id: repair1
+        message: Repair restores both buses
+        author: mica
+        parent: base
+        files:
+          power.policy: |
+            bus_a=online
+            bus_b=online
+          NOTES.md: |
+            Shared baseline.
+            Repair notes attached.
+
+objectives:
+  - id: start_merge
+    type: git_state
+    description: Merge repair into main and produce a conflict on power.policy.
+    visible: true
+    assert:
+      last_command: git merge repair
+      conflict_count: 1
+      stdout_contains: CONFLICT
+  - id: resolve_theirs
+    type: git_state
+    description: Resolve power.policy using the repair branch (theirs) values.
+    visible: true
+    assert:
+      file_equals:power.policy: |
+        bus_a=online
+        bus_b=online
+  - id: finish_merge
+    type: git_state
+    description: Stage the resolution and commit the merge.
+    visible: true
+    assert:
+      working_tree_clean: true
+      conflict_count: 0
+      head_message_contains: Merge
+      file_equals:power.policy: |
+        bus_a=online
+        bus_b=online
+
+hints:
+  - level: 1
+    text: You are on main. Merge with git merge repair.
+  - level: 2
+    text: Use the conflict UI or git checkout --theirs power.policy.
+  - level: 3
+    text: Stage the resolved file with git add power.policy.
+  - level: 4
+    text: Finish with git commit -m "Merge branch 'repair'".
+
+rewards:
+  clearance_points: 45
+  mastery:
+    git.merge: 1
+    git.inspect: 1
+  unlocks:
+    - lore.version.merge_conflict.01
+
+completion:
+  mode: all
+  objective_ids:
+    - start_merge
+    - resolve_theirs
+    - finish_merge

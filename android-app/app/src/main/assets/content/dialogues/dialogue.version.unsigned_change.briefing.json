@@ -1,0 +1,14 @@
+{
+  "dialogue_id": "dialogue.version.unsigned_change.briefing",
+  "lines": [
+    {
+      "speaker": "ORION",
+      "text": "Version Vault reports an unsigned edit in routing.conf. The working tree no longer matches the last signed commit."
+    },
+    {
+      "speaker": "MICA",
+      "text": "Inspect with git status and git diff. Discard the unauthorized change with git checkout -- routing.conf."
+    }
+  ],
+  "schema_version": 1
+}

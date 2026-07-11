@@ -1,0 +1,140 @@
+{
+  "chapter_id": "version_vault",
+  "completion": {
+    "mode": "all",
+    "objective_ids": [
+      "start_merge",
+      "resolve_theirs",
+      "finish_merge"
+    ]
+  },
+  "difficulty": "practiced",
+  "environment": {
+    "git": {
+      "branches": {
+        "main": "main1",
+        "repair": "repair1"
+      },
+      "commits": [
+        {
+          "author": "crew",
+          "files": {
+            "NOTES.md": "Shared baseline.\n",
+            "power.policy": "bus_a=online\nbus_b=online\n"
+          },
+          "id": "base",
+          "message": "Baseline power policy"
+        },
+        {
+          "author": "orion",
+          "files": {
+            "NOTES.md": "Shared baseline.\n",
+            "power.policy": "bus_a=online\nbus_b=degraded\n"
+          },
+          "id": "main1",
+          "message": "Main keeps bus_a online",
+          "parent": "base"
+        },
+        {
+          "author": "mica",
+          "files": {
+            "NOTES.md": "Shared baseline.\nRepair notes attached.\n",
+            "power.policy": "bus_a=online\nbus_b=online\n"
+          },
+          "id": "repair1",
+          "message": "Repair restores both buses",
+          "parent": "base"
+        }
+      ],
+      "initial_branch": "main"
+    },
+    "schema_version": 1,
+    "seed": 13,
+    "template_id": "git.repo.v1"
+  },
+  "hints": [
+    {
+      "level": 1,
+      "text": "You are on main. Merge with git merge repair."
+    },
+    {
+      "level": 2,
+      "text": "Use the conflict UI or git checkout --theirs power.policy."
+    },
+    {
+      "level": 3,
+      "text": "Stage the resolved file with git add power.policy."
+    },
+    {
+      "level": 4,
+      "text": "Finish with git commit -m \"Merge branch 'repair'\"."
+    }
+  ],
+  "mission_id": "version.merge_conflict.01",
+  "narrative": {
+    "briefing_dialogue_id": "dialogue.version.merge_conflict.briefing",
+    "success_dialogue_id": "dialogue.version.merge_conflict.success"
+  },
+  "objectives": [
+    {
+      "assert": {
+        "conflict_count": 1,
+        "last_command": "git merge repair",
+        "stdout_contains": "CONFLICT"
+      },
+      "description": "Merge repair into main and produce a conflict on power.policy.",
+      "id": "start_merge",
+      "type": "git_state",
+      "visible": true
+    },
+    {
+      "assert": {
+        "file_equals:power.policy": "bus_a=online\nbus_b=online\n"
+      },
+      "description": "Resolve power.policy using the repair branch (theirs) values.",
+      "id": "resolve_theirs",
+      "type": "git_state",
+      "visible": true
+    },
+    {
+      "assert": {
+        "conflict_count": 0,
+        "file_equals:power.policy": "bus_a=online\nbus_b=online\n",
+        "head_message_contains": "Merge",
+        "working_tree_clean": true
+      },
+      "description": "Stage the resolution and commit the merge.",
+      "id": "finish_merge",
+      "type": "git_state",
+      "visible": true
+    }
+  ],
+  "requirements": {
+    "app_version": ">=0.1.0",
+    "online": false,
+    "prerequisite_skills": []
+  },
+  "rewards": {
+    "clearance_points": 45,
+    "mastery": {
+      "git.inspect": 1,
+      "git.merge": 1
+    },
+    "unlocks": [
+      "lore.version.merge_conflict.01"
+    ]
+  },
+  "schema_version": 1,
+  "skills": {
+    "primary": "git.merge",
+    "secondary": [
+      "git.inspect"
+    ]
+  },
+  "summary": "Merge the repair branch into main and resolve the power.policy conflict.",
+  "title": "Conflicting Repair",
+  "tools": [
+    "git"
+  ],
+  "version": "1.0.0"
+}
