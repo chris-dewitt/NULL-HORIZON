@@ -1,0 +1,6 @@
+schema_version: 1
+skill_id: mlops.rollback
+name: Roll back a failing model
+domain: ml_infrastructure
+description: Respond to drift alerts by rolling a deployment back to a stable registry stage.
+prerequisites: []

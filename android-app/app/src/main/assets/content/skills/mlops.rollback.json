@@ -1,0 +1,8 @@
+{
+  "description": "Respond to drift alerts by rolling a deployment back to a stable registry stage.",
+  "domain": "ml_infrastructure",
+  "name": "Roll back a failing model",
+  "prerequisites": [],
+  "schema_version": 1,
+  "skill_id": "mlops.rollback"
+}

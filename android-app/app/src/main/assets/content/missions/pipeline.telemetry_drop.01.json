@@ -1,0 +1,200 @@
+{
+  "chapter_id": "data_foundry",
+  "completion": {
+    "mode": "all",
+    "objective_ids": [
+      "inspect_drop",
+      "repair_gate",
+      "green_run"
+    ]
+  },
+  "difficulty": "practiced",
+  "environment": {
+    "pipeline": {
+      "actions": [
+        {
+          "description": "Read the quality gate that marks drops as success.",
+          "effects": {
+            "explanation": "Validate treats schema failures as soft drops and still exits 0.",
+            "inspected_validate": "true"
+          },
+          "id": "inspect_validate",
+          "label": "Inspect validate stage"
+        },
+        {
+          "effects": {
+            "explanation": "Quality gate now fails the stage instead of dropping frames quietly.",
+            "node.validate.detail": "schema gate rejects malformed frames",
+            "node.validate.status": "succeeded",
+            "quality_gate": "hard_fail"
+          },
+          "id": "fix_quality_gate",
+          "label": "Enforce hard fail on schema errors",
+          "requires": {
+            "inspected_validate": "true"
+          }
+        },
+        {
+          "effects": {
+            "edge.e2.status": "ok",
+            "edge.e3.status": "ok",
+            "edge.e4.status": "ok",
+            "explanation": "Full DAG completed. Forecast store received all valid frames.",
+            "node.load.status": "succeeded",
+            "node.publish.status": "succeeded",
+            "node.transform.status": "succeeded",
+            "run_outcome": "succeeded"
+          },
+          "id": "rerun_pipeline",
+          "label": "Rerun pipeline",
+          "requires": {
+            "quality_gate": "hard_fail"
+          }
+        }
+      ],
+      "edges": [
+        {
+          "from": "extract",
+          "id": "e1",
+          "kind": "data",
+          "status": "ok",
+          "to": "validate"
+        },
+        {
+          "from": "validate",
+          "id": "e2",
+          "kind": "data",
+          "status": "blocked",
+          "to": "transform"
+        },
+        {
+          "from": "transform",
+          "id": "e3",
+          "kind": "data",
+          "status": "idle",
+          "to": "load"
+        },
+        {
+          "from": "load",
+          "id": "e4",
+          "kind": "data",
+          "status": "idle",
+          "to": "publish"
+        }
+      ],
+      "nodes": [
+        {
+          "detail": "1200 frames read",
+          "id": "extract",
+          "kind": "extract",
+          "label": "Extract sensor frames",
+          "status": "succeeded"
+        },
+        {
+          "detail": "dropping malformed frames as success",
+          "id": "validate",
+          "kind": "validate",
+          "label": "Validate schema",
+          "status": "failed"
+        },
+        {
+          "id": "transform",
+          "kind": "transform",
+          "label": "Normalize units",
+          "status": "pending"
+        },
+        {
+          "id": "load",
+          "kind": "load",
+          "label": "Load forecast store",
+          "status": "pending"
+        },
+        {
+          "id": "publish",
+          "kind": "publish",
+          "label": "Publish reactor forecast",
+          "status": "pending"
+        }
+      ],
+      "run_id": "telemetry-batch-42"
+    },
+    "schema_version": 1,
+    "seed": 101,
+    "template_id": "pipeline.dag.v1"
+  },
+  "hints": [
+    {
+      "level": 1,
+      "text": "Start by inspecting the validate stage that still exits successfully."
+    },
+    {
+      "level": 2,
+      "text": "Soft drops hide data loss. Enforce a hard quality gate."
+    },
+    {
+      "level": 3,
+      "text": "After the gate is fixed, rerun the DAG so transform through publish can finish."
+    }
+  ],
+  "mission_id": "pipeline.telemetry_drop.01",
+  "narrative": {
+    "briefing_dialogue_id": "dialogue.pipeline.telemetry_drop.briefing",
+    "success_dialogue_id": "dialogue.pipeline.telemetry_drop.success"
+  },
+  "objectives": [
+    {
+      "assert": {
+        "inspected_validate": "true"
+      },
+      "description": "Inspect the validate stage that drops frames.",
+      "id": "inspect_drop",
+      "type": "pipeline_state",
+      "visible": true
+    },
+    {
+      "assert": {
+        "node.validate.status": "succeeded",
+        "quality_gate": "hard_fail"
+      },
+      "description": "Make validate fail hard on schema errors.",
+      "id": "repair_gate",
+      "type": "pipeline_state",
+      "visible": true
+    },
+    {
+      "assert": {
+        "node.publish.status": "succeeded",
+        "run_outcome": "succeeded"
+      },
+      "description": "Rerun until publish succeeds.",
+      "id": "green_run",
+      "type": "pipeline_state",
+      "visible": true
+    }
+  ],
+  "requirements": {
+    "app_version": ">=0.1.0",
+    "online": false,
+    "prerequisite_skills": []
+  },
+  "rewards": {
+    "clearance_points": 40,
+    "mastery": {
+      "data.pipeline.validate": 1
+    },
+    "unlocks": [
+      "lore.pipeline.telemetry_drop.01"
+    ]
+  },
+  "schema_version": 1,
+  "skills": {
+    "primary": "data.pipeline.validate",
+    "secondary": []
+  },
+  "summary": "Repair a batch pipeline that reports success while silently dropping sensor frames.",
+  "title": "Dropped Telemetry Frames",
+  "tools": [
+    "pipeline"
+  ],
+  "version": "1.0.0"
+}

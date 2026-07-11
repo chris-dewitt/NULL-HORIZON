@@ -1,0 +1,7 @@
+{
+  "description": "A validate stage that marked failures as success while discarding sensor frames.",
+  "kind": "lore",
+  "name": "Dropped Frames Log",
+  "reward_id": "lore.pipeline.telemetry_drop.01",
+  "schema_version": 1
+}

@@ -4,7 +4,9 @@
   "chapters": [
     "archive_core",
     "automation_lab",
+    "data_foundry",
     "emergency_interface",
+    "prediction_observatory",
     "version_vault"
   ],
   "content_schema_version": 1,
@@ -17,6 +19,10 @@
     "dialogue.emergency.fault_log.success",
     "dialogue.emergency.lighting.briefing",
     "dialogue.emergency.lighting.success",
+    "dialogue.mlops.nav_risk_rollback.briefing",
+    "dialogue.mlops.nav_risk_rollback.success",
+    "dialogue.pipeline.telemetry_drop.briefing",
+    "dialogue.pipeline.telemetry_drop.success",
     "dialogue.version.merge_conflict.briefing",
     "dialogue.version.merge_conflict.success",
     "dialogue.version.unsigned_change.briefing",
@@ -29,6 +35,8 @@
     "automation.pressure_threshold.01",
     "emergency.fault_log.01",
     "emergency.lighting.01",
+    "mlops.nav_risk_rollback.01",
+    "pipeline.telemetry_drop.01",
     "version.merge_conflict.01",
     "version.unsigned_change.01"
   ],
@@ -37,6 +45,8 @@
     "lore.automation.pressure_threshold.01",
     "lore.emergency.fault_log.01",
     "lore.emergency.lighting.01",
+    "lore.mlops.nav_risk_rollback.01",
+    "lore.pipeline.telemetry_drop.01",
     "lore.version.merge_conflict.01",
     "lore.version.unsigned_change.01"
   ],
@@ -44,11 +54,13 @@
   "skills": [
     "computational_thinking.hypothesis",
     "computational_thinking.observe",
+    "data.pipeline.validate",
     "git.inspect",
     "git.merge",
     "git.recover",
     "linux.inspection",
     "linux.navigation",
+    "mlops.rollback",
     "python.conditionals",
     "python.functions",
     "sql.filter",

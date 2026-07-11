@@ -1,0 +1,7 @@
+schema_version: 1
+dialogue_id: dialogue.mlops.nav_risk_rollback.success
+lines:
+  - speaker: Auditor
+    text: Stable model v3 is serving again. Drift alert cleared. Promotion gates are re-armed.
+  - speaker: Player
+    text: Good. We do not train our way out of a bad deploy mid-incident.

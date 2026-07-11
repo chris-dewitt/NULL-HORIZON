@@ -1,0 +1,5 @@
+schema_version: 1
+reward_id: lore.mlops.nav_risk_rollback.01
+kind: lore
+name: Skew Alert Transcript
+description: Monitoring caught feature skew after an ungated model promotion.

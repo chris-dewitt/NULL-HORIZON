@@ -71,6 +71,10 @@ data class EnvironmentDefinition(
     val git: com.nullhorizon.app.simulation.git.GitRepositoryDefinition? = null,
     val databases: List<com.nullhorizon.app.simulation.sql.MissionDatabaseDefinition> = emptyList(),
     val workspace: com.nullhorizon.app.simulation.execution.WorkspaceDefinition? = null,
+    @SerialName("service_map")
+    val serviceMap: com.nullhorizon.app.simulation.servicemap.ServiceMapDefinition? = null,
+    val pipeline: com.nullhorizon.app.simulation.pipeline.PipelineDefinition? = null,
+    val mlops: com.nullhorizon.app.simulation.mlops.MlOpsDefinition? = null,
 )
 
 @Serializable

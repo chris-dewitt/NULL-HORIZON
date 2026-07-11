@@ -170,6 +170,24 @@ class MissionSessionViewModel(
         persistAndMaybeComplete(machine.runTests(_uiState.value.session), mission)
     }
 
+    fun applyServiceMapAction(actionId: String) {
+        val machine = stateMachine ?: return
+        val mission = _uiState.value.mission ?: return
+        persistAndMaybeComplete(machine.applyServiceMapAction(_uiState.value.session, actionId), mission)
+    }
+
+    fun applyPipelineAction(actionId: String) {
+        val machine = stateMachine ?: return
+        val mission = _uiState.value.mission ?: return
+        persistAndMaybeComplete(machine.applyPipelineAction(_uiState.value.session, actionId), mission)
+    }
+
+    fun applyMlOpsAction(actionId: String) {
+        val machine = stateMachine ?: return
+        val mission = _uiState.value.mission ?: return
+        persistAndMaybeComplete(machine.applyMlOpsAction(_uiState.value.session, actionId), mission)
+    }
+
     private fun persistAndMaybeComplete(next: MissionSessionState, mission: MissionDefinition) {
         updateSession(next, mission)
         if (next.phase == MissionPhase.Completed) {

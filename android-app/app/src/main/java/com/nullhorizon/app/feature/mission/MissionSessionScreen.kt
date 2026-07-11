@@ -33,6 +33,9 @@ import com.nullhorizon.app.simulation.execution.EditorSessionState
 import com.nullhorizon.app.simulation.execution.EditorWorkspace
 import com.nullhorizon.app.simulation.execution.TestStatus
 import com.nullhorizon.app.simulation.git.GitRepositoryState
+import com.nullhorizon.app.simulation.mlops.MlOpsSessionState
+import com.nullhorizon.app.simulation.pipeline.PipelineSessionState
+import com.nullhorizon.app.simulation.servicemap.ServiceMapSessionState
 import com.nullhorizon.app.simulation.sql.SqlSessionState
 import com.nullhorizon.app.simulation.terminal.TerminalSessionState
 
@@ -143,6 +146,36 @@ fun MissionSessionScreen(
                             onRedo = viewModel::redoEditor,
                             onToggleDiff = viewModel::toggleEditorDiff,
                             onRunTests = viewModel::runTests,
+                        )
+                    }
+
+                    if (mission.tools.contains("service_map") && state.session.serviceMap != null) {
+                        ServiceMapPanel(
+                            serviceMap = state.session.serviceMap!!,
+                            actions = mission.environment.serviceMap?.actions.orEmpty()
+                                .map { it.id to it.label },
+                            enabled = state.session.phase == MissionPhase.InProgress,
+                            onAction = viewModel::applyServiceMapAction,
+                        )
+                    }
+
+                    if (mission.tools.contains("pipeline") && state.session.pipeline != null) {
+                        PipelinePanel(
+                            pipeline = state.session.pipeline!!,
+                            actions = mission.environment.pipeline?.actions.orEmpty()
+                                .map { it.id to it.label },
+                            enabled = state.session.phase == MissionPhase.InProgress,
+                            onAction = viewModel::applyPipelineAction,
+                        )
+                    }
+
+                    if (mission.tools.contains("mlops") && state.session.mlops != null) {
+                        MlOpsPanel(
+                            mlops = state.session.mlops!!,
+                            actions = mission.environment.mlops?.actions.orEmpty()
+                                .map { it.id to it.label },
+                            enabled = state.session.phase == MissionPhase.InProgress,
+                            onAction = viewModel::applyMlOpsAction,
                         )
                     }
 
@@ -910,4 +943,178 @@ private fun EditorPanel(
             }
         }
     }
+}
+
+@Composable
+private fun ServiceMapPanel(
+    serviceMap: ServiceMapSessionState,
+    actions: List<Pair<String, String>>,
+    enabled: Boolean,
+    onAction: (String) -> Unit,
+) {
+    Text(
+        text = stringResource(R.string.mission_service_map),
+        style = MaterialTheme.typography.titleMedium,
+    )
+    GraphStatusList(
+        title = stringResource(R.string.mission_service_map_nodes),
+        lines = serviceMap.nodes.values.map { node ->
+            val label = "[${node.status}] ${node.label} (${node.kind})" +
+                if (node.detail.isNotEmpty()) " — ${node.detail}" else ""
+            label to failureTone(node.status)
+        },
+        contentDescription = "Service map nodes",
+    )
+    if (serviceMap.edges.isNotEmpty()) {
+        GraphStatusList(
+            title = stringResource(R.string.mission_service_map_edges),
+            lines = serviceMap.edges.values.map { edge ->
+                "[${edge.status}] ${edge.fromId} → ${edge.toId} (${edge.kind})" to
+                    failureTone(edge.status)
+            },
+            contentDescription = "Service map edges",
+        )
+    }
+    serviceMap.lastExplanation?.let {
+        Text(it, style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.primary)
+    }
+    serviceMap.lastError?.let {
+        Text(it, style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.error)
+    }
+    ActionButtonRow(actions = actions, enabled = enabled, onAction = onAction)
+}
+
+@Composable
+private fun PipelinePanel(
+    pipeline: PipelineSessionState,
+    actions: List<Pair<String, String>>,
+    enabled: Boolean,
+    onAction: (String) -> Unit,
+) {
+    Text(
+        text = stringResource(R.string.mission_pipeline),
+        style = MaterialTheme.typography.titleMedium,
+    )
+    Text(
+        text = stringResource(
+            R.string.mission_pipeline_run,
+            pipeline.runId,
+            pipeline.lastRunOutcome,
+        ),
+        style = MaterialTheme.typography.bodyMedium,
+    )
+    GraphStatusList(
+        title = stringResource(R.string.mission_pipeline_stages),
+        lines = pipeline.nodes.values.map { node ->
+            val label = "[${node.status}] ${node.label} (${node.kind})" +
+                if (node.detail.isNotEmpty()) " — ${node.detail}" else ""
+            label to failureTone(node.status)
+        },
+        contentDescription = "Pipeline stages",
+    )
+    pipeline.lastExplanation?.let {
+        Text(it, style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.primary)
+    }
+    pipeline.lastError?.let {
+        Text(it, style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.error)
+    }
+    ActionButtonRow(actions = actions, enabled = enabled, onAction = onAction)
+}
+
+@Composable
+private fun MlOpsPanel(
+    mlops: MlOpsSessionState,
+    actions: List<Pair<String, String>>,
+    enabled: Boolean,
+    onAction: (String) -> Unit,
+) {
+    Text(
+        text = stringResource(R.string.mission_mlops),
+        style = MaterialTheme.typography.titleMedium,
+    )
+    GraphStatusList(
+        title = stringResource(R.string.mission_mlops_artifacts),
+        lines = mlops.artifacts.values.map { art ->
+            val version = if (art.version.isNotEmpty()) " v${art.version}" else ""
+            val label = "[${art.status}/${art.stage}] ${art.label}$version (${art.kind})" +
+                if (art.detail.isNotEmpty()) " — ${art.detail}" else ""
+            label to failureTone(art.status)
+        },
+        contentDescription = "ML ops artifacts",
+    )
+    mlops.lastExplanation?.let {
+        Text(it, style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.primary)
+    }
+    mlops.lastError?.let {
+        Text(it, style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.error)
+    }
+    ActionButtonRow(actions = actions, enabled = enabled, onAction = onAction)
+}
+
+@Composable
+private fun GraphStatusList(
+    title: String,
+    lines: List<Pair<String, Boolean>>,
+    contentDescription: String,
+) {
+    Text(title, style = MaterialTheme.typography.labelLarge)
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .border(1.dp, MaterialTheme.colorScheme.outline)
+            .padding(12.dp)
+            .semantics { this.contentDescription = contentDescription },
+        verticalArrangement = Arrangement.spacedBy(4.dp),
+    ) {
+        lines.forEach { (line, isFailure) ->
+            Text(
+                text = line,
+                style = MaterialTheme.typography.bodySmall,
+                fontFamily = FontFamily.Monospace,
+                color = if (isFailure) {
+                    MaterialTheme.colorScheme.error
+                } else {
+                    MaterialTheme.colorScheme.onSurface
+                },
+            )
+        }
+    }
+}
+
+@OptIn(ExperimentalLayoutApi::class)
+@Composable
+private fun ActionButtonRow(
+    actions: List<Pair<String, String>>,
+    enabled: Boolean,
+    onAction: (String) -> Unit,
+) {
+    if (!enabled) return
+    FlowRow(
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
+        verticalArrangement = Arrangement.spacedBy(8.dp),
+    ) {
+        actions.forEach { (id, label) ->
+            OutlinedButton(
+                onClick = { onAction(id) },
+                modifier = Modifier.semantics { contentDescription = "Action $label" },
+            ) {
+                Text(label)
+            }
+        }
+    }
+}
+
+private fun failureTone(status: String): Boolean {
+    val normalized = status.lowercase()
+    return normalized in setOf(
+        "failed",
+        "failing",
+        "down",
+        "degraded",
+        "error",
+        "drift",
+        "alert",
+        "blocked",
+        "dropping",
+    )
 }

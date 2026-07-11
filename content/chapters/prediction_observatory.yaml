@@ -1,0 +1,7 @@
+schema_version: 1
+chapter_id: prediction_observatory
+title: Prediction Observatory
+region: Prediction Observatory
+summary: Training, registry, deployment, and monitoring for navigation-risk models.
+mission_ids:
+  - mlops.nav_risk_rollback.01

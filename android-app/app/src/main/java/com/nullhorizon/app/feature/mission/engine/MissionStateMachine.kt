@@ -6,6 +6,9 @@ import com.nullhorizon.app.simulation.execution.EditorWorkspace
 import com.nullhorizon.app.simulation.execution.ExecutionProvider
 import com.nullhorizon.app.simulation.execution.FakeExecutionProvider
 import com.nullhorizon.app.simulation.git.GitSimulator
+import com.nullhorizon.app.simulation.mlops.MlOpsSimulator
+import com.nullhorizon.app.simulation.pipeline.PipelineSimulator
+import com.nullhorizon.app.simulation.servicemap.ServiceMapSimulator
 import com.nullhorizon.app.simulation.sql.SqlSimulator
 import com.nullhorizon.app.simulation.terminal.TerminalSimulator
 import com.nullhorizon.app.simulation.terminal.VirtualFileSystem
@@ -41,6 +44,15 @@ class MissionStateMachine(
     private val executionProvider: ExecutionProvider? =
         mission.environment.workspace?.execution?.let { FakeExecutionProvider(it.fixtures) }
 
+    private val serviceMapDefinition = mission.environment.serviceMap
+    private val initialServiceMap = serviceMapDefinition?.let { ServiceMapSimulator.fromDefinition(it) }
+
+    private val pipelineDefinition = mission.environment.pipeline
+    private val initialPipeline = pipelineDefinition?.let { PipelineSimulator.fromDefinition(it) }
+
+    private val mlopsDefinition = mission.environment.mlops
+    private val initialMlops = mlopsDefinition?.let { MlOpsSimulator.fromDefinition(it) }
+
     fun initialState(): MissionSessionState {
         val terminal = terminalSimulator?.initialState(
             mission.environment.filesystem?.cwd ?: "/",
@@ -53,6 +65,9 @@ class MissionStateMachine(
             git = initialGitState,
             sql = sql,
             editor = initialEditorState,
+            serviceMap = initialServiceMap,
+            pipeline = initialPipeline,
+            mlops = initialMlops,
             completedObjectiveIds = emptySet(),
             hintLevel = 0,
             lastActionMessage = null,
@@ -212,6 +227,82 @@ class MissionStateMachine(
                 lastActionMessage = message,
             ),
         )
+    }
+
+    fun applyServiceMapAction(state: MissionSessionState, actionId: String): MissionSessionState {
+        if (state.phase != MissionPhase.InProgress) {
+            return state.copy(lastActionMessage = "Start the mission before using the service map.")
+        }
+        val definition = serviceMapDefinition
+            ?: return state.copy(lastActionMessage = "This mission has no service map.")
+        val current = state.serviceMap
+            ?: return state.copy(lastActionMessage = "Service map is not initialized.")
+        val next = ServiceMapSimulator.applyAction(
+            definition,
+            current,
+            actionId,
+            context = sharedContext(state),
+        )
+        return evaluate(
+            state.copy(
+                serviceMap = next,
+                worldState = state.worldState + next.extras,
+                lastActionMessage = next.lastError ?: next.lastExplanation,
+            ),
+        )
+    }
+
+    fun applyPipelineAction(state: MissionSessionState, actionId: String): MissionSessionState {
+        if (state.phase != MissionPhase.InProgress) {
+            return state.copy(lastActionMessage = "Start the mission before using the pipeline.")
+        }
+        val definition = pipelineDefinition
+            ?: return state.copy(lastActionMessage = "This mission has no pipeline.")
+        val current = state.pipeline
+            ?: return state.copy(lastActionMessage = "Pipeline is not initialized.")
+        val next = PipelineSimulator.applyAction(
+            definition,
+            current,
+            actionId,
+            context = sharedContext(state),
+        )
+        return evaluate(
+            state.copy(
+                pipeline = next,
+                worldState = state.worldState + next.extras,
+                lastActionMessage = next.lastError ?: next.lastExplanation,
+            ),
+        )
+    }
+
+    fun applyMlOpsAction(state: MissionSessionState, actionId: String): MissionSessionState {
+        if (state.phase != MissionPhase.InProgress) {
+            return state.copy(lastActionMessage = "Start the mission before using ML ops.")
+        }
+        val definition = mlopsDefinition
+            ?: return state.copy(lastActionMessage = "This mission has no ML-ops simulator.")
+        val current = state.mlops
+            ?: return state.copy(lastActionMessage = "ML-ops state is not initialized.")
+        val next = MlOpsSimulator.applyAction(
+            definition,
+            current,
+            actionId,
+            context = sharedContext(state),
+        )
+        return evaluate(
+            state.copy(
+                mlops = next,
+                worldState = state.worldState + next.extras,
+                lastActionMessage = next.lastError ?: next.lastExplanation,
+            ),
+        )
+    }
+
+    private fun sharedContext(state: MissionSessionState): Map<String, String> {
+        return state.worldState +
+            (state.serviceMap?.snapshot().orEmpty()) +
+            (state.pipeline?.snapshot().orEmpty()) +
+            (state.mlops?.snapshot().orEmpty())
     }
 
     private fun evaluate(state: MissionSessionState): MissionSessionState {

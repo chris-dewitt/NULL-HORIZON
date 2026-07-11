@@ -55,6 +55,7 @@ Operating rules for human and agentic contributors working in this monorepo.
 - Epic 7 delivers the FastAPI backend foundation: Postgres models, Alembic, Redis adapter, content/profile/progress APIs, and fake execution jobs.
 - Epic 8 delivers execution orchestration: contracts, queue, Python/C++ workers, limits, normalization, cancel, retention; public hardened sandbox stays blocked.
 - Epic 9 delivers progression: skill mastery evidence, rank, deterministic rewards, debrief, review recommendations, and offline-safe progress sync.
+- Epic 10 delivers service-map, pipeline, and ML-infrastructure simulators with controlled actions, objective assertions, and explained state changes.
 - Do not begin the production execution sandbox, production infrastructure, or full mission curriculum until their epics begin.
 - Learner-authored code must remain completely separated from the API process at every stage.
 

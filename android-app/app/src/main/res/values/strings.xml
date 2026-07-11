@@ -63,6 +63,14 @@
     <string name="mission_test_console">Test console</string>
     <string name="mission_test_console_empty">No test run yet.</string>
     <string name="mission_run_tests">Run tests</string>
+    <string name="mission_service_map">Service map</string>
+    <string name="mission_service_map_nodes">Services</string>
+    <string name="mission_service_map_edges">Links</string>
+    <string name="mission_pipeline">Data pipeline</string>
+    <string name="mission_pipeline_run">Run %1$s · outcome %2$s</string>
+    <string name="mission_pipeline_stages">Stages</string>
+    <string name="mission_mlops">ML infrastructure</string>
+    <string name="mission_mlops_artifacts">Lifecycle artifacts</string>
     <string name="mission_objectives">Objectives</string>
     <string name="mission_request_hint">Request hint</string>
     <string name="mission_hint_item">Hint %1$d: %2$s</string>

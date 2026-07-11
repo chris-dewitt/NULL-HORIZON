@@ -128,7 +128,9 @@
           "git",
           "python_editor",
           "test_console",
-          "service_map"
+          "service_map",
+          "pipeline",
+          "mlops"
         ]
       },
       "uniqueItems": true
