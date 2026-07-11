@@ -180,13 +180,13 @@ class GitMissionTest {
                             message = "Baseline power policy",
                             author = "crew",
                             files = mapOf(
-                                "power.policy" to "bus_a=online\nbus_b=online\n",
+                                "power.policy" to "bus_a=unknown\nbus_b=unknown\n",
                                 "NOTES.md" to "Shared baseline.\n",
                             ),
                         ),
                         GitCommitDefinition(
                             id = "main1",
-                            message = "Main keeps bus_a online",
+                            message = "Main marks bus_b degraded",
                             author = "orion",
                             parent = "base",
                             files = mapOf(

@@ -38,12 +38,12 @@ environment:
         author: crew
         files:
           power.policy: |
-            bus_a=online
-            bus_b=online
+            bus_a=unknown
+            bus_b=unknown
           NOTES.md: |
             Shared baseline.
       - id: main1
-        message: Main keeps bus_a online
+        message: Main marks bus_b degraded
         author: orion
         parent: base
         files:
