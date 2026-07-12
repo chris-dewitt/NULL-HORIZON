@@ -39,11 +39,15 @@ class PipelineMissionTest {
     }
 
     private fun loadMission(id: String): MissionDefinition {
+        // Shared test: resolve the built mission bundle from either client's
+        // test working directory (android-app/app assets or pc-app resources).
         val candidates = listOf(
             File("src/main/assets/content/missions/$id.json"),
             File("app/src/main/assets/content/missions/$id.json"),
+            File("src/main/resources/content/missions/$id.json"),
         )
-        val file = candidates.first { it.exists() }
+        val file = candidates.firstOrNull { it.exists() }
+            ?: error("Mission $id not found in any client bundle; tried $candidates")
         return json.decodeFromString(file.readText())
     }
 }
