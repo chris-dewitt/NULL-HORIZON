@@ -18,8 +18,13 @@
     <string name="nav_settings_a11y">Navigate to settings</string>
 
     <string name="ship_map_title">Ship Map</string>
-    <string name="ship_map_subtitle">Schematic placeholder. Region systems unlock with later chapters.</string>
-    <string name="ship_map_selected">Selected: %1$s (%2$s)</string>
+    <string name="ship_map_subtitle">Restore the ship region by region. Complete repairs to bring systems back online.</string>
+    <string name="ship_map_loading">Charting ship systems…</string>
+    <string name="ship_map_status_offline">Offline</string>
+    <string name="ship_map_status_degraded">Degraded</string>
+    <string name="ship_map_status_restored">Restored</string>
+    <string name="ship_map_region_progress">%1$d of %2$d systems restored</string>
+    <string name="ship_map_region_missions">Repairs in %1$s</string>
 
     <string name="missions_title">Missions</string>
     <string name="missions_subtitle">Vertical-slice missions are listed first. Select one to begin.</string>

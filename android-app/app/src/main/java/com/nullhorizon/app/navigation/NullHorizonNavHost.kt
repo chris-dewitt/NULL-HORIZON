@@ -165,8 +165,16 @@ private fun MainShell(
             modifier = Modifier.padding(innerPadding),
         ) {
             composable(TopLevelDestination.ShipMap.route) {
-                val viewModel: ShipMapViewModel = viewModel()
-                ShipMapScreen(viewModel = viewModel)
+                val viewModel: ShipMapViewModel = viewModel(
+                    factory = ShipMapViewModel.factory(
+                        contentRepository = appContainer.contentRepository,
+                        progressRepository = appContainer.missionProgressRepository,
+                    ),
+                )
+                ShipMapScreen(
+                    viewModel = viewModel,
+                    onOpenMission = onOpenMission,
+                )
             }
             composable(TopLevelDestination.Missions.route) {
                 val viewModel: MissionListViewModel = viewModel(
