@@ -46,6 +46,17 @@ android {
     testOptions {
         unitTests.isIncludeAndroidResources = false
     }
+
+    // Cross-client game core shared with pc-app (see ADR-0020). Sources are
+    // compiled by each client's own toolchain; no separate module or publishing.
+    sourceSets {
+        getByName("main") {
+            kotlin.srcDir("../../shared/client-core/src/main/kotlin")
+        }
+        getByName("test") {
+            kotlin.srcDir("../../shared/client-core/src/test/kotlin")
+        }
+    }
 }
 
 kotlin {

@@ -12,21 +12,6 @@ import kotlinx.coroutines.flow.map
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 
-interface ProgressionRepository {
-    val snapshot: Flow<ProgressionSnapshot>
-    val completedMissionIds: Flow<Set<String>>
-
-    suspend fun currentSnapshot(): ProgressionSnapshot
-
-    suspend fun recordCompletion(
-        mission: MissionDefinition,
-        hintLevelUsed: Int,
-        completedAtEpochMs: Long = System.currentTimeMillis(),
-    ): DebriefSummary
-
-    suspend fun clear()
-}
-
 class DataStoreProgressionRepository(
     private val dataStore: DataStore<Preferences>,
     private val json: Json = Json {

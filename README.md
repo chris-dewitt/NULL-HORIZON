@@ -15,7 +15,7 @@ android-app/   Kotlin + Jetpack Compose Android client
 pc-app/        Kotlin + Compose Desktop PC client
 backend/       FastAPI API, runner contracts, shared schemas
 content/       Versioned mission and curriculum data
-shared/        OpenAPI, JSON Schema, fixtures
+shared/        OpenAPI, JSON Schema, fixtures, client-core Kotlin shared by both clients
 infra/         Local Compose, Terraform placeholders, policies, images
 scripts/       Bootstrap and validation helpers
 docs/          Product spec, architecture, ADRs, authoring guides

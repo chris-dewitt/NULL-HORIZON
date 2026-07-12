@@ -113,6 +113,8 @@ jobs:
           test -f android-app/app/src/main/java/com/nullhorizon/app/MainActivity.kt
           test -f pc-app/src/main/kotlin/com/nullhorizon/pc/Main.kt
           test -f docs/ADR/0019-compose-desktop-pc-client.md
+          test -f docs/ADR/0020-shared-client-core-source-set.md
+          test -f shared/client-core/src/main/kotlin/com/nullhorizon/app/feature/mission/engine/MissionStateMachine.kt
           test -f content/schema/mission.schema.json
           test -f scripts/validate_content.py
           test -f android-app/app/src/main/assets/content/manifest.json

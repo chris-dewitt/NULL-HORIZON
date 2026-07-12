@@ -88,6 +88,9 @@ run_structure_checks() {
     android-app/app/src/main/java/com/nullhorizon/app/MainActivity.kt
     pc-app/src/main/kotlin/com/nullhorizon/pc/Main.kt
     docs/ADR/0019-compose-desktop-pc-client.md
+    docs/ADR/0020-shared-client-core-source-set.md
+    shared/client-core/README.md
+    shared/client-core/src/main/kotlin/com/nullhorizon/app/feature/mission/engine/MissionStateMachine.kt
     .github/workflows/ci.yml
     infra/compose/dev.yml
     shared/openapi/openapi.json

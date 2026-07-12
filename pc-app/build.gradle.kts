@@ -12,6 +12,17 @@ version = "0.1.0-pc"
 
 kotlin {
     jvmToolchain(17)
+
+    // Cross-client game core shared with android-app (see ADR-0020). Sources are
+    // compiled by each client's own toolchain; no separate module or publishing.
+    sourceSets {
+        named("main") {
+            kotlin.srcDir("../shared/client-core/src/main/kotlin")
+        }
+        named("test") {
+            kotlin.srcDir("../shared/client-core/src/test/kotlin")
+        }
+    }
 }
 
 dependencies {
