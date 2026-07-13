@@ -1,6 +1,6 @@
 [versions]
 # Kotlin 2.3+ required to run the compiler daemon on JDK 25.
-kotlin = "2.3.0"
+kotlin = "2.3.21"
 composeMultiplatform = "1.9.3"
 coroutines = "1.10.2"
 serialization = "1.8.1"
