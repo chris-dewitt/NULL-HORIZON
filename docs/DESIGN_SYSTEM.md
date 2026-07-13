@@ -143,11 +143,11 @@ screens. **Decision:** phones use **Lean** CRT by default; PC uses **Medium**.
 2. PC shell: boot, CRT Medium, ship map `TuiPanel` — done
 3. Disable CRT pref + Medium real curvature + Lean Android CRT — done
 4. Terminal typeface (VT323) — done
-5. PC mission session (comms typewriter, terminal/git/sql prompts, TUI borders),
-   mission list, skills, settings, profile — done (this slice)
-6. Android ship map lean TUI back-port — done
-7. Remaining Android screens (missions/skills/settings/session) — next
-8. Editor / service-map / pipeline panels: finish Material→TUI polish on PC
+5. PC mission session / list / skills / settings / profile — done
+6. Android ship map lean TUI — done
+7. Android missions / skills / settings / profile / mission session — done (this slice)
+8. PC editor / service-map / pipeline / mlops TUI panels — done (this slice)
+9. Residual polish: Material buttons/text fields inside editor, nav rail → pure TUI column
 
 Do not rewrite mission engines or content YAML for cosmetics.
 

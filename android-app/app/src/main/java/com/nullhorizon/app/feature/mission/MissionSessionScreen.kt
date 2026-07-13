@@ -1,6 +1,5 @@
 package com.nullhorizon.app.feature.mission
 
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
@@ -28,6 +27,13 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.nullhorizon.app.R
+import com.nullhorizon.app.ui.theme.NhTheme
+import com.nullhorizon.app.ui.theme.NhRegionAccent
+import com.nullhorizon.app.ui.theme.NhColors
+import com.nullhorizon.app.ui.chrome.drawTuiBorder
+import com.nullhorizon.app.ui.chrome.TuiPanel
+import com.nullhorizon.app.ui.chrome.TerminalPromptField
+import com.nullhorizon.app.ui.chrome.DialogueLines
 import com.nullhorizon.app.feature.mission.engine.MissionPhase
 import com.nullhorizon.app.simulation.execution.EditorSessionState
 import com.nullhorizon.app.simulation.execution.EditorWorkspace
@@ -64,42 +70,55 @@ fun MissionSessionScreen(
             state.isLoading -> Text(stringResource(R.string.missions_loading))
             state.errorMessage != null -> Text(state.errorMessage.orEmpty())
             mission != null -> {
-                Text(mission.title, style = MaterialTheme.typography.headlineMedium)
-                Text(mission.summary, style = MaterialTheme.typography.bodyLarge)
+                Text(
+                    text = mission.title.uppercase(),
+                    style = MaterialTheme.typography.headlineMedium,
+                    color = NhColors.PhosphorAmber,
+                )
+                Text(
+                    text = mission.summary,
+                    style = MaterialTheme.typography.bodyLarge,
+                    color = NhColors.PhosphorWhite,
+                )
+                Text(
+                    text = NhRegionAccent.statusLine(mission.chapterId, state.session.phase.name),
+                    style = MaterialTheme.typography.labelMedium,
+                    color = NhRegionAccent.forRegionId(mission.chapterId).accent,
+                )
 
                 val dialogue = when (state.session.phase) {
                     MissionPhase.Completed -> state.success
                     else -> state.briefing
                 }
-                dialogue?.lines?.forEach { line ->
-                    Text(
-                        text = "${line.speaker}: ${line.text}",
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    )
+                dialogue?.lines?.let { lines ->
+                    TuiPanel(
+                        title = "COMMS",
+                        accent = NhColors.PhosphorAmber,
+                    ) {
+                        DialogueLines(
+                            lines = lines.map { it.speaker to it.text },
+                        )
+                    }
                 }
 
                 if (mission.requirements.online &&
                     state.offlineFallback != null &&
                     state.session.phase != MissionPhase.Completed
                 ) {
-                    Text(
-                        text = stringResource(R.string.mission_offline_fallback),
-                        style = MaterialTheme.typography.labelLarge,
-                        color = MaterialTheme.colorScheme.tertiary,
-                    )
-                    state.offlineFallback?.lines?.forEach { line ->
-                        Text(
-                            text = "${line.speaker}: ${line.text}",
-                            style = MaterialTheme.typography.bodyMedium,
-                            color = MaterialTheme.colorScheme.tertiary,
+                    TuiPanel(
+                        title = stringResource(R.string.mission_offline_fallback),
+                        accent = NhColors.PhosphorBlue,
+                    ) {
+                        DialogueLines(
+                            lines = state.offlineFallback!!.lines.map { it.speaker to it.text },
                         )
                     }
                 }
 
                 Text(
-                    text = stringResource(R.string.mission_phase, state.session.phase.name),
+                    text = stringResource(R.string.mission_phase, state.session.phase.name).uppercase(),
                     style = MaterialTheme.typography.labelLarge,
+                    color = NhColors.PhosphorDim,
                 )
 
                 if (state.session.phase == MissionPhase.Briefing) {
@@ -200,14 +219,16 @@ fun MissionSessionScreen(
                     Text(
                         text = stringResource(R.string.mission_objectives),
                         style = MaterialTheme.typography.titleMedium,
+                        color = NhColors.PhosphorAmber,
                     )
                     mission.objectives.filter { it.visible }.forEach { objective ->
                         val done = state.session.isObjectiveComplete(objective.id)
                         Text(
                             text = "${if (done) "[x]" else "[ ]"} ${objective.description}",
+                            color = if (done) NhColors.PhosphorGreen else NhColors.PhosphorWhite,
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .border(1.dp, MaterialTheme.colorScheme.outline)
+                                .drawTuiBorder(color = if (done) NhColors.PhosphorGreen else NhColors.PhosphorDim)
                                 .padding(8.dp),
                         )
                     }
@@ -328,28 +349,31 @@ private fun SystemsPanel(
     actions: List<Pair<String, String>>,
     onAction: (String) -> Unit,
 ) {
-    Text(
-        text = stringResource(R.string.mission_systems_panel),
-        style = MaterialTheme.typography.titleMedium,
-    )
-    worldState.entries.sortedBy { it.key }.forEach { (key, value) ->
-        Text(
-            text = "$key = $value",
-            style = MaterialTheme.typography.bodyMedium,
-            modifier = Modifier.semantics { contentDescription = "State $key $value" },
-        )
-    }
-    if (actionsEnabled) {
-        FlowRow(
-            horizontalArrangement = Arrangement.spacedBy(8.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp),
-        ) {
-            actions.forEach { (id, label) ->
-                Button(
-                    onClick = { onAction(id) },
-                    modifier = Modifier.semantics { contentDescription = "Action $label" },
-                ) {
-                    Text(label)
+    TuiPanel(
+        title = stringResource(R.string.mission_systems_panel),
+        accent = NhColors.PhosphorAmber,
+    ) {
+        worldState.entries.sortedBy { it.key }.forEach { (key, value) ->
+            Text(
+                text = "$key = $value",
+                style = MaterialTheme.typography.bodyMedium,
+                color = NhColors.PhosphorWhite,
+                fontFamily = NhTheme.fontFamily,
+                modifier = Modifier.semantics { contentDescription = "State $key $value" },
+            )
+        }
+        if (actionsEnabled) {
+            FlowRow(
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                verticalArrangement = Arrangement.spacedBy(8.dp),
+            ) {
+                actions.forEach { (id, label) ->
+                    Button(
+                        onClick = { onAction(id) },
+                        modifier = Modifier.semantics { contentDescription = "Action $label" },
+                    ) {
+                        Text(label.uppercase())
+                    }
                 }
             }
         }
@@ -363,77 +387,76 @@ private fun TerminalPanel(
     onSubmit: (String) -> Unit,
 ) {
     var input by rememberSaveable { mutableStateOf("") }
+    val fontFamily = NhTheme.fontFamily
 
-    Text(
-        text = stringResource(R.string.mission_terminal),
-        style = MaterialTheme.typography.titleMedium,
-    )
-    Text(
-        text = stringResource(R.string.mission_terminal_cwd, terminal.cwd),
-        style = MaterialTheme.typography.labelLarge,
-        fontFamily = FontFamily.Monospace,
-        modifier = Modifier.semantics { contentDescription = "Terminal cwd ${terminal.cwd}" },
-    )
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .border(1.dp, MaterialTheme.colorScheme.outline)
-            .padding(12.dp)
-            .semantics { contentDescription = "Terminal history" },
-        verticalArrangement = Arrangement.spacedBy(8.dp),
+    TuiPanel(
+        title = stringResource(R.string.mission_terminal),
+        accent = NhColors.PhosphorGreen,
     ) {
-        if (terminal.history.isEmpty()) {
-            Text(
-                text = stringResource(R.string.mission_terminal_empty),
-                style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-            )
-        } else {
-            terminal.history.takeLast(12).forEach { entry ->
+        Text(
+            text = stringResource(R.string.mission_terminal_cwd, terminal.cwd).uppercase(),
+            style = MaterialTheme.typography.labelLarge,
+            fontFamily = fontFamily,
+            color = NhColors.PhosphorDim,
+            modifier = Modifier.semantics { contentDescription = "Terminal cwd ${terminal.cwd}" },
+        )
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .drawTuiBorder(color = NhColors.PhosphorDim)
+                .padding(10.dp)
+                .semantics { contentDescription = "Terminal history" },
+            verticalArrangement = Arrangement.spacedBy(6.dp),
+        ) {
+            if (terminal.history.isEmpty()) {
                 Text(
-                    text = "$ ${entry.command}",
-                    fontFamily = FontFamily.Monospace,
+                    text = stringResource(R.string.mission_terminal_empty),
                     style = MaterialTheme.typography.bodyMedium,
+                    color = NhColors.PhosphorDim,
+                    fontFamily = fontFamily,
                 )
-                if (entry.stdout.isNotBlank()) {
+            } else {
+                terminal.history.takeLast(12).forEach { entry ->
                     Text(
-                        text = entry.stdout,
-                        fontFamily = FontFamily.Monospace,
-                        style = MaterialTheme.typography.bodySmall,
+                        text = "$ ${entry.command}",
+                        fontFamily = fontFamily,
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = NhColors.PhosphorGreen,
                     )
-                }
-                if (entry.stderr.isNotBlank()) {
-                    Text(
-                        text = entry.stderr,
-                        fontFamily = FontFamily.Monospace,
-                        style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.error,
-                    )
+                    if (entry.stdout.isNotBlank()) {
+                        Text(
+                            text = entry.stdout,
+                            fontFamily = fontFamily,
+                            style = MaterialTheme.typography.bodySmall,
+                            color = NhColors.PhosphorWhite,
+                        )
+                    }
+                    if (entry.stderr.isNotBlank()) {
+                        Text(
+                            text = entry.stderr,
+                            fontFamily = fontFamily,
+                            style = MaterialTheme.typography.bodySmall,
+                            color = NhColors.PhosphorRed,
+                        )
+                    }
                 }
             }
         }
-    }
-    if (enabled) {
-        OutlinedTextField(
-            value = input,
-            onValueChange = { input = it },
-            modifier = Modifier
-                .fillMaxWidth()
-                .semantics { contentDescription = "Terminal input" },
-            singleLine = true,
-            label = { Text(stringResource(R.string.mission_terminal_input)) },
-        )
-        Button(
-            onClick = {
-                val command = input.trim()
-                if (command.isNotEmpty()) {
-                    onSubmit(command)
-                    input = ""
-                }
-            },
-            modifier = Modifier.semantics { contentDescription = "Run terminal command" },
-        ) {
-            Text(stringResource(R.string.mission_terminal_run))
+        if (enabled) {
+            TerminalPromptField(
+                value = input,
+                onValueChange = { input = it },
+                onSubmit = {
+                    val command = input.trim()
+                    if (command.isNotEmpty()) {
+                        onSubmit(command)
+                        input = ""
+                    }
+                },
+                prompt = "$ ",
+                runLabel = stringResource(R.string.mission_terminal_run).uppercase(),
+                contentDescription = "Terminal input",
+            )
         }
     }
 }
@@ -466,7 +489,7 @@ private fun GitPanel(
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .border(1.dp, MaterialTheme.colorScheme.outline)
+            .drawTuiBorder(color = NhColors.PhosphorDim)
             .padding(12.dp)
             .semantics { contentDescription = "Git commit graph" },
         verticalArrangement = Arrangement.spacedBy(4.dp),
@@ -521,7 +544,7 @@ private fun GitPanel(
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .border(1.dp, MaterialTheme.colorScheme.outline)
+            .drawTuiBorder(color = NhColors.PhosphorDim)
             .padding(12.dp)
             .semantics { contentDescription = "Git history" },
         verticalArrangement = Arrangement.spacedBy(8.dp),
@@ -558,27 +581,20 @@ private fun GitPanel(
         }
     }
     if (enabled) {
-        OutlinedTextField(
+        TerminalPromptField(
             value = input,
             onValueChange = { input = it },
-            modifier = Modifier
-                .fillMaxWidth()
-                .semantics { contentDescription = "Git input" },
-            singleLine = true,
-            label = { Text(stringResource(R.string.mission_git_input)) },
-        )
-        Button(
-            onClick = {
+            onSubmit = {
                 val command = input.trim()
                 if (command.isNotEmpty()) {
                     onSubmit(command)
                     input = ""
                 }
             },
-            modifier = Modifier.semantics { contentDescription = "Run git command" },
-        ) {
-            Text(stringResource(R.string.mission_git_run))
-        }
+            prompt = "git> ",
+            runLabel = stringResource(R.string.mission_git_run).uppercase(),
+            contentDescription = "Git input",
+        )
     }
 }
 
@@ -629,7 +645,7 @@ private fun SqlPanel(
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .border(1.dp, MaterialTheme.colorScheme.outline)
+            .drawTuiBorder(color = NhColors.PhosphorDim)
             .padding(12.dp)
             .semantics { contentDescription = "SQL schema browser" },
         verticalArrangement = Arrangement.spacedBy(8.dp),
@@ -680,7 +696,7 @@ private fun SqlPanel(
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .border(1.dp, MaterialTheme.colorScheme.outline)
+            .drawTuiBorder(color = NhColors.PhosphorDim)
             .padding(12.dp)
             .semantics { contentDescription = "SQL result table" },
         verticalArrangement = Arrangement.spacedBy(4.dp),
@@ -722,27 +738,19 @@ private fun SqlPanel(
     }
 
     if (enabled) {
-        OutlinedTextField(
+        TerminalPromptField(
             value = input,
             onValueChange = { input = it },
-            modifier = Modifier
-                .fillMaxWidth()
-                .semantics { contentDescription = "SQL input" },
-            minLines = 2,
-            maxLines = 5,
-            label = { Text(stringResource(R.string.mission_sql_input)) },
-        )
-        Button(
-            onClick = {
+            onSubmit = {
                 val query = input.trim()
                 if (query.isNotEmpty()) {
                     onSubmit(query)
                 }
             },
-            modifier = Modifier.semantics { contentDescription = "Run SQL query" },
-        ) {
-            Text(stringResource(R.string.mission_sql_run))
-        }
+            prompt = "sql> ",
+            runLabel = stringResource(R.string.mission_sql_run).uppercase(),
+            contentDescription = "SQL input",
+        )
     }
 }
 
@@ -831,7 +839,7 @@ private fun EditorPanel(
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .border(1.dp, MaterialTheme.colorScheme.outline)
+                    .drawTuiBorder(color = NhColors.PhosphorDim)
                     .padding(12.dp)
                     .semantics { contentDescription = "Editor diff" },
                 verticalArrangement = Arrangement.spacedBy(2.dp),
@@ -855,7 +863,7 @@ private fun EditorPanel(
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .border(1.dp, MaterialTheme.colorScheme.outline)
+                .drawTuiBorder(color = NhColors.PhosphorDim)
                 .padding(8.dp),
         ) {
             Text(
@@ -917,7 +925,7 @@ private fun EditorPanel(
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .border(1.dp, MaterialTheme.colorScheme.outline)
+                .drawTuiBorder(color = NhColors.PhosphorDim)
                 .padding(12.dp)
                 .semantics { contentDescription = "Test results" },
             verticalArrangement = Arrangement.spacedBy(8.dp),
@@ -1075,11 +1083,16 @@ private fun GraphStatusList(
     lines: List<Pair<String, Boolean>>,
     contentDescription: String,
 ) {
-    Text(title, style = MaterialTheme.typography.labelLarge)
+    Text(
+        title.uppercase(),
+        style = MaterialTheme.typography.labelLarge,
+        color = NhColors.PhosphorDim,
+        fontFamily = NhTheme.fontFamily,
+    )
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .border(1.dp, MaterialTheme.colorScheme.outline)
+            .drawTuiBorder(color = NhColors.PhosphorDim)
             .padding(12.dp)
             .semantics { this.contentDescription = contentDescription },
         verticalArrangement = Arrangement.spacedBy(4.dp),
@@ -1088,11 +1101,11 @@ private fun GraphStatusList(
             Text(
                 text = line,
                 style = MaterialTheme.typography.bodySmall,
-                fontFamily = FontFamily.Monospace,
+                fontFamily = NhTheme.fontFamily,
                 color = if (isFailure) {
-                    MaterialTheme.colorScheme.error
+                    NhColors.PhosphorRed
                 } else {
-                    MaterialTheme.colorScheme.onSurface
+                    NhColors.PhosphorWhite
                 },
             )
         }
