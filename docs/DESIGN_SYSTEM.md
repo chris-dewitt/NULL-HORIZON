@@ -147,7 +147,8 @@ screens. **Decision:** phones use **Lean** CRT by default; PC uses **Medium**.
 6. Android ship map lean TUI — done
 7. Android missions / skills / settings / profile / mission session — done (this slice)
 8. PC editor / service-map / pipeline / mlops TUI panels — done (this slice)
-9. Residual polish: Material buttons/text fields inside editor, nav rail → pure TUI column
+9. Residual polish: Material buttons/text fields inside editor, nav rail → pure TUI column — done (PC `TuiNavColumn` + `TuiActionButton`)
+10. Optional later: replace remaining OutlinedTextField editor bodies with terminal fields; Android bottom nav TUI
 
 Do not rewrite mission engines or content YAML for cosmetics.
 
@@ -159,7 +160,7 @@ Do not rewrite mission engines or content YAML for cosmetics.
 - Global OK green vs region accent for success (default: global OK green)
 - Black Vault red exact hue
 - Flicker: rare idle OK, or boot-only?
-- Replace PC `NavigationRail` with pure TUI column?
+- Replace PC `NavigationRail` with pure TUI column? **Done** (`TuiNavColumn`)
 - Mission panel migration pace
 - Keybind hints always on vs toggle
 - Density target (% tighter)

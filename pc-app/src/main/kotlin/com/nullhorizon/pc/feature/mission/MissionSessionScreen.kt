@@ -26,6 +26,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.runtime.collectAsState
 import com.nullhorizon.app.ui.chrome.DialogueLines
 import com.nullhorizon.app.ui.chrome.TerminalPromptField
+import com.nullhorizon.app.ui.chrome.TuiActionButton
 import com.nullhorizon.app.ui.chrome.TuiPanel
 import com.nullhorizon.app.ui.chrome.drawTuiBorder
 import com.nullhorizon.app.ui.theme.NhColors
@@ -60,9 +61,12 @@ fun MissionSessionScreen(
             .semantics { contentDescription = "Mission session" },
         verticalArrangement = Arrangement.spacedBy(12.dp),
     ) {
-        OutlinedButton(onClick = onBack) {
-            Text(Strings.mission_back)
-        }
+        TuiActionButton(
+            label = Strings.mission_back,
+            onClick = onBack,
+            accent = NhColors.PhosphorDim,
+            contentDescription = "Back to missions",
+        )
 
         when {
             state.isLoading -> Text(Strings.missions_loading)
@@ -120,12 +124,12 @@ fun MissionSessionScreen(
                 )
 
                 if (state.session.phase == MissionPhase.Briefing) {
-                    Button(
+                    TuiActionButton(
+                        label = Strings.mission_begin,
                         onClick = viewModel::beginMission,
-                        modifier = Modifier.semantics { contentDescription = "Begin mission" },
-                    ) {
-                        Text(Strings.mission_begin)
-                    }
+                        accent = NhColors.PhosphorGreen,
+                        contentDescription = "Begin mission",
+                    )
                 }
 
                 if (state.session.phase == MissionPhase.InProgress ||
@@ -231,12 +235,12 @@ fun MissionSessionScreen(
                         )
                     }
 
-                    OutlinedButton(
+                    TuiActionButton(
+                        label = Strings.mission_request_hint,
                         onClick = viewModel::requestHint,
-                        modifier = Modifier.semantics { contentDescription = "Request hint" },
-                    ) {
-                        Text(Strings.mission_request_hint)
-                    }
+                        accent = NhColors.PhosphorBlue,
+                        contentDescription = "Request hint",
+                    )
                     state.visibleHintTexts.forEachIndexed { index, hint ->
                         Text(
                             text = Strings.mission_hint_item(index + 1, hint),
@@ -245,15 +249,15 @@ fun MissionSessionScreen(
                     }
 
                     state.session.lastActionMessage?.let { message ->
-                        Text(message, color = MaterialTheme.colorScheme.primary)
+                        Text(message, color = NhColors.PhosphorGreen)
                     }
 
-                    OutlinedButton(
+                    TuiActionButton(
+                        label = Strings.mission_reset,
                         onClick = viewModel::resetMission,
-                        modifier = Modifier.semantics { contentDescription = "Reset mission" },
-                    ) {
-                        Text(Strings.mission_reset)
-                    }
+                        accent = NhColors.PhosphorRed,
+                        contentDescription = "Reset mission",
+                    )
                 }
 
                 if (state.session.phase == MissionPhase.Completed) {
@@ -374,12 +378,12 @@ private fun SystemsPanel(
                 verticalArrangement = Arrangement.spacedBy(8.dp),
             ) {
                 actions.forEach { (id, label) ->
-                    Button(
+                    TuiActionButton(
+                        label = label,
                         onClick = { onAction(id) },
-                        modifier = Modifier.semantics { contentDescription = "Action $label" },
-                    ) {
-                        Text(label.uppercase())
-                    }
+                        accent = NhColors.PhosphorAmber,
+                        contentDescription = "Action $label",
+                    )
                 }
             }
         }
@@ -918,15 +922,15 @@ private fun EditorPanel(
             style = MaterialTheme.typography.titleMedium,
         )
         if (enabled) {
-            Button(
+            TuiActionButton(
+                label = Strings.mission_run_tests,
                 onClick = onRunTests,
-                modifier = Modifier.semantics { contentDescription = "Run tests" },
-            ) {
-                Text(Strings.mission_run_tests)
-            }
+                accent = NhColors.PhosphorGreen,
+                contentDescription = "Run tests",
+            )
         }
         editor.lastRunMessage?.let { message ->
-            Text(message, color = MaterialTheme.colorScheme.primary)
+            Text(message, color = NhColors.PhosphorGreen)
         }
         Column(
             modifier = Modifier
@@ -1136,12 +1140,12 @@ private fun ActionButtonRow(
         verticalArrangement = Arrangement.spacedBy(8.dp),
     ) {
         actions.forEach { (id, label) ->
-            OutlinedButton(
+            TuiActionButton(
+                label = label,
                 onClick = { onAction(id) },
-                modifier = Modifier.semantics { contentDescription = "Action $label" },
-            ) {
-                Text(label)
-            }
+                accent = NhColors.PhosphorAmber,
+                contentDescription = "Action $label",
+            )
         }
     }
 }
