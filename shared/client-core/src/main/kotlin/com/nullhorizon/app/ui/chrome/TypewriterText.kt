@@ -27,6 +27,7 @@ fun TypewriterText(
     onFinished: (() -> Unit)? = null,
 ) {
     val reducedMotion = NhTheme.accessibility.reducedMotion
+    val fontFamily = NhTheme.fontFamily
     var visibleChars by remember(text, reducedMotion) {
         mutableIntStateOf(if (reducedMotion) text.length else 0)
     }
@@ -54,6 +55,6 @@ fun TypewriterText(
         text = text.take(visibleChars),
         modifier = modifier,
         color = color,
-        style = style,
+        style = style.copy(fontFamily = fontFamily),
     )
 }

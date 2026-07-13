@@ -139,11 +139,17 @@ screens. **Decision:** phones use **Lean** CRT by default; PC uses **Medium**.
 
 ## 8. Migration plan
 
-1. Docs + tokens + shared primitives
-2. PC shell: boot, CRT Medium, ship map `TuiPanel`
-3. Disable CRT pref + Medium real curvature + Lean Android CRT
-4. PC mission session / dialogue / terminal cursor
-5. Remaining screens without Material cards
+1. Docs + tokens + shared primitives — done
+2. PC shell: boot, CRT Medium, ship map `TuiPanel` — done
+3. Disable CRT pref + Medium real curvature + Lean Android CRT — done
+4. Terminal typeface (VT323) — done
+5. PC mission session (comms typewriter, terminal/git/sql prompts, TUI borders),
+   mission list, skills, settings, profile — done (this slice)
+6. Android ship map lean TUI back-port — done
+7. Remaining Android screens (missions/skills/settings/session) — next
+8. Editor / service-map / pipeline panels: finish Material→TUI polish on PC
+
+Do not rewrite mission engines or content YAML for cosmetics.
 
 ---
 
