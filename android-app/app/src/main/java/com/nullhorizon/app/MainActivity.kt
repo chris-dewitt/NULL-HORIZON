@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
@@ -14,6 +15,8 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Density
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.nullhorizon.app.navigation.NullHorizonNavHost
+import com.nullhorizon.app.ui.chrome.CrtFrame
+import com.nullhorizon.app.ui.chrome.CrtProfile
 import com.nullhorizon.app.ui.theme.NullHorizonTheme
 
 class MainActivity : ComponentActivity() {
@@ -49,10 +52,18 @@ fun NullHorizonApp(
         highContrast = accessibility.highContrast,
         reducedMotion = accessibility.reducedMotion,
         largerText = accessibility.largerText,
+        disableCrt = accessibility.disableCrt,
     ) {
         CompositionLocalProvider(LocalDensity provides contentDensity) {
-            Surface(modifier = Modifier.fillMaxSize()) {
-                NullHorizonNavHost(appContainer = app.container)
+            CrtFrame(
+                modifier = Modifier.fillMaxSize(),
+                profile = CrtProfile.Lean,
+            ) {
+                Surface(modifier = Modifier.fillMaxSize()) {
+                    Box(modifier = Modifier.fillMaxSize()) {
+                        NullHorizonNavHost(appContainer = app.container)
+                    }
+                }
             }
         }
     }

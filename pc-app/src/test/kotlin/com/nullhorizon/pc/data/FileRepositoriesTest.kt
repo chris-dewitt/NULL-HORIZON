@@ -35,6 +35,7 @@ class FileRepositoriesTest {
 
             repository.setHighContrast(true)
             repository.setReducedMotion(true)
+            repository.setDisableCrt(true)
             repository.setAnalyticsEnabled(true)
             repository.setCrashReportingEnabled(true)
 
@@ -42,6 +43,7 @@ class FileRepositoriesTest {
             assertThat(reloaded.accessibilitySettings.first().highContrast).isTrue()
             assertThat(reloaded.accessibilitySettings.first().reducedMotion).isTrue()
             assertThat(reloaded.accessibilitySettings.first().largerText).isFalse()
+            assertThat(reloaded.accessibilitySettings.first().disableCrt).isTrue()
             assertThat(reloaded.privacySettings.first().analyticsEnabled).isTrue()
             assertThat(reloaded.privacySettings.first().crashReportingEnabled).isTrue()
 
@@ -49,6 +51,7 @@ class FileRepositoriesTest {
 
             val cleared = FileSettingsRepository(dataDir)
             assertThat(cleared.accessibilitySettings.first().highContrast).isFalse()
+            assertThat(cleared.accessibilitySettings.first().disableCrt).isFalse()
             assertThat(cleared.privacySettings.first().analyticsEnabled).isFalse()
         }
     }

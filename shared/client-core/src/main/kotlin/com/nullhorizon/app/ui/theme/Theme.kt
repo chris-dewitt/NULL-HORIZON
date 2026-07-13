@@ -12,10 +12,15 @@ data class NhAccessibilityVisuals(
     val highContrast: Boolean = false,
     val reducedMotion: Boolean = false,
     val largerText: Boolean = false,
+    val disableCrt: Boolean = false,
 ) {
-    /** CRT overlays and decorative motion are off under a11y constraints. */
+    /**
+     * CRT overlays (scanlines, curvature, vignette, bloom, flicker).
+     * Forced off by Disable CRT or high contrast. Reduced motion alone does
+     * not remove static CRT — only animated chrome.
+     */
     val crtEffectsEnabled: Boolean
-        get() = !highContrast && !reducedMotion
+        get() = !disableCrt && !highContrast
 
     val animatedChromeEnabled: Boolean
         get() = !reducedMotion
@@ -64,6 +69,7 @@ fun NullHorizonTheme(
     highContrast: Boolean = false,
     reducedMotion: Boolean = false,
     largerText: Boolean = false,
+    disableCrt: Boolean = false,
     content: @Composable () -> Unit,
 ) {
     val colorScheme = if (highContrast) highContrastColorScheme() else standardColorScheme()
@@ -72,6 +78,7 @@ fun NullHorizonTheme(
             highContrast = highContrast,
             reducedMotion = reducedMotion,
             largerText = largerText,
+            disableCrt = disableCrt,
         ),
     ) {
         MaterialTheme(

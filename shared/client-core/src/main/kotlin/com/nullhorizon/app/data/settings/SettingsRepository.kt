@@ -13,6 +13,8 @@ interface SettingsRepository {
 
     suspend fun setLargerText(enabled: Boolean)
 
+    suspend fun setDisableCrt(enabled: Boolean)
+
     suspend fun setAnalyticsEnabled(enabled: Boolean)
 
     suspend fun setCrashReportingEnabled(enabled: Boolean)

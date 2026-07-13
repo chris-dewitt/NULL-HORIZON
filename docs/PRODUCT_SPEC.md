@@ -1002,6 +1002,7 @@ Required for version 1:
 - Focus order
 - High-contrast option
 - Reduced-motion option
+- Disable CRT effects option (scanlines, curvature, bloom; independent of reduced motion)
 - Color-blind-safe status indicators
 - No essential state represented by color alone
 - External keyboard support
@@ -1029,10 +1030,11 @@ Authoritative token and component rules: [DESIGN_SYSTEM.md](DESIGN_SYSTEM.md) an
 Visual language:
 
 - Near-black CRT backgrounds with phosphor text (white, green, amber, red, blue)
+- Primary look target: dense operator terminal (**tmux × Palantir × Fallout**); MU-TH-UR mood is inspirational only
 - Per-ship-region accent colors (for example amber Emergency, green Archive, red-shift Black Vault) always paired with textual status
 - TUI panel chrome using box-drawing borders (`┌─ SYSTEMS ─┐`), not rounded Material cards
-- Dense layout: tighter spacing, more information per screen, ALL-CAPS labels and headers
-- Subtle CRT presentation: scanlines, vignette, optional curvature/glow/flicker — all disabled or flattened under reduced-motion and high-contrast accessibility prefs
+- Dense layout: tighter spacing, more information per screen; ALL-CAPS for **system chrome** only (nav, panel titles, status lines)
+- Medium CRT presentation with real screen curvature, scanlines, vignette, and soft bloom — off via Disable CRT pref or high contrast; Android phones use a leaner CRT profile
 - Strong monospace typography hierarchy
 - Ship map as a technical schematic / region status board
 - PC client may be more maximal (wider layouts, keybind hints); Android stays lean while sharing tokens and primitives

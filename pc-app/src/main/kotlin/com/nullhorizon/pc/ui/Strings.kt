@@ -122,4 +122,5 @@ object Strings {
     const val settings_high_contrast = "High contrast"
     const val settings_reduced_motion = "Reduced motion"
     const val settings_larger_text = "Larger text"
+    const val settings_disable_crt = "Disable CRT effects"
 }

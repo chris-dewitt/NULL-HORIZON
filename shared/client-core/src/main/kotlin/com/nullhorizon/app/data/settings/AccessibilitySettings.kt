@@ -10,4 +10,6 @@ data class AccessibilitySettings(
     val highContrast: Boolean = false,
     val reducedMotion: Boolean = false,
     val largerText: Boolean = false,
+    /** When true, CRT overlays (scanlines, curvature, bloom, flicker) are off. */
+    val disableCrt: Boolean = false,
 )

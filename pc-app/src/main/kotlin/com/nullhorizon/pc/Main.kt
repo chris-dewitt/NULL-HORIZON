@@ -12,6 +12,7 @@ import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.application
 import com.nullhorizon.app.data.settings.AccessibilitySettings
 import com.nullhorizon.app.ui.chrome.CrtFrame
+import com.nullhorizon.app.ui.chrome.CrtProfile
 import com.nullhorizon.app.ui.theme.NullHorizonTheme
 import com.nullhorizon.pc.di.PcAppContainer
 
@@ -37,9 +38,13 @@ fun main() = application {
             highContrast = accessibility.highContrast,
             reducedMotion = accessibility.reducedMotion,
             largerText = accessibility.largerText,
+            disableCrt = accessibility.disableCrt,
         ) {
             CompositionLocalProvider(LocalDensity provides contentDensity) {
-                CrtFrame(modifier = Modifier.fillMaxSize()) {
+                CrtFrame(
+                    modifier = Modifier.fillMaxSize(),
+                    profile = CrtProfile.Medium,
+                ) {
                     Box(modifier = Modifier.fillMaxSize()) {
                         PcApp(container)
                     }

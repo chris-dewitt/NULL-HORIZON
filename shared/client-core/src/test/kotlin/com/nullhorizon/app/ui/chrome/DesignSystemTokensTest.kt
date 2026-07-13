@@ -1,12 +1,13 @@
 package com.nullhorizon.app.ui.chrome
 
+import com.nullhorizon.app.ui.theme.NhAccessibilityVisuals
+import com.nullhorizon.app.ui.theme.NhColors
+import com.nullhorizon.app.ui.theme.NhRegionAccent
+import com.nullhorizon.app.ui.theme.ShipRegionId
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Test
-import com.nullhorizon.app.ui.theme.NhColors
-import com.nullhorizon.app.ui.theme.NhRegionAccent
-import com.nullhorizon.app.ui.theme.ShipRegionId
 
 class DesignSystemTokensTest {
     @Test
@@ -42,5 +43,31 @@ class DesignSystemTokensTest {
         val line = NhRegionAccent.statusLine("Archive Core", "Degraded")
         assertEquals("REGION: ARCHIVE CORE — DEGRADED", line)
         assertFalse(line.any { it.isLowerCase() })
+    }
+
+    @Test
+    fun crtEffects_respectDisableCrtAndHighContrast() {
+        val normal = NhAccessibilityVisuals()
+        assertTrue(normal.crtEffectsEnabled)
+        assertTrue(normal.animatedChromeEnabled)
+
+        val disabled = NhAccessibilityVisuals(disableCrt = true)
+        assertFalse(disabled.crtEffectsEnabled)
+        assertTrue(disabled.animatedChromeEnabled)
+
+        val highContrast = NhAccessibilityVisuals(highContrast = true)
+        assertFalse(highContrast.crtEffectsEnabled)
+
+        val reducedOnly = NhAccessibilityVisuals(reducedMotion = true)
+        assertTrue(reducedOnly.crtEffectsEnabled)
+        assertFalse(reducedOnly.animatedChromeEnabled)
+    }
+
+    @Test
+    fun crtProfiles_mediumStrongerThanLean() {
+        assertTrue(CrtProfile.Medium.scanlineAlpha > CrtProfile.Lean.scanlineAlpha)
+        assertTrue(CrtProfile.Medium.barrelStrength > CrtProfile.Lean.barrelStrength)
+        assertTrue(CrtProfile.Medium.enableIdleFlicker)
+        assertFalse(CrtProfile.Lean.enableIdleFlicker)
     }
 }
