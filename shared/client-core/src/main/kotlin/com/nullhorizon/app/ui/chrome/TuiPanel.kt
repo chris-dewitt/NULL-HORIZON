@@ -15,11 +15,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
-import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.nullhorizon.app.ui.theme.NhColors
+import com.nullhorizon.app.ui.theme.NhTheme
 
 /**
  * TUI-style panel with box-drawing border and ALL-CAPS title.
@@ -45,7 +45,7 @@ fun TuiPanel(
             text = "┌─ $normalizedTitle ─┐",
             style = MaterialTheme.typography.labelMedium,
             color = accent,
-            fontFamily = FontFamily.Monospace,
+            fontFamily = NhTheme.fontFamily,
             maxLines = 1,
             overflow = TextOverflow.Clip,
             modifier = Modifier.padding(start = 6.dp, top = 2.dp),
@@ -85,7 +85,7 @@ fun TuiRegionChip(
             text = name.uppercase(),
             style = MaterialTheme.typography.labelLarge,
             color = if (selected) accent else NhColors.PhosphorWhite,
-            fontFamily = FontFamily.Monospace,
+            fontFamily = NhTheme.fontFamily,
             maxLines = 1,
             overflow = TextOverflow.Ellipsis,
         )
@@ -93,7 +93,7 @@ fun TuiRegionChip(
             text = status.uppercase(),
             style = MaterialTheme.typography.labelMedium,
             color = if (selected) accent else NhColors.PhosphorDim,
-            fontFamily = FontFamily.Monospace,
+            fontFamily = NhTheme.fontFamily,
             maxLines = 1,
             overflow = TextOverflow.Ellipsis,
         )
