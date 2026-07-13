@@ -2,7 +2,7 @@
 ## Product, Game, Curriculum, and Engineering Specification
 
 **Document status:** Implementation baseline  
-**Version:** 0.2  
+**Version:** 0.3  
 **Platform:** Android (primary, Google Play) and Compose Desktop PC (`pc-app/`, ADR-0019)  
 **Working title:** NULL HORIZON  
 **Primary audience:** Beginner through early-intermediate backend developers  

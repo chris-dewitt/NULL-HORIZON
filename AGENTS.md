@@ -4,7 +4,7 @@ Operating rules for human and agentic contributors working in this monorepo.
 
 ## Before changing code
 
-1. Read this file, `docs/PRODUCT_SPEC.md`, relevant ADRs under `docs/ADR/`, and nearby tests.
+1. Read this file, `docs/PRODUCT_SPEC.md`, `docs/DESIGN_SYSTEM.md`, relevant ADRs under `docs/ADR/`, and nearby tests.
 2. Do not invent a different architecture without proposing an ADR.
 3. Prefer the simplest implementation that preserves the specified interfaces.
 4. Keep learning content separate from platform code.
