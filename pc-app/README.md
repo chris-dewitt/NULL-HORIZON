@@ -14,9 +14,21 @@ cd pc-app
 ./gradlew run
 ```
 
-Requires a JDK on `PATH` / `JAVA_HOME` (**17 through 25**). Temurin 25 works.
-The project still compiles against **JDK 17** bytecode; if needed, Gradle auto-downloads
-a JDK 17 toolchain on first run.
+Requires a JDK on `PATH` / `JAVA_HOME`. **JDK 17 or 21 is recommended** for playtesting.
+Kotlin 2.3 supports JDK 25, but Temurin 17/21 is the smoothest path on Windows.
+
+Windows quick start:
+
+```bat
+cd pc-app
+run.bat
+```
+
+Or:
+
+```bat
+.\gradlew.bat run
+```
 
 Optional native installers:
 
