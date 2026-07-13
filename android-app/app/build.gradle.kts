@@ -52,9 +52,13 @@ android {
     sourceSets {
         getByName("main") {
             kotlin.srcDir("../../shared/client-core/src/main/kotlin")
+            // Terminal face + OFL also live under res/font; classpath copy keeps
+            // shared unit tests that load fonts/NhTerminal-Regular.ttf green.
+            resources.srcDir("../../shared/client-core/src/main/resources")
         }
         getByName("test") {
             kotlin.srcDir("../../shared/client-core/src/test/kotlin")
+            resources.srcDir("../../shared/client-core/src/main/resources")
         }
     }
 }

@@ -7,7 +7,8 @@ import org.junit.Test
 class TerminalFontResourceTest {
     @Test
     fun terminalFont_isOnClasspath() {
-        val stream = javaClass.classLoader.getResourceAsStream("fonts/NhTerminal-Regular.ttf")
+        val loader = requireNotNull(javaClass.classLoader) { "class loader required" }
+        val stream = loader.getResourceAsStream("fonts/NhTerminal-Regular.ttf")
         assertNotNull("NhTerminal-Regular.ttf must be on the test classpath", stream)
         stream!!.use { bytes ->
             val header = ByteArray(4)
