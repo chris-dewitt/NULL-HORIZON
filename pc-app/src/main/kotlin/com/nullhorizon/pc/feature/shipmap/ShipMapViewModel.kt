@@ -24,6 +24,16 @@ private val defaultRegions = listOf(
     ShipRegionPlaceholder("maintenance", "Maintenance Deck", "Degraded"),
     ShipRegionPlaceholder("archive", "Archive Core", "Sealed"),
     ShipRegionPlaceholder("vault", "Version Vault", "Unknown"),
+    ShipRegionPlaceholder("automation", "Automation Lab", "Offline"),
+    ShipRegionPlaceholder("drone", "Drone Foundry", "Offline"),
+    ShipRegionPlaceholder("navigation", "Navigation Array", "Degraded"),
+    ShipRegionPlaceholder("comms", "Communications Spire", "Offline"),
+    ShipRegionPlaceholder("verification", "Verification Chamber", "Offline"),
+    ShipRegionPlaceholder("black_vault", "Black Vault", "Sealed"),
+    ShipRegionPlaceholder("data_foundry", "Data Foundry", "Offline"),
+    ShipRegionPlaceholder("reactor", "Reactor Kernel", "Critical"),
+    ShipRegionPlaceholder("prediction", "Prediction Observatory", "Offline"),
+    ShipRegionPlaceholder("horizon", "Horizon Core", "Fractured"),
 )
 
 class ShipMapViewModel : PcViewModel() {

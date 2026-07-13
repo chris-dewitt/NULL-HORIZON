@@ -9,18 +9,21 @@ object Strings {
     const val profile_no_account_required = "Stored on this device only."
     const val profile_continue = "Enter emergency interface"
 
-    const val nav_ship_map = "Ship Map"
-    const val nav_missions = "Missions"
-    const val nav_skills = "Skills"
-    const val nav_settings = "Settings"
+    const val nav_ship_map = "SHIP MAP"
+    const val nav_missions = "MISSIONS"
+    const val nav_skills = "SKILLS"
+    const val nav_settings = "SETTINGS"
     const val nav_ship_map_a11y = "Navigate to ship map"
     const val nav_missions_a11y = "Navigate to mission list"
     const val nav_skills_a11y = "Navigate to skill map"
     const val nav_settings_a11y = "Navigate to settings"
+    const val nav_keybind_hint = "1-4 SWITCH · ENTER SELECT"
 
-    const val ship_map_title = "Ship Map"
-    const val ship_map_subtitle = "Schematic placeholder. Region systems unlock with later chapters."
-    fun ship_map_selected(arg1: String, arg2: String): String = "Selected: $arg1 ($arg2)"
+    const val ship_map_title = "SHIP MAP"
+    const val ship_map_subtitle = "REGION SCHEMATIC — SYSTEMS UNLOCK WITH CAMPAIGN PROGRESS"
+    fun ship_map_selected(arg1: String, arg2: String): String =
+        "REGION: ${arg1.uppercase()} — ${arg2.uppercase()}"
+    const val ship_map_systems = "SYSTEMS"
 
     const val missions_title = "Missions"
     const val missions_subtitle = "Vertical-slice missions are listed first. Select one to begin."

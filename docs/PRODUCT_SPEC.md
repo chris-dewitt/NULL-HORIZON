@@ -1020,35 +1020,45 @@ Touch targets must meet Android accessibility guidance.
 
 # 15. Visual and Audio Direction
 
+Authoritative token and component rules: [DESIGN_SYSTEM.md](DESIGN_SYSTEM.md) and [ADR-0021](ADR/0021-terminal-console-visual-language.md).
+
 ## 15.1 Art direction
 
-“Functional retro-future,” not neon overload.
+**MU-TH-UR / terminal-console** aesthetic: a diegetic ship OS (NULL HORIZON OS), not a Material gallery and not neon cyberpunk overload.
 
 Visual language:
 
-- Dark graphite panels
-- Warm off-white text
-- Muted warning colors
-- Thin system diagrams
-- Subtle scan-line or CRT effects, disabled in reduced-motion mode
-- Strong typography hierarchy
-- Dense information presented in expandable layers
-- Ship map resembling a technical schematic
+- Near-black CRT backgrounds with phosphor text (white, green, amber, red, blue)
+- Per-ship-region accent colors (for example amber Emergency, green Archive, red-shift Black Vault) always paired with textual status
+- TUI panel chrome using box-drawing borders (`┌─ SYSTEMS ─┐`), not rounded Material cards
+- Dense layout: tighter spacing, more information per screen, ALL-CAPS labels and headers
+- Subtle CRT presentation: scanlines, vignette, optional curvature/glow/flicker — all disabled or flattened under reduced-motion and high-contrast accessibility prefs
+- Strong monospace typography hierarchy
+- Ship map as a technical schematic / region status board
+- PC client may be more maximal (wider layouts, keybind hints); Android stays lean while sharing tokens and primitives
 
 ## 15.2 UI surfaces
 
-- Bridge dashboard
+- Boot / NULL HORIZON OS sequence
+- Bridge / ship-map console
 - Terminal
 - Code editor
 - Database browser
 - Git graph
 - Service map
 - Test console
-- Message/log viewer
+- Message/log / ORION-MICA dialogue viewer (typewriter reveal)
 - Skill map
 - Mission debrief
 
-## 15.3 Audio
+## 15.3 Motion moments
+
+- Cold-start boot sequence (version line, memory/system checks, OK) with skip
+- Typewriter reveal for ORION/MICA dialogue
+- Blinking block cursor on text inputs
+- Instant equivalents when reduced motion is enabled
+
+## 15.4 Audio
 
 - Minimal ambient score
 - Mechanical feedback

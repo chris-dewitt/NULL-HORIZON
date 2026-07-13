@@ -3,24 +3,44 @@ package com.nullhorizon.app.ui.theme
 import androidx.compose.ui.graphics.Color
 
 /**
- * Design tokens for the "functional retro-future" visual language.
+ * CRT / MU-TH-UR console design tokens (ADR-0021).
  *
- * Graphite panels, warm off-white text, muted warning accents.
- * Avoid neon purple, cream/terracotta brochure looks, and glow-heavy UI.
+ * Phosphor text on near-black. Region accents are separate ([NhRegionAccent]).
+ * Avoid purple neon, cream/terracotta brochure looks, and glow-heavy chrome.
  */
 object NhColors {
-    val Graphite = Color(0xFF1B1E24)
-    val GraphiteRaised = Color(0xFF242830)
-    val Panel = Color(0xFF2A3038)
-    val PanelEdge = Color(0xFF3A424C)
-    val WarmOffWhite = Color(0xFFE8E2D6)
-    val WarmMuted = Color(0xFFB9B2A4)
-    val Accent = Color(0xFFB08D57)
-    val AccentDim = Color(0xFF8A6E43)
-    val Success = Color(0xFF7A9E7E)
-    val Warning = Color(0xFFC4A35A)
-    val Danger = Color(0xFFB56A5A)
+    val CrtBlack = Color(0xFF000000)
+    val CrtRaised = Color(0xFF0A0A0A)
+    val CrtPanel = Color(0xFF050505)
+    val PhosphorWhite = Color(0xFFE6E6E6)
+    val PhosphorDim = Color(0xFF7A7A7A)
+    val PhosphorGreen = Color(0xFF33FF66)
+    val PhosphorAmber = Color(0xFFFFB000)
+    val PhosphorRed = Color(0xFFFF3344)
+    val PhosphorBlue = Color(0xFF44AAFF)
+    val Scanline = Color(0x22FFFFFF)
+    val Vignette = Color(0xCC000000)
+
+    /** @deprecated Use [CrtBlack]; retained for transitional call sites. */
+    val Graphite = CrtBlack
+    /** @deprecated Use [CrtRaised]. */
+    val GraphiteRaised = CrtRaised
+    /** @deprecated Use [CrtPanel]. */
+    val Panel = CrtPanel
+    /** @deprecated Use [PhosphorDim]. */
+    val PanelEdge = PhosphorDim
+    /** @deprecated Use [PhosphorWhite]. */
+    val WarmOffWhite = PhosphorWhite
+    /** @deprecated Use [PhosphorDim]. */
+    val WarmMuted = PhosphorDim
+    /** @deprecated Use [PhosphorAmber] as default system accent. */
+    val Accent = PhosphorAmber
+    /** @deprecated Use dim amber. */
+    val AccentDim = Color(0xFFB07A00)
+    val Success = PhosphorGreen
+    val Warning = PhosphorAmber
+    val Danger = PhosphorRed
     val HighContrastBackground = Color(0xFF000000)
     val HighContrastForeground = Color(0xFFFFFFF0)
-    val HighContrastAccent = Color(0xFFE0C070)
+    val HighContrastAccent = Color(0xFFE8E8E8)
 }

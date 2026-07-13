@@ -38,4 +38,7 @@ PC app (Compose Desktop)┤
 
 ## Current stage
 
-Epic 0 provides repository standards and minimal compilable shells only. See delivery epics in the product specification §32.
+Epics 0–13 are implemented in-repo. Visual redesign toward the MU-TH-UR /
+terminal-console language is underway (ADR-0021, `docs/DESIGN_SYSTEM.md`);
+shared tokens and chrome primitives live in `shared/client-core` UI packages.
+See delivery epics in the product specification §32.

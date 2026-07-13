@@ -1,8 +1,10 @@
 package com.nullhorizon.pc
 
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationRail
@@ -20,6 +22,10 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.unit.dp
+import com.nullhorizon.app.ui.chrome.BootSequenceScreen
+import com.nullhorizon.app.ui.theme.NhColors
 import com.nullhorizon.pc.di.PcAppContainer
 import com.nullhorizon.pc.feature.mission.MissionListScreen
 import com.nullhorizon.pc.feature.mission.MissionListViewModel
@@ -48,6 +54,7 @@ fun PcApp(
     val profileState by profileSetupViewModel.uiState.collectAsState()
     var lastMainTab by remember { mutableStateOf(TopLevelTab.ShipMap) }
     var route by remember { mutableStateOf<PcRoutes>(PcRoutes.ProfileSetup) }
+    var bootComplete by remember { mutableStateOf(false) }
 
     LaunchedEffect(profileState.isLoading, profileState.profileConfigured) {
         if (profileState.isLoading) return@LaunchedEffect
@@ -65,9 +72,18 @@ fun PcApp(
         modifier = Modifier.fillMaxSize(),
         color = MaterialTheme.colorScheme.background,
     ) {
+        if (!bootComplete) {
+            BootSequenceScreen(onFinished = { bootComplete = true })
+            return@Surface
+        }
+
         if (profileState.isLoading) {
-            Box(modifier = Modifier.fillMaxSize()) {
-                Text(Strings.boot_status)
+            Box(modifier = Modifier.fillMaxSize().padding(24.dp)) {
+                Text(
+                    text = Strings.boot_status.uppercase(),
+                    color = NhColors.PhosphorAmber,
+                    fontFamily = FontFamily.Monospace,
+                )
             }
             return@Surface
         }
@@ -137,6 +153,24 @@ private fun MainShell(
             modifier = Modifier.semantics {
                 contentDescription = "Primary navigation"
             },
+            containerColor = MaterialTheme.colorScheme.background,
+            contentColor = NhColors.PhosphorGreen,
+            header = {
+                Column(modifier = Modifier.padding(8.dp)) {
+                    Text(
+                        text = "NH OS",
+                        style = MaterialTheme.typography.labelMedium,
+                        color = NhColors.PhosphorAmber,
+                        fontFamily = FontFamily.Monospace,
+                    )
+                    Text(
+                        text = Strings.nav_keybind_hint,
+                        style = MaterialTheme.typography.labelSmall,
+                        color = NhColors.PhosphorDim,
+                        fontFamily = FontFamily.Monospace,
+                    )
+                }
+            },
         ) {
             TopLevelTab.entries.forEach { tab ->
                 NavigationRailItem(
@@ -146,9 +180,24 @@ private fun MainShell(
                         Icon(
                             imageVector = tab.icon,
                             contentDescription = tab.contentDescription,
+                            tint = if (currentTab == tab) {
+                                NhColors.PhosphorAmber
+                            } else {
+                                NhColors.PhosphorDim
+                            },
                         )
                     },
-                    label = { Text(tab.label) },
+                    label = {
+                        Text(
+                            text = tab.label,
+                            fontFamily = FontFamily.Monospace,
+                            color = if (currentTab == tab) {
+                                NhColors.PhosphorAmber
+                            } else {
+                                NhColors.PhosphorDim
+                            },
+                        )
+                    },
                     modifier = Modifier.semantics {
                         contentDescription = tab.contentDescription
                     },

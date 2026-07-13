@@ -77,6 +77,7 @@ python scripts/build_bundle.py --channel dev --sync-android-assets --sync-pc-res
 |---|---|
 | [AGENTS.md](AGENTS.md) | Contributor and coding-agent operating rules |
 | [docs/PRODUCT_SPEC.md](docs/PRODUCT_SPEC.md) | Authoritative product and engineering specification |
+| [docs/DESIGN_SYSTEM.md](docs/DESIGN_SYSTEM.md) | Terminal-console visual language, tokens, open questions |
 | [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) | Architecture overview |
 | [docs/THREAT_MODEL.md](docs/THREAT_MODEL.md) | Security threat model skeleton |
 | [docs/API.md](docs/API.md) | API notes |

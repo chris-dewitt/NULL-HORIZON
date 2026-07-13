@@ -48,6 +48,7 @@ fun NullHorizonApp(
     NullHorizonTheme(
         highContrast = accessibility.highContrast,
         reducedMotion = accessibility.reducedMotion,
+        largerText = accessibility.largerText,
     ) {
         CompositionLocalProvider(LocalDensity provides contentDensity) {
             Surface(modifier = Modifier.fillMaxSize()) {
