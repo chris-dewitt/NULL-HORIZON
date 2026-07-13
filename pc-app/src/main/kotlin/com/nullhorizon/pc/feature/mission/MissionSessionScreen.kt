@@ -22,7 +22,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
-import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
 import androidx.compose.runtime.collectAsState
 import com.nullhorizon.app.ui.chrome.DialogueLines
@@ -485,7 +484,7 @@ private fun GitPanel(
     Text(
         text = Strings.mission_git_branch(git.currentBranch),
         style = MaterialTheme.typography.labelLarge,
-        fontFamily = FontFamily.Monospace,
+        fontFamily = NhTheme.fontFamily,
         modifier = Modifier.semantics { contentDescription = "Git branch ${git.currentBranch}" },
     )
 
@@ -504,7 +503,7 @@ private fun GitPanel(
         commitGraphLines(git).forEach { line ->
             Text(
                 text = line,
-                fontFamily = FontFamily.Monospace,
+                fontFamily = NhTheme.fontFamily,
                 style = MaterialTheme.typography.bodySmall,
             )
         }
@@ -519,7 +518,7 @@ private fun GitPanel(
         git.conflicts.keys.sorted().forEach { path ->
             Text(
                 text = path,
-                fontFamily = FontFamily.Monospace,
+                fontFamily = NhTheme.fontFamily,
                 style = MaterialTheme.typography.bodyMedium,
             )
             if (enabled) {
@@ -566,20 +565,20 @@ private fun GitPanel(
             git.history.takeLast(12).forEach { entry ->
                 Text(
                     text = "$ ${entry.command}",
-                    fontFamily = FontFamily.Monospace,
+                    fontFamily = NhTheme.fontFamily,
                     style = MaterialTheme.typography.bodyMedium,
                 )
                 if (entry.stdout.isNotBlank()) {
                     Text(
                         text = entry.stdout,
-                        fontFamily = FontFamily.Monospace,
+                        fontFamily = NhTheme.fontFamily,
                         style = MaterialTheme.typography.bodySmall,
                     )
                 }
                 if (entry.stderr.isNotBlank()) {
                     Text(
                         text = entry.stderr,
-                        fontFamily = FontFamily.Monospace,
+                        fontFamily = NhTheme.fontFamily,
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.error,
                     )
@@ -639,7 +638,7 @@ private fun SqlPanel(
     Text(
         text = Strings.mission_sql_database(sql.databaseId, sql.policy),
         style = MaterialTheme.typography.labelLarge,
-        fontFamily = FontFamily.Monospace,
+        fontFamily = NhTheme.fontFamily,
         modifier = Modifier.semantics {
             contentDescription = "SQL database ${sql.databaseId}"
         },
@@ -668,7 +667,7 @@ private fun SqlPanel(
                 val columns = table.columns.joinToString { "${it.name}:${it.type}" }
                 Text(
                     text = "${table.name} ($columns)",
-                    fontFamily = FontFamily.Monospace,
+                    fontFamily = NhTheme.fontFamily,
                     style = MaterialTheme.typography.bodySmall,
                 )
                 sql.sampleRows[table.name]?.let { sample ->
@@ -679,13 +678,13 @@ private fun SqlPanel(
                         )
                         Text(
                             text = sample.columns.joinToString(" | "),
-                            fontFamily = FontFamily.Monospace,
+                            fontFamily = NhTheme.fontFamily,
                             style = MaterialTheme.typography.bodySmall,
                         )
                         sample.rows.take(3).forEach { row ->
                             Text(
                                 text = row.joinToString(" | "),
-                                fontFamily = FontFamily.Monospace,
+                                fontFamily = NhTheme.fontFamily,
                                 style = MaterialTheme.typography.bodySmall,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                             )
@@ -712,7 +711,7 @@ private fun SqlPanel(
             sql.lastError != null -> Text(
                 text = sql.lastError.orEmpty(),
                 color = MaterialTheme.colorScheme.error,
-                fontFamily = FontFamily.Monospace,
+                fontFamily = NhTheme.fontFamily,
                 style = MaterialTheme.typography.bodySmall,
             )
             sql.lastResult == null -> Text(
@@ -724,13 +723,13 @@ private fun SqlPanel(
                 val result = sql.lastResult!!
                 Text(
                     text = result.columns.joinToString(" | "),
-                    fontFamily = FontFamily.Monospace,
+                    fontFamily = NhTheme.fontFamily,
                     style = MaterialTheme.typography.bodyMedium,
                 )
                 result.rows.take(20).forEach { row ->
                     Text(
                         text = row.joinToString(" | "),
-                        fontFamily = FontFamily.Monospace,
+                        fontFamily = NhTheme.fontFamily,
                         style = MaterialTheme.typography.bodySmall,
                     )
                 }
@@ -783,12 +782,12 @@ private fun EditorPanel(
     onRunTests: () -> Unit,
 ) {
     val active = editor.activeFile()
+    val fontFamily = NhTheme.fontFamily
 
-    Text(
-        text = Strings.mission_editor,
-        style = MaterialTheme.typography.titleMedium,
-    )
-
+    TuiPanel(
+        title = Strings.mission_editor,
+        accent = NhColors.PhosphorBlue,
+    ) {
     FlowRow(
         horizontalArrangement = Arrangement.spacedBy(8.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp),
@@ -823,13 +822,13 @@ private fun EditorPanel(
                 onClick = onUndo,
                 enabled = enabled && active.editable && active.undoStack.isNotEmpty(),
             ) {
-                Text(Strings.mission_editor_undo)
+                Text(Strings.mission_editor_undo.uppercase())
             }
             OutlinedButton(
                 onClick = onRedo,
                 enabled = enabled && active.editable && active.redoStack.isNotEmpty(),
             ) {
-                Text(Strings.mission_editor_redo)
+                Text(Strings.mission_editor_redo.uppercase())
             }
             OutlinedButton(onClick = onToggleDiff) {
                 Text(
@@ -837,7 +836,7 @@ private fun EditorPanel(
                         Strings.mission_editor_hide_diff
                     } else {
                         Strings.mission_editor_show_diff
-                    },
+                    }.uppercase(),
                 )
             }
         }
@@ -854,12 +853,12 @@ private fun EditorPanel(
                 EditorWorkspace.diffLines(active.starterContent, active.content).forEach { line ->
                     Text(
                         text = line,
-                        fontFamily = FontFamily.Monospace,
+                        fontFamily = fontFamily,
                         style = MaterialTheme.typography.bodySmall,
                         color = when {
-                            line.startsWith("+") -> MaterialTheme.colorScheme.primary
-                            line.startsWith("-") -> MaterialTheme.colorScheme.error
-                            else -> MaterialTheme.colorScheme.onSurface
+                            line.startsWith("+") -> NhColors.PhosphorGreen
+                            line.startsWith("-") -> NhColors.PhosphorRed
+                            else -> NhColors.PhosphorWhite
                         },
                     )
                 }
@@ -875,7 +874,7 @@ private fun EditorPanel(
         ) {
             Text(
                 text = lineNumbers.ifBlank { "1" },
-                fontFamily = FontFamily.Monospace,
+                fontFamily = NhTheme.fontFamily,
                 style = MaterialTheme.typography.labelSmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
@@ -886,7 +885,7 @@ private fun EditorPanel(
                     .fillMaxWidth()
                     .semantics { contentDescription = "Editor content ${active.path}" },
                 enabled = enabled && active.editable,
-                textStyle = MaterialTheme.typography.bodyMedium.copy(fontFamily = FontFamily.Monospace),
+                textStyle = MaterialTheme.typography.bodyMedium.copy(fontFamily = NhTheme.fontFamily),
                 minLines = 8,
                 maxLines = 16,
             )
@@ -954,7 +953,7 @@ private fun EditorPanel(
                     }
                     Text(
                         text = "[$statusLabel] ${test.id}",
-                        fontFamily = FontFamily.Monospace,
+                        fontFamily = NhTheme.fontFamily,
                         style = MaterialTheme.typography.bodyMedium,
                         color = when (test.status) {
                             TestStatus.Passed -> MaterialTheme.colorScheme.primary
@@ -968,13 +967,14 @@ private fun EditorPanel(
                     if (test.expected != null || test.actual != null) {
                         Text(
                             text = "expected=${test.expected} actual=${test.actual}",
-                            fontFamily = FontFamily.Monospace,
+                            fontFamily = NhTheme.fontFamily,
                             style = MaterialTheme.typography.bodySmall,
                         )
                     }
                 }
             }
         }
+    }
     }
 }
 
@@ -985,10 +985,10 @@ private fun ServiceMapPanel(
     enabled: Boolean,
     onAction: (String) -> Unit,
 ) {
-    Text(
-        text = Strings.mission_service_map,
-        style = MaterialTheme.typography.titleMedium,
-    )
+    TuiPanel(
+        title = Strings.mission_service_map,
+        accent = NhColors.PhosphorBlue,
+    ) {
     GraphStatusList(
         title = Strings.mission_service_map_nodes,
         lines = serviceMap.nodes.values.map { node ->
@@ -1009,12 +1009,13 @@ private fun ServiceMapPanel(
         )
     }
     serviceMap.lastExplanation?.let {
-        Text(it, style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.primary)
+        Text(it, style = MaterialTheme.typography.bodyMedium, color = NhColors.PhosphorGreen)
     }
     serviceMap.lastError?.let {
-        Text(it, style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.error)
+        Text(it, style = MaterialTheme.typography.bodyMedium, color = NhColors.PhosphorRed)
     }
     ActionButtonRow(actions = actions, enabled = enabled, onAction = onAction)
+    }
 }
 
 @Composable
@@ -1024,16 +1025,18 @@ private fun PipelinePanel(
     enabled: Boolean,
     onAction: (String) -> Unit,
 ) {
-    Text(
-        text = Strings.mission_pipeline,
-        style = MaterialTheme.typography.titleMedium,
-    )
+    TuiPanel(
+        title = Strings.mission_pipeline,
+        accent = NhColors.PhosphorAmber,
+    ) {
     Text(
         text = Strings.mission_pipeline_run(
             pipeline.runId,
             pipeline.lastRunOutcome,
-        ),
+        ).uppercase(),
         style = MaterialTheme.typography.bodyMedium,
+        color = NhColors.PhosphorWhite,
+        fontFamily = NhTheme.fontFamily,
     )
     GraphStatusList(
         title = Strings.mission_pipeline_stages,
@@ -1045,12 +1048,13 @@ private fun PipelinePanel(
         contentDescription = "Pipeline stages",
     )
     pipeline.lastExplanation?.let {
-        Text(it, style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.primary)
+        Text(it, style = MaterialTheme.typography.bodyMedium, color = NhColors.PhosphorGreen)
     }
     pipeline.lastError?.let {
-        Text(it, style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.error)
+        Text(it, style = MaterialTheme.typography.bodyMedium, color = NhColors.PhosphorRed)
     }
     ActionButtonRow(actions = actions, enabled = enabled, onAction = onAction)
+    }
 }
 
 @Composable
@@ -1060,10 +1064,10 @@ private fun MlOpsPanel(
     enabled: Boolean,
     onAction: (String) -> Unit,
 ) {
-    Text(
-        text = Strings.mission_mlops,
-        style = MaterialTheme.typography.titleMedium,
-    )
+    TuiPanel(
+        title = Strings.mission_mlops,
+        accent = NhColors.PhosphorRed,
+    ) {
     GraphStatusList(
         title = Strings.mission_mlops_artifacts,
         lines = mlops.artifacts.values.map { art ->
@@ -1075,12 +1079,13 @@ private fun MlOpsPanel(
         contentDescription = "ML ops artifacts",
     )
     mlops.lastExplanation?.let {
-        Text(it, style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.primary)
+        Text(it, style = MaterialTheme.typography.bodyMedium, color = NhColors.PhosphorGreen)
     }
     mlops.lastError?.let {
-        Text(it, style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.error)
+        Text(it, style = MaterialTheme.typography.bodyMedium, color = NhColors.PhosphorRed)
     }
     ActionButtonRow(actions = actions, enabled = enabled, onAction = onAction)
+    }
 }
 
 @Composable
