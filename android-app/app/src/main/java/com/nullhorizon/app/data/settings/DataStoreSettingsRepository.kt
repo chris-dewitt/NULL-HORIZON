@@ -15,6 +15,7 @@ class DataStoreSettingsRepository(
             highContrast = prefs[Keys.HighContrast] ?: false,
             reducedMotion = prefs[Keys.ReducedMotion] ?: false,
             largerText = prefs[Keys.LargerText] ?: false,
+            disableCrt = prefs[Keys.DisableCrt] ?: false,
         )
     }
 
@@ -37,6 +38,10 @@ class DataStoreSettingsRepository(
         dataStore.edit { it[Keys.LargerText] = enabled }
     }
 
+    override suspend fun setDisableCrt(enabled: Boolean) {
+        dataStore.edit { it[Keys.DisableCrt] = enabled }
+    }
+
     override suspend fun setAnalyticsEnabled(enabled: Boolean) {
         dataStore.edit { it[Keys.AnalyticsEnabled] = enabled }
     }
@@ -50,6 +55,7 @@ class DataStoreSettingsRepository(
             prefs.remove(Keys.HighContrast)
             prefs.remove(Keys.ReducedMotion)
             prefs.remove(Keys.LargerText)
+            prefs.remove(Keys.DisableCrt)
             prefs.remove(Keys.AnalyticsEnabled)
             prefs.remove(Keys.CrashReportingEnabled)
         }
@@ -59,6 +65,7 @@ class DataStoreSettingsRepository(
         val HighContrast = booleanPreferencesKey("a11y_high_contrast")
         val ReducedMotion = booleanPreferencesKey("a11y_reduced_motion")
         val LargerText = booleanPreferencesKey("a11y_larger_text")
+        val DisableCrt = booleanPreferencesKey("a11y_disable_crt")
         val AnalyticsEnabled = booleanPreferencesKey("privacy_analytics_enabled")
         val CrashReportingEnabled = booleanPreferencesKey("privacy_crash_reporting_enabled")
     }

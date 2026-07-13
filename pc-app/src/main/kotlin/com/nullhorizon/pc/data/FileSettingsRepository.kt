@@ -48,6 +48,10 @@ class FileSettingsRepository(
         update { it.copy(accessibility = it.accessibility.copy(largerText = enabled)) }
     }
 
+    override suspend fun setDisableCrt(enabled: Boolean) {
+        update { it.copy(accessibility = it.accessibility.copy(disableCrt = enabled)) }
+    }
+
     override suspend fun setAnalyticsEnabled(enabled: Boolean) {
         update { it.copy(privacy = it.privacy.copy(analyticsEnabled = enabled)) }
     }

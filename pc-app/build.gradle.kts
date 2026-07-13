@@ -18,9 +18,11 @@ kotlin {
     sourceSets {
         named("main") {
             kotlin.srcDir("../shared/client-core/src/main/kotlin")
+            resources.srcDir("../shared/client-core/src/main/resources")
         }
         named("test") {
             kotlin.srcDir("../shared/client-core/src/test/kotlin")
+            resources.srcDir("../shared/client-core/src/main/resources")
         }
     }
 }

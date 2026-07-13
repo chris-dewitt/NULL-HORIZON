@@ -146,6 +146,12 @@ fun SettingsScreen(
             contentDescription = "Larger text",
             onCheckedChange = viewModel::setLargerText,
         )
+        SettingsToggle(
+            title = stringResource(R.string.settings_disable_crt),
+            checked = state.accessibility.disableCrt,
+            contentDescription = "Disable CRT effects",
+            onCheckedChange = viewModel::setDisableCrt,
+        )
     }
 
     if (confirmDelete) {

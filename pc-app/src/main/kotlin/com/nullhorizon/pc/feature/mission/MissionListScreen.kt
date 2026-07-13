@@ -1,6 +1,5 @@
 package com.nullhorizon.pc.feature.mission
 
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -20,6 +19,11 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import com.nullhorizon.app.data.mission.MissionStatus
 import com.nullhorizon.app.data.mission.MissionSummary
+import com.nullhorizon.app.ui.chrome.TuiPanel
+import com.nullhorizon.app.ui.chrome.drawTuiBorder
+import com.nullhorizon.app.ui.theme.NhColors
+import com.nullhorizon.app.ui.theme.NhRegionAccent
+import com.nullhorizon.app.ui.theme.NhTheme
 import com.nullhorizon.pc.ui.Strings
 
 @Composable
@@ -28,32 +32,50 @@ fun MissionListScreen(
     onMissionSelected: (String) -> Unit,
 ) {
     val state by viewModel.uiState.collectAsState()
+    val fontFamily = NhTheme.fontFamily
 
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(20.dp)
+            .padding(12.dp)
             .semantics { contentDescription = "Mission list" },
+        verticalArrangement = Arrangement.spacedBy(10.dp),
     ) {
         Text(
             text = Strings.missions_title,
             style = MaterialTheme.typography.headlineMedium,
+            color = NhColors.PhosphorAmber,
+            fontFamily = fontFamily,
         )
         Text(
             text = Strings.missions_subtitle,
-            style = MaterialTheme.typography.bodyMedium,
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
-            modifier = Modifier.padding(top = 8.dp, bottom = 16.dp),
+            style = MaterialTheme.typography.labelMedium,
+            color = NhColors.PhosphorDim,
+            fontFamily = fontFamily,
         )
         when {
-            state.isLoading -> Text(Strings.missions_loading)
-            state.errorMessage != null -> Text(state.errorMessage.orEmpty())
-            else -> LazyColumn(verticalArrangement = Arrangement.spacedBy(12.dp)) {
-                items(state.missions, key = { it.id }) { mission ->
-                    MissionRow(
-                        mission = mission,
-                        onClick = { onMissionSelected(mission.id) },
-                    )
+            state.isLoading -> Text(
+                Strings.missions_loading,
+                color = NhColors.PhosphorDim,
+                fontFamily = fontFamily,
+            )
+            state.errorMessage != null -> Text(
+                state.errorMessage.orEmpty(),
+                color = NhColors.PhosphorRed,
+                fontFamily = fontFamily,
+            )
+            else -> TuiPanel(
+                title = "INCIDENTS",
+                accent = NhColors.PhosphorGreen,
+                modifier = Modifier.fillMaxWidth().weight(1f, fill = false),
+            ) {
+                LazyColumn(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                    items(state.missions, key = { it.id }) { mission ->
+                        MissionRow(
+                            mission = mission,
+                            onClick = { onMissionSelected(mission.id) },
+                        )
+                    }
                 }
             }
         }
@@ -65,32 +87,46 @@ private fun MissionRow(
     mission: MissionSummary,
     onClick: () -> Unit,
 ) {
+    val accent = NhRegionAccent.forRegionId(mission.region).accent
+    val statusText = when (mission.status) {
+        MissionStatus.Available -> Strings.mission_status_available
+        MissionStatus.Locked -> Strings.mission_status_locked
+        MissionStatus.Completed -> Strings.mission_status_completed
+    }
+    val statusColor = when (mission.status) {
+        MissionStatus.Available -> NhColors.PhosphorAmber
+        MissionStatus.Locked -> NhColors.PhosphorDim
+        MissionStatus.Completed -> NhColors.PhosphorGreen
+    }
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .border(1.dp, MaterialTheme.colorScheme.outline)
+            .drawTuiBorder(color = accent)
             .clickable(onClick = onClick)
-            .padding(12.dp)
+            .padding(10.dp)
             .semantics {
                 contentDescription =
                     "Mission ${mission.title}, ${mission.status.name.lowercase()}, ${mission.difficulty}"
             },
-        verticalArrangement = Arrangement.spacedBy(4.dp),
+        verticalArrangement = Arrangement.spacedBy(2.dp),
     ) {
-        Text(mission.title, style = MaterialTheme.typography.titleMedium)
         Text(
-            text = "${mission.region} - ${mission.difficulty}",
-            style = MaterialTheme.typography.bodyMedium,
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            text = mission.title.uppercase(),
+            style = MaterialTheme.typography.titleMedium,
+            color = NhColors.PhosphorWhite,
+            fontFamily = NhTheme.fontFamily,
         )
         Text(
-            text = when (mission.status) {
-                MissionStatus.Available -> Strings.mission_status_available
-                MissionStatus.Locked -> Strings.mission_status_locked
-                MissionStatus.Completed -> Strings.mission_status_completed
-            },
+            text = "${mission.region.uppercase()} — ${mission.difficulty.uppercase()}",
             style = MaterialTheme.typography.labelMedium,
-            color = MaterialTheme.colorScheme.primary,
+            color = accent,
+            fontFamily = NhTheme.fontFamily,
+        )
+        Text(
+            text = statusText.uppercase(),
+            style = MaterialTheme.typography.labelMedium,
+            color = statusColor,
+            fontFamily = NhTheme.fontFamily,
         )
     }
 }

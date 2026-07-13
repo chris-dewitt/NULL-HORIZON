@@ -80,6 +80,10 @@ class SettingsViewModel(
         viewModelScope.launch { settingsRepository.setLargerText(enabled) }
     }
 
+    fun setDisableCrt(enabled: Boolean) {
+        viewModelScope.launch { settingsRepository.setDisableCrt(enabled) }
+    }
+
     fun setAnalyticsEnabled(enabled: Boolean) {
         viewModelScope.launch { settingsRepository.setAnalyticsEnabled(enabled) }
     }

@@ -1,6 +1,5 @@
 package com.nullhorizon.app.feature.shipmap
 
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -10,6 +9,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.MaterialTheme
@@ -24,6 +24,12 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.nullhorizon.app.R
+import com.nullhorizon.app.ui.chrome.TuiPanel
+import com.nullhorizon.app.ui.chrome.TuiRegionChip
+import com.nullhorizon.app.ui.chrome.drawTuiBorder
+import com.nullhorizon.app.ui.theme.NhColors
+import com.nullhorizon.app.ui.theme.NhRegionAccent
+import com.nullhorizon.app.ui.theme.NhTheme
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
@@ -32,62 +38,67 @@ fun ShipMapScreen(
     onOpenMission: (String) -> Unit,
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
+    val fontFamily = NhTheme.fontFamily
 
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(20.dp)
+            .padding(12.dp)
             .semantics { contentDescription = "Ship map" },
-        verticalArrangement = Arrangement.spacedBy(16.dp),
+        verticalArrangement = Arrangement.spacedBy(10.dp),
     ) {
         Text(
             text = stringResource(R.string.ship_map_title),
             style = MaterialTheme.typography.headlineMedium,
+            color = NhColors.PhosphorAmber,
+            fontFamily = fontFamily,
         )
         Text(
             text = stringResource(R.string.ship_map_subtitle),
-            style = MaterialTheme.typography.bodyMedium,
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            style = MaterialTheme.typography.labelMedium,
+            color = NhColors.PhosphorDim,
+            fontFamily = fontFamily,
         )
         when {
             state.isLoading -> Text(
                 text = stringResource(R.string.ship_map_loading),
                 style = MaterialTheme.typography.bodyMedium,
+                color = NhColors.PhosphorDim,
+                fontFamily = fontFamily,
             )
             state.errorMessage != null -> Text(
                 text = state.errorMessage.orEmpty(),
                 style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.error,
+                color = NhColors.PhosphorRed,
+                fontFamily = fontFamily,
             )
             else -> {
-                FlowRow(
-                    horizontalArrangement = Arrangement.spacedBy(8.dp),
-                    verticalArrangement = Arrangement.spacedBy(8.dp),
+                TuiPanel(
+                    title = stringResource(R.string.ship_map_systems),
+                    accent = NhColors.PhosphorGreen,
                     modifier = Modifier.fillMaxWidth(),
                 ) {
-                    state.regions.forEach { region ->
-                        val selected = region.id == state.selectedRegionId
-                        val statusLabel = statusLabel(region.status)
-                        Text(
-                            text = "${region.name}\n$statusLabel · ${region.completedCount}/${region.missionCount}",
-                            modifier = Modifier
-                                .border(
-                                    width = if (selected) 2.dp else 1.dp,
-                                    color = if (selected) {
-                                        MaterialTheme.colorScheme.primary
-                                    } else {
-                                        MaterialTheme.colorScheme.outline
-                                    },
-                                )
-                                .clickable { viewModel.selectRegion(region.id) }
-                                .padding(12.dp)
-                                .semantics {
-                                    contentDescription =
-                                        "Ship region ${region.name}, status $statusLabel, " +
-                                            "${region.completedCount} of ${region.missionCount} systems restored"
-                                },
-                            style = MaterialTheme.typography.labelLarge,
-                        )
+                    FlowRow(
+                        horizontalArrangement = Arrangement.spacedBy(8.dp),
+                        verticalArrangement = Arrangement.spacedBy(8.dp),
+                        modifier = Modifier.fillMaxWidth(),
+                    ) {
+                        state.regions.forEach { region ->
+                            val selected = region.id == state.selectedRegionId
+                            val status = statusLabel(region.status)
+                            val accent = NhRegionAccent.forRegionId(region.id).accent
+                            TuiRegionChip(
+                                name = region.name,
+                                status = "$status · ${region.completedCount}/${region.missionCount}",
+                                selected = selected,
+                                accent = accent,
+                                onClickLabel =
+                                    "Ship region ${region.name}, status $status, " +
+                                        "${region.completedCount} of ${region.missionCount} systems restored",
+                                modifier = Modifier.widthIn(min = 140.dp, max = 200.dp),
+                                onClick = { viewModel.selectRegion(region.id) },
+                            )
+                        }
                     }
                 }
                 state.selectedRegion?.let { selected ->
@@ -108,21 +119,26 @@ private fun SelectedRegionPanel(
     onOpenMission: (String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    Column(
-        verticalArrangement = Arrangement.spacedBy(8.dp),
-        modifier = modifier.semantics {
-            contentDescription = "Selected region ${region.name}"
-        },
+    val accent = NhRegionAccent.forRegionId(region.id).accent
+    TuiPanel(
+        title = region.name,
+        accent = accent,
+        modifier = modifier
+            .fillMaxWidth()
+            .semantics { contentDescription = "Selected region ${region.name}" },
     ) {
         Text(
-            text = stringResource(R.string.ship_map_region_missions, region.name),
-            style = MaterialTheme.typography.titleMedium,
+            text = NhRegionAccent.statusLine(region.name, statusLabel(region.status)),
+            style = MaterialTheme.typography.bodyLarge,
+            color = accent,
+            fontFamily = NhTheme.fontFamily,
         )
         region.summary?.let { summary ->
             Text(
                 text = summary,
                 style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                color = NhColors.PhosphorDim,
+                fontFamily = NhTheme.fontFamily,
             )
         }
         Text(
@@ -130,8 +146,10 @@ private fun SelectedRegionPanel(
                 R.string.ship_map_region_progress,
                 region.completedCount,
                 region.missionCount,
-            ),
+            ).uppercase(),
             style = MaterialTheme.typography.bodyMedium,
+            color = NhColors.PhosphorWhite,
+            fontFamily = NhTheme.fontFamily,
         )
         LazyColumn(
             verticalArrangement = Arrangement.spacedBy(4.dp),
@@ -159,9 +177,9 @@ private fun RegionMissionRow(
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .border(width = 1.dp, color = MaterialTheme.colorScheme.outlineVariant)
+            .drawTuiBorder(color = NhColors.PhosphorDim)
             .clickable { onOpenMission(mission.id) }
-            .padding(12.dp)
+            .padding(10.dp)
             .semantics {
                 contentDescription = "Mission ${mission.title}, $statusLabel"
             },
@@ -172,21 +190,25 @@ private fun RegionMissionRow(
             Text(
                 text = mission.title,
                 style = MaterialTheme.typography.bodyLarge,
+                color = NhColors.PhosphorWhite,
+                fontFamily = NhTheme.fontFamily,
             )
             Text(
-                text = mission.difficulty,
+                text = mission.difficulty.uppercase(),
                 style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                color = NhColors.PhosphorDim,
+                fontFamily = NhTheme.fontFamily,
             )
         }
         Text(
-            text = statusLabel,
+            text = statusLabel.uppercase(),
             style = MaterialTheme.typography.labelMedium,
             color = if (mission.completed) {
-                MaterialTheme.colorScheme.primary
+                NhColors.PhosphorGreen
             } else {
-                MaterialTheme.colorScheme.onSurfaceVariant
+                NhColors.PhosphorAmber
             },
+            fontFamily = NhTheme.fontFamily,
         )
     }
 }

@@ -28,6 +28,10 @@ class InMemorySettingsRepository(
         accessibilityState.update { it.copy(largerText = enabled) }
     }
 
+    override suspend fun setDisableCrt(enabled: Boolean) {
+        accessibilityState.update { it.copy(disableCrt = enabled) }
+    }
+
     override suspend fun setAnalyticsEnabled(enabled: Boolean) {
         privacyState.update { it.copy(analyticsEnabled = enabled) }
     }
