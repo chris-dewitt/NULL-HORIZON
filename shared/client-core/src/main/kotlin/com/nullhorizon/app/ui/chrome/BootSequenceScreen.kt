@@ -85,7 +85,7 @@ fun BootSequenceScreen(
                     style = MaterialTheme.typography.labelMedium,
                     color = NhColors.PhosphorDim,
                     fontFamily = FontFamily.Monospace,
-                    modifier = Modifier.padding(top = 12),
+                    modifier = Modifier.padding(top = 12.dp),
                 )
             }
         }
