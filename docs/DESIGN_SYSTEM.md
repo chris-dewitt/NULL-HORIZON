@@ -22,7 +22,7 @@ accessibility. Implementation primitives live under
 | 5 | ALL-CAPS | **System chrome only** (nav, panel titles, status lines). ORION/MICA dialogue stays sentence case. |
 | 6 | Android CRT | **Lean CRT on phones** (lighter scanlines, milder curve, no idle flicker). Same tokens/TUI; full medium CRT on PC. See §6.1. |
 | 7 | Disable CRT | **Separate accessibility pref** (`disableCrt`). Independent of reduced motion. High contrast still forces CRT off for readability. |
-| 8 | Font | **Still open** — keep `FontFamily.Monospace` until a licensed face is chosen |
+| 8 | Font | **Terminal** — VT323 (DEC VT320 console glyphs, SIL OFL). See `shared/client-core/.../fonts/`. |
 
 ---
 
@@ -87,7 +87,8 @@ for focus only; CRT overlays forced off.
 
 ## 4. Typography and density
 
-- Font: platform monospace until a licensed CRT/terminal face is chosen (§1 #8).
+- Font: **Terminal** face — VT323 (`NhTerminal-Regular.ttf`, SIL OFL). Fallback:
+  platform monospace if the file fails to load.
 - **System chrome** (nav, panel titles, region/status lines): **ALL-CAPS**.
 - **Dialogue / narrative / learner errors:** sentence case.
 - Larger-text: ~1.15× `fontScale` without breaking TUI geometry.
@@ -149,7 +150,6 @@ screens. **Decision:** phones use **Lean** CRT by default; PC uses **Medium**.
 ## 9. Remaining open questions
 
 ### Still open
-- Font / licensed face (§1 #8)
 - Global OK green vs region accent for success (default: global OK green)
 - Black Vault red exact hue
 - Flicker: rare idle OK, or boot-only?
@@ -165,4 +165,4 @@ screens. **Decision:** phones use **Lean** CRT by default; PC uses **Medium**.
 
 ### Answered (see §1)
 Identity, region accents, CRT medium+real, boot every cold start, ALL-CAPS
-chrome only, Android lean CRT, separate Disable CRT pref.
+chrome only, Android lean CRT, separate Disable CRT pref, **Terminal font (VT323)**.

@@ -1035,7 +1035,7 @@ Visual language:
 - TUI panel chrome using box-drawing borders (`┌─ SYSTEMS ─┐`), not rounded Material cards
 - Dense layout: tighter spacing, more information per screen; ALL-CAPS for **system chrome** only (nav, panel titles, status lines)
 - Medium CRT presentation with real screen curvature, scanlines, vignette, and soft bloom — off via Disable CRT pref or high contrast; Android phones use a leaner CRT profile
-- Strong monospace typography hierarchy
+- Strong **Terminal** typography hierarchy (VT323 console face)
 - Ship map as a technical schematic / region status board
 - PC client may be more maximal (wider layouts, keybind hints); Android stays lean while sharing tokens and primitives
 

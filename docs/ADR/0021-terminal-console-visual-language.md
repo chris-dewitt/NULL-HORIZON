@@ -33,7 +33,9 @@ MU-TH-UR / Nostromo mood is a north star only — not a costume requirement.
    Reduced motion disables animated chrome (boot/typewriter/cursor/flicker)
    but may leave static CRT unless `disableCrt` or high contrast is on.
 6. **Boot sequence** runs every cold start and is skippable.
-7. **Platform split:** PC maximal; Android lean CRT + touch-first layout;
+7. **Typeface is Terminal** — VT323 (VT320 console glyphs, SIL OFL), loaded
+   per platform into `NullHorizonTheme`.
+8. **Platform split:** PC maximal; Android lean CRT + touch-first layout;
    shared primitives in `shared/client-core`.
 
 ## Alternatives considered

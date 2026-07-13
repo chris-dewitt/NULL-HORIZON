@@ -10,8 +10,12 @@ import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Density
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.nullhorizon.app.navigation.NullHorizonNavHost
@@ -47,12 +51,21 @@ fun NullHorizonApp(
     } else {
         density
     }
+    val terminalFont = remember {
+        FontFamily(
+            Font(
+                resId = R.font.nh_terminal_regular,
+                weight = FontWeight.Normal,
+            ),
+        )
+    }
 
     NullHorizonTheme(
         highContrast = accessibility.highContrast,
         reducedMotion = accessibility.reducedMotion,
         largerText = accessibility.largerText,
         disableCrt = accessibility.disableCrt,
+        fontFamily = terminalFont,
     ) {
         CompositionLocalProvider(LocalDensity provides contentDensity) {
             CrtFrame(

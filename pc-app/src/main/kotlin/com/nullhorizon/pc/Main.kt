@@ -15,6 +15,7 @@ import com.nullhorizon.app.ui.chrome.CrtFrame
 import com.nullhorizon.app.ui.chrome.CrtProfile
 import com.nullhorizon.app.ui.theme.NullHorizonTheme
 import com.nullhorizon.pc.di.PcAppContainer
+import com.nullhorizon.pc.ui.rememberTerminalFontFamily
 
 fun main() = application {
     val container = PcAppContainer()
@@ -34,11 +35,13 @@ fun main() = application {
         } else {
             density
         }
+        val terminalFont = rememberTerminalFontFamily()
         NullHorizonTheme(
             highContrast = accessibility.highContrast,
             reducedMotion = accessibility.reducedMotion,
             largerText = accessibility.largerText,
             disableCrt = accessibility.disableCrt,
+            fontFamily = terminalFont,
         ) {
             CompositionLocalProvider(LocalDensity provides contentDensity) {
                 CrtFrame(

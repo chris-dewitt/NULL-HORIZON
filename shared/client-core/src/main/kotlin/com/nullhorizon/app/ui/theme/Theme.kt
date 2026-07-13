@@ -7,6 +7,7 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.ReadOnlyComposable
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontFamily
 
 data class NhAccessibilityVisuals(
     val highContrast: Boolean = false,
@@ -27,6 +28,7 @@ data class NhAccessibilityVisuals(
 }
 
 val LocalNhAccessibility = staticCompositionLocalOf { NhAccessibilityVisuals() }
+val LocalNhFontFamily = staticCompositionLocalOf { NhFontFamilyFallback }
 
 private fun standardColorScheme() = darkColorScheme(
     primary = NhColors.PhosphorAmber,
@@ -70,9 +72,14 @@ fun NullHorizonTheme(
     reducedMotion: Boolean = false,
     largerText: Boolean = false,
     disableCrt: Boolean = false,
+    fontFamily: FontFamily = NhFontFamilyFallback,
     content: @Composable () -> Unit,
 ) {
     val colorScheme = if (highContrast) highContrastColorScheme() else standardColorScheme()
+    val typography = createNhTypography(
+        fontFamily = fontFamily,
+        scale = if (largerText) 1.15f else 1.0f,
+    )
     CompositionLocalProvider(
         LocalNhAccessibility provides NhAccessibilityVisuals(
             highContrast = highContrast,
@@ -80,10 +87,11 @@ fun NullHorizonTheme(
             largerText = largerText,
             disableCrt = disableCrt,
         ),
+        LocalNhFontFamily provides fontFamily,
     ) {
         MaterialTheme(
             colorScheme = colorScheme,
-            typography = if (largerText) NhTypographyLarge else NhTypography,
+            typography = typography,
             content = content,
         )
     }
@@ -94,4 +102,9 @@ object NhTheme {
         @Composable
         @ReadOnlyComposable
         get() = LocalNhAccessibility.current
+
+    val fontFamily: FontFamily
+        @Composable
+        @ReadOnlyComposable
+        get() = LocalNhFontFamily.current
 }

@@ -6,15 +6,25 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 
-val NhFontFamily: FontFamily = FontFamily.Monospace
+/**
+ * Fallback when the Terminal face (VT323) is not injected by the platform shell.
+ * Prefer [createNhTypography] with a loaded Terminal family from [NullHorizonTheme].
+ */
+val NhFontFamilyFallback: FontFamily = FontFamily.Monospace
 
-private fun nhTypography(scale: Float): Typography {
+/** @deprecated Use [NhFontFamilyFallback] or a platform-loaded Terminal family. */
+val NhFontFamily: FontFamily = NhFontFamilyFallback
+
+fun createNhTypography(
+    fontFamily: FontFamily = NhFontFamilyFallback,
+    scale: Float = 1.0f,
+): Typography {
     fun sized(base: Int, line: Int, weight: FontWeight): TextStyle = TextStyle(
-        fontFamily = NhFontFamily,
+        fontFamily = fontFamily,
         fontWeight = weight,
         fontSize = (base * scale).sp,
         lineHeight = (line * scale).sp,
-        letterSpacing = 0.4.sp,
+        letterSpacing = 0.6.sp,
     )
     return Typography(
         displayLarge = sized(28, 32, FontWeight.Bold),
@@ -31,8 +41,8 @@ private fun nhTypography(scale: Float): Typography {
     )
 }
 
-/** Dense terminal typography (default). */
-val NhTypography: Typography = nhTypography(scale = 1.0f)
+/** Dense terminal typography (fallback monospace). Prefer theme-injected Terminal face. */
+val NhTypography: Typography = createNhTypography(scale = 1.0f)
 
 /** Larger-text accessibility variant (~15% scale via style sizes). */
-val NhTypographyLarge: Typography = nhTypography(scale = 1.15f)
+val NhTypographyLarge: Typography = createNhTypography(scale = 1.15f)
