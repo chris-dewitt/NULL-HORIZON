@@ -41,9 +41,11 @@ fun TuiActionButton(
     enabled: Boolean = true,
     accent: Color = NhColors.PhosphorAmber,
     contentDescription: String = label,
+    inverted: Boolean = false,
 ) {
     val color = when {
         !enabled -> NhColors.PhosphorDim
+        inverted -> NhColors.CrtBlack
         else -> accent
     }
     Box(
@@ -59,6 +61,13 @@ fun TuiActionButton(
                         indication = null,
                         onClick = onClick,
                     )
+                } else {
+                    Modifier
+                },
+            )
+            .then(
+                if (enabled && inverted) {
+                    Modifier.background(accent)
                 } else {
                     Modifier
                 },
@@ -132,6 +141,13 @@ fun TuiNavColumn(
                         role = Role.Tab
                     }
                     .clickable { onSelect(item.id) }
+                    .then(
+                        if (selected) {
+                            Modifier.background(NhColors.PhosphorAmber)
+                        } else {
+                            Modifier
+                        },
+                    )
                     .drawTuiBorder(color = accent)
                     .padding(horizontal = 8.dp, vertical = 8.dp),
                 verticalAlignment = Alignment.CenterVertically,
@@ -140,14 +156,14 @@ fun TuiNavColumn(
                 Text(
                     text = hint,
                     style = MaterialTheme.typography.labelMedium,
-                    color = accent,
+                    color = if (selected) NhColors.CrtBlack else accent,
                     fontFamily = fontFamily,
                     modifier = Modifier.width(16.dp),
                 )
                 Text(
                     text = item.label.uppercase(),
                     style = MaterialTheme.typography.labelLarge,
-                    color = if (selected) NhColors.PhosphorWhite else NhColors.PhosphorDim,
+                    color = if (selected) NhColors.CrtBlack else NhColors.PhosphorDim,
                     fontFamily = fontFamily,
                 )
             }
@@ -224,9 +240,9 @@ fun TuiTabLine(
         }
         statusText?.let {
             Text(
-                text = it.trim().uppercase(),
+                text = "● ${it.trim().uppercase()}",
                 style = MaterialTheme.typography.labelMedium,
-                color = NhColors.PhosphorDim,
+                color = NhColors.PhosphorGreen,
                 fontFamily = fontFamily,
             )
         }

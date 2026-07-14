@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -72,17 +71,13 @@ fun TerminalPromptField(
                 }
             },
         )
-        TextButton(
+        TuiActionButton(
+            label = runLabel,
             onClick = onSubmit,
             enabled = enabled && value.isNotBlank(),
-            modifier = Modifier.semantics { this.contentDescription = "Run command" },
-        ) {
-            Text(
-                text = runLabel,
-                color = NhColors.PhosphorAmber,
-                fontFamily = fontFamily,
-            )
-        }
+            accent = NhColors.PhosphorAmber,
+            contentDescription = "Run command",
+        )
     }
 }
 

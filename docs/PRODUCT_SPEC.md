@@ -1002,7 +1002,7 @@ Required for version 1:
 - Focus order
 - High-contrast option
 - Reduced-motion option
-- Disable CRT effects option (scanlines, curvature, bloom; independent of reduced motion)
+- Disable CRT effects option (scanlines and vignette; independent of reduced motion)
 - Color-blind-safe status indicators
 - No essential state represented by color alone
 - External keyboard support
@@ -1021,7 +1021,7 @@ Touch targets must meet Android accessibility guidance.
 
 # 15. Visual and Audio Direction
 
-Authoritative token and component rules: [DESIGN_SYSTEM.md](DESIGN_SYSTEM.md) and [ADR-0021](ADR/0021-terminal-console-visual-language.md).
+Authoritative token and component rules: [DESIGN_SYSTEM.md](DESIGN_SYSTEM.md), [ADR-0021](ADR/0021-terminal-console-visual-language.md), and [ADR-0022](ADR/0022-green-phosphor-terminal-visual-lock.md).
 
 ## 15.1 Art direction
 
@@ -1030,11 +1030,11 @@ Authoritative token and component rules: [DESIGN_SYSTEM.md](DESIGN_SYSTEM.md) an
 Visual language:
 
 - Near-black CRT backgrounds with phosphor text (white, green, amber, red, blue)
-- Primary look target: dense operator terminal (**tmux × Palantir × Fallout**); MU-TH-UR mood is inspirational only
+- Primary look target: dense green phosphor operator terminal (**tmux x Palantir x Nostromo** mood); avoid kitsch and glow-heavy cyberpunk
 - Per-ship-region accent colors (for example amber Emergency, green Archive, red-shift Black Vault) always paired with textual status
 - TUI panel chrome using box-drawing borders (`┌─ SYSTEMS ─┐`), not rounded Material cards
 - Dense layout: tighter spacing, more information per screen; ALL-CAPS for **system chrome** only (nav, panel titles, status lines)
-- Medium CRT presentation with real screen curvature, scanlines, vignette, and soft bloom — off via Disable CRT pref or high contrast; Android phones use a leaner CRT profile
+- CRT presentation is scanlines plus vignette only - off via Disable CRT pref or high contrast; Android phones use a leaner CRT profile
 - Strong **Terminal** typography hierarchy (VT323 console face)
 - Ship map as a technical schematic / region status board
 - PC client may be more maximal (wider layouts, keybind hints); Android stays lean while sharing tokens and primitives

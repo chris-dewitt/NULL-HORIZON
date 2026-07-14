@@ -9,10 +9,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedButton
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -28,6 +25,7 @@ import com.nullhorizon.app.ui.chrome.DialogueLines
 import com.nullhorizon.app.ui.chrome.TerminalPromptField
 import com.nullhorizon.app.ui.chrome.TuiActionButton
 import com.nullhorizon.app.ui.chrome.TuiPanel
+import com.nullhorizon.app.ui.chrome.TuiTextField
 import com.nullhorizon.app.ui.chrome.drawTuiBorder
 import com.nullhorizon.app.ui.theme.NhColors
 import com.nullhorizon.app.ui.theme.NhRegionAccent
@@ -530,22 +528,18 @@ private fun GitPanel(
                     horizontalArrangement = Arrangement.spacedBy(8.dp),
                     verticalArrangement = Arrangement.spacedBy(8.dp),
                 ) {
-                    OutlinedButton(
+                    TuiActionButton(
+                        label = Strings.mission_git_use_ours,
                         onClick = { onResolveConflict(path, "ours") },
-                        modifier = Modifier.semantics {
-                            contentDescription = "Resolve $path with ours"
-                        },
-                    ) {
-                        Text(Strings.mission_git_use_ours)
-                    }
-                    OutlinedButton(
+                        accent = NhColors.PhosphorGreen,
+                        contentDescription = "Resolve $path with ours",
+                    )
+                    TuiActionButton(
+                        label = Strings.mission_git_use_theirs,
                         onClick = { onResolveConflict(path, "theirs") },
-                        modifier = Modifier.semantics {
-                            contentDescription = "Resolve $path with theirs"
-                        },
-                    ) {
-                        Text(Strings.mission_git_use_theirs)
-                    }
+                        accent = NhColors.PhosphorAmber,
+                        contentDescription = "Resolve $path with theirs",
+                    )
                 }
             }
         }
@@ -799,21 +793,13 @@ private fun EditorPanel(
         editor.files.forEach { file ->
             val selected = file.path == active?.path
             val label = file.path.substringAfterLast('/')
-            if (selected) {
-                Button(
-                    onClick = { onSelectFile(file.path) },
-                    modifier = Modifier.semantics { contentDescription = "File tab $label" },
-                ) {
-                    Text(label + if (!file.editable) " (ro)" else "")
-                }
-            } else {
-                OutlinedButton(
-                    onClick = { onSelectFile(file.path) },
-                    modifier = Modifier.semantics { contentDescription = "File tab $label" },
-                ) {
-                    Text(label + if (!file.editable) " (ro)" else "")
-                }
-            }
+            TuiActionButton(
+                label = label + if (!file.editable) " (ro)" else "",
+                onClick = { onSelectFile(file.path) },
+                accent = if (selected) NhColors.PhosphorAmber else NhColors.PhosphorDim,
+                contentDescription = "File tab $label",
+                inverted = selected,
+            )
         }
     }
 
@@ -822,27 +808,27 @@ private fun EditorPanel(
             horizontalArrangement = Arrangement.spacedBy(8.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp),
         ) {
-            OutlinedButton(
+            TuiActionButton(
+                label = Strings.mission_editor_undo,
                 onClick = onUndo,
                 enabled = enabled && active.editable && active.undoStack.isNotEmpty(),
-            ) {
-                Text(Strings.mission_editor_undo.uppercase())
-            }
-            OutlinedButton(
+                accent = NhColors.PhosphorBlue,
+            )
+            TuiActionButton(
+                label = Strings.mission_editor_redo,
                 onClick = onRedo,
                 enabled = enabled && active.editable && active.redoStack.isNotEmpty(),
-            ) {
-                Text(Strings.mission_editor_redo.uppercase())
-            }
-            OutlinedButton(onClick = onToggleDiff) {
-                Text(
-                    if (editor.showDiff) {
-                        Strings.mission_editor_hide_diff
-                    } else {
-                        Strings.mission_editor_show_diff
-                    }.uppercase(),
-                )
-            }
+                accent = NhColors.PhosphorBlue,
+            )
+            TuiActionButton(
+                label = if (editor.showDiff) {
+                    Strings.mission_editor_hide_diff
+                } else {
+                    Strings.mission_editor_show_diff
+                },
+                onClick = onToggleDiff,
+                accent = NhColors.PhosphorAmber,
+            )
         }
 
         if (editor.showDiff) {
@@ -882,16 +868,18 @@ private fun EditorPanel(
                 style = MaterialTheme.typography.labelSmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
-            OutlinedTextField(
+            TuiTextField(
                 value = active.content,
                 onValueChange = { if (enabled && active.editable) onContentChange(active.path, it) },
+                label = active.path,
                 modifier = Modifier
                     .fillMaxWidth()
                     .semantics { contentDescription = "Editor content ${active.path}" },
                 enabled = enabled && active.editable,
-                textStyle = MaterialTheme.typography.bodyMedium.copy(fontFamily = NhTheme.fontFamily),
+                singleLine = false,
                 minLines = 8,
                 maxLines = 16,
+                textStyle = MaterialTheme.typography.bodyMedium,
             )
         }
 
@@ -905,12 +893,12 @@ private fun EditorPanel(
                 verticalArrangement = Arrangement.spacedBy(4.dp),
             ) {
                 editorSymbols.forEach { symbol ->
-                    OutlinedButton(
+                    TuiActionButton(
+                        label = if (symbol.isBlank()) "tab" else symbol,
                         onClick = { onInsertSymbol(symbol) },
-                        modifier = Modifier.semantics { contentDescription = "Insert symbol $symbol" },
-                    ) {
-                        Text(if (symbol.isBlank()) "tab" else symbol)
-                    }
+                        accent = NhColors.PhosphorDim,
+                        contentDescription = "Insert symbol $symbol",
+                    )
                 }
             }
         }

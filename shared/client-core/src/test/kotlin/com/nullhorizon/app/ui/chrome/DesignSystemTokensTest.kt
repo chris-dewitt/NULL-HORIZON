@@ -57,6 +57,7 @@ class DesignSystemTokensTest {
 
         val highContrast = NhAccessibilityVisuals(highContrast = true)
         assertFalse(highContrast.crtEffectsEnabled)
+        assertFalse(highContrast.animatedChromeEnabled)
 
         val reducedOnly = NhAccessibilityVisuals(reducedMotion = true)
         assertTrue(reducedOnly.crtEffectsEnabled)
@@ -66,8 +67,6 @@ class DesignSystemTokensTest {
     @Test
     fun crtProfiles_mediumStrongerThanLean() {
         assertTrue(CrtProfile.Medium.scanlineAlpha > CrtProfile.Lean.scanlineAlpha)
-        assertTrue(CrtProfile.Medium.barrelStrength > CrtProfile.Lean.barrelStrength)
-        assertTrue(CrtProfile.Medium.enableIdleFlicker)
-        assertFalse(CrtProfile.Lean.enableIdleFlicker)
+        assertTrue(CrtProfile.Medium.vignetteStrength > CrtProfile.Lean.vignetteStrength)
     }
 }
