@@ -1,6 +1,8 @@
 package com.nullhorizon.app.ui.chrome
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -11,6 +13,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -148,6 +151,84 @@ fun TuiNavColumn(
                     fontFamily = fontFamily,
                 )
             }
+        }
+    }
+}
+
+/**
+ * tmux-style horizontal tab line: session tag, indexed tabs, right status
+ * segment. The selected tab inverts to the accent, matching a tmux
+ * window-status-current. Android primary navigation; also fits any surface
+ * that needs a horizontal pane switcher.
+ */
+@Composable
+fun TuiTabLine(
+    sessionTag: String,
+    items: List<TuiNavItem>,
+    selectedId: String,
+    onSelect: (String) -> Unit,
+    modifier: Modifier = Modifier,
+    statusText: String? = null,
+) {
+    val fontFamily = NhTheme.fontFamily
+    Row(
+        modifier = modifier
+            .fillMaxWidth()
+            .drawTuiBorder(color = NhColors.PhosphorDim)
+            .padding(horizontal = 8.dp, vertical = 4.dp)
+            .semantics { contentDescription = "Primary navigation" },
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(6.dp),
+    ) {
+        Text(
+            text = sessionTag,
+            style = MaterialTheme.typography.labelMedium,
+            color = NhColors.PhosphorGreen,
+            fontFamily = fontFamily,
+        )
+        Row(
+            modifier = Modifier
+                .weight(1f)
+                .horizontalScroll(rememberScrollState()),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(2.dp),
+        ) {
+            items.forEachIndexed { index, item ->
+                val selected = item.id == selectedId
+                val hint = item.keyHint ?: index.toString()
+                Text(
+                    text = "$hint:${item.label.trim().uppercase()}",
+                    style = MaterialTheme.typography.labelLarge,
+                    color = if (selected) NhColors.CrtBlack else NhColors.PhosphorDim,
+                    fontFamily = fontFamily,
+                    modifier = Modifier
+                        .semantics {
+                            contentDescription = item.contentDescription
+                            this.selected = selected
+                            role = Role.Tab
+                        }
+                        .clickable(
+                            interactionSource = remember { MutableInteractionSource() },
+                            indication = null,
+                        ) { onSelect(item.id) }
+                        .then(
+                            if (selected) {
+                                Modifier.background(NhColors.PhosphorAmber)
+                            } else {
+                                Modifier
+                            },
+                        )
+                        .padding(horizontal = 8.dp, vertical = 10.dp),
+                )
+            }
+        }
+        statusText?.let {
+            Text(
+                text = it.trim().uppercase(),
+                style = MaterialTheme.typography.labelMedium,
+                color = NhColors.PhosphorDim,
+                fontFamily = fontFamily,
+            )
         }
     }
 }
