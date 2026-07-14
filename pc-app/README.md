@@ -21,7 +21,10 @@ cd pc-app
 .\run.bat
 ```
 
-Requires JDK 17+. Optional native installers:
+Any recent JDK can launch Gradle; compilation itself pins JDK 17 via the
+Gradle toolchain and auto-downloads it on first build if missing (very new
+JDKs such as 25 cannot run the Kotlin 2.0.x compiler directly). Optional
+native installers:
 
 ```bash
 ./gradlew packageDeb   # Linux
