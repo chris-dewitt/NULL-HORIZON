@@ -14,6 +14,13 @@ cd pc-app
 ./gradlew run
 ```
 
+On Windows, `run.bat` wraps the same Gradle invocation:
+
+```bat
+cd pc-app
+.\run.bat
+```
+
 Requires JDK 17+. Optional native installers:
 
 ```bash
