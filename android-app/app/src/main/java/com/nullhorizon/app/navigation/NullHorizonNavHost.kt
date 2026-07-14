@@ -1,11 +1,7 @@
 package com.nullhorizon.app.navigation
 
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Icon
-import androidx.compose.material3.NavigationBar
-import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -36,6 +32,9 @@ import com.nullhorizon.app.feature.shipmap.ShipMapScreen
 import com.nullhorizon.app.feature.shipmap.ShipMapViewModel
 import com.nullhorizon.app.feature.skills.SkillMapScreen
 import com.nullhorizon.app.feature.skills.SkillMapViewModel
+import com.nullhorizon.app.progression.ProgressionSnapshot
+import com.nullhorizon.app.ui.chrome.TuiNavItem
+import com.nullhorizon.app.ui.chrome.TuiTabLine
 
 @Composable
 fun NullHorizonNavHost(
@@ -122,41 +121,33 @@ private fun MainShell(
     val navBackStackEntry by tabNavController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
 
+    val progression by appContainer.progressionRepository.snapshot
+        .collectAsStateWithLifecycle(initialValue = ProgressionSnapshot())
+    val navItems = TopLevelDestination.entries.map { destination ->
+        TuiNavItem(
+            id = destination.route,
+            label = stringResource(destination.labelRes),
+            contentDescription = stringResource(destination.contentDescriptionRes),
+        )
+    }
+
     Scaffold(
         bottomBar = {
-            NavigationBar(
-                modifier = Modifier.semantics {
-                    contentDescription = "Primary navigation"
+            TuiTabLine(
+                sessionTag = "[NH-0.1]",
+                items = navItems,
+                selectedId = currentRoute ?: TopLevelDestination.ShipMap.route,
+                statusText = progression.rank,
+                onSelect = { route ->
+                    tabNavController.navigate(route) {
+                        popUpTo(tabNavController.graph.findStartDestination().id) {
+                            saveState = true
+                        }
+                        launchSingleTop = true
+                        restoreState = true
+                    }
                 },
-            ) {
-                TopLevelDestination.entries.forEach { destination ->
-                    val selected = currentRoute == destination.route
-                    val label = stringResource(destination.labelRes)
-                    val a11y = stringResource(destination.contentDescriptionRes)
-                    NavigationBarItem(
-                        selected = selected,
-                        onClick = {
-                            tabNavController.navigate(destination.route) {
-                                popUpTo(tabNavController.graph.findStartDestination().id) {
-                                    saveState = true
-                                }
-                                launchSingleTop = true
-                                restoreState = true
-                            }
-                        },
-                        icon = {
-                            Icon(
-                                imageVector = destination.icon,
-                                contentDescription = a11y,
-                            )
-                        },
-                        label = { Text(label) },
-                        modifier = Modifier.semantics {
-                            contentDescription = a11y
-                        },
-                    )
-                }
-            }
+            )
         },
     ) { innerPadding ->
         NavHost(
