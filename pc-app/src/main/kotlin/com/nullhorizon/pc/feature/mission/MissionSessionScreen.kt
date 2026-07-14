@@ -724,7 +724,7 @@ private fun SqlPanel(
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
             else -> {
-                val result = sql.lastResult!!
+                val result = sql.lastResult
                 Text(
                     text = result.columns.joinToString(" | "),
                     fontFamily = NhTheme.fontFamily,
