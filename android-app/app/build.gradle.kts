@@ -64,6 +64,11 @@ android {
 }
 
 kotlin {
+    // Run the Kotlin compiler on JDK 17 regardless of the JDK that launches
+    // Gradle, so builds succeed on machines whose only JDK is newer than what
+    // Kotlin 2.0.x can run on (e.g. JDK 25). foojay (settings.gradle.kts)
+    // downloads a matching JDK if one is not already installed.
+    jvmToolchain(17)
     compilerOptions {
         jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17)
     }
