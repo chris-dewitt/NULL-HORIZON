@@ -16,7 +16,7 @@ junit = "4.13.2"
 androidxJunit = "1.2.1"
 espresso = "3.7.0"
 truth = "1.4.4"
-sqliteJdbc = "3.45.3.0"
+sqliteJdbc = "3.53.2.0"
 
 [libraries]
 androidx-core-ktx = { module = "androidx.core:core-ktx", version.ref = "coreKtx" }
