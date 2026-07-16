@@ -9,12 +9,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Switch
+import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -26,6 +24,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
+import com.nullhorizon.app.ui.chrome.TuiActionButton
 import com.nullhorizon.app.ui.chrome.TuiPanel
 import com.nullhorizon.app.ui.chrome.drawTuiBorder
 import com.nullhorizon.app.ui.theme.NhColors
@@ -92,18 +91,18 @@ fun SettingsScreen(
         }
 
         TuiPanel(title = Strings.settings_data_section, accent = NhColors.PhosphorAmber) {
-            OutlinedButton(
+            TuiActionButton(
+                label = Strings.settings_export_data,
                 onClick = viewModel::exportLocalData,
-                modifier = Modifier.semantics { contentDescription = "Export local data" },
-            ) {
-                Text(Strings.settings_export_data.uppercase())
-            }
-            Button(
+                accent = NhColors.PhosphorGreen,
+                contentDescription = "Export local data",
+            )
+            TuiActionButton(
+                label = Strings.settings_delete_data,
                 onClick = { confirmDelete = true },
-                modifier = Modifier.semantics { contentDescription = "Delete local data" },
-            ) {
-                Text(Strings.settings_delete_data.uppercase())
-            }
+                accent = NhColors.PhosphorRed,
+                contentDescription = "Delete local data",
+            )
             state.dataMessage?.let { message ->
                 Text(
                     text = message,
@@ -172,20 +171,22 @@ fun SettingsScreen(
             title = { Text(Strings.settings_delete_confirm_title) },
             text = { Text(Strings.settings_delete_confirm_body) },
             confirmButton = {
-                TextButton(
+                TuiActionButton(
+                    label = Strings.settings_delete_confirm_action,
                     onClick = {
                         confirmDelete = false
                         viewModel.deleteLocalData()
                     },
-                    modifier = Modifier.semantics { contentDescription = "Confirm delete local data" },
-                ) {
-                    Text(Strings.settings_delete_confirm_action)
-                }
+                    accent = NhColors.PhosphorRed,
+                    contentDescription = "Confirm delete local data",
+                )
             },
             dismissButton = {
-                TextButton(onClick = { confirmDelete = false }) {
-                    Text(Strings.settings_delete_cancel)
-                }
+                TuiActionButton(
+                    label = Strings.settings_delete_cancel,
+                    onClick = { confirmDelete = false },
+                    accent = NhColors.PhosphorDim,
+                )
             },
         )
     }
@@ -201,6 +202,8 @@ private fun SettingsToggle(
     Row(
         modifier = Modifier
             .fillMaxWidth()
+            .drawTuiBorder(color = if (checked) NhColors.PhosphorGreen else NhColors.PhosphorDim)
+            .padding(8.dp)
             .semantics { this.contentDescription = contentDescription },
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically,
@@ -211,6 +214,17 @@ private fun SettingsToggle(
             color = NhColors.PhosphorWhite,
             fontFamily = NhTheme.fontFamily,
         )
-        Switch(checked = checked, onCheckedChange = onCheckedChange)
+        Switch(
+            checked = checked,
+            onCheckedChange = onCheckedChange,
+            colors = SwitchDefaults.colors(
+                checkedThumbColor = NhColors.CrtBlack,
+                checkedTrackColor = NhColors.PhosphorGreen,
+                checkedBorderColor = NhColors.PhosphorGreen,
+                uncheckedThumbColor = NhColors.PhosphorDim,
+                uncheckedTrackColor = NhColors.CrtPanel,
+                uncheckedBorderColor = NhColors.PhosphorDim,
+            ),
+        )
     }
 }

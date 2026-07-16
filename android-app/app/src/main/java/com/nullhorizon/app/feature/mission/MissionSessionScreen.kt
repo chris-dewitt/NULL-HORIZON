@@ -9,10 +9,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedButton
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -30,10 +27,12 @@ import com.nullhorizon.app.R
 import com.nullhorizon.app.ui.theme.NhTheme
 import com.nullhorizon.app.ui.theme.NhRegionAccent
 import com.nullhorizon.app.ui.theme.NhColors
-import com.nullhorizon.app.ui.chrome.drawTuiBorder
-import com.nullhorizon.app.ui.chrome.TuiPanel
-import com.nullhorizon.app.ui.chrome.TerminalPromptField
 import com.nullhorizon.app.ui.chrome.DialogueLines
+import com.nullhorizon.app.ui.chrome.TerminalPromptField
+import com.nullhorizon.app.ui.chrome.TuiActionButton
+import com.nullhorizon.app.ui.chrome.TuiPanel
+import com.nullhorizon.app.ui.chrome.TuiTextField
+import com.nullhorizon.app.ui.chrome.drawTuiBorder
 import com.nullhorizon.app.feature.mission.engine.MissionPhase
 import com.nullhorizon.app.simulation.execution.EditorSessionState
 import com.nullhorizon.app.simulation.execution.EditorWorkspace
@@ -62,9 +61,12 @@ fun MissionSessionScreen(
             .semantics { contentDescription = "Mission session" },
         verticalArrangement = Arrangement.spacedBy(12.dp),
     ) {
-        OutlinedButton(onClick = onBack) {
-            Text(stringResource(R.string.mission_back))
-        }
+        TuiActionButton(
+            label = stringResource(R.string.mission_back),
+            onClick = onBack,
+            accent = NhColors.PhosphorDim,
+            contentDescription = "Back to missions",
+        )
 
         when {
             state.isLoading -> Text(stringResource(R.string.missions_loading))
@@ -122,12 +124,12 @@ fun MissionSessionScreen(
                 )
 
                 if (state.session.phase == MissionPhase.Briefing) {
-                    Button(
+                    TuiActionButton(
+                        label = stringResource(R.string.mission_begin),
                         onClick = viewModel::beginMission,
-                        modifier = Modifier.semantics { contentDescription = "Begin mission" },
-                    ) {
-                        Text(stringResource(R.string.mission_begin))
-                    }
+                        accent = NhColors.PhosphorGreen,
+                        contentDescription = "Begin mission",
+                    )
                 }
 
                 if (state.session.phase == MissionPhase.InProgress ||
@@ -233,12 +235,12 @@ fun MissionSessionScreen(
                         )
                     }
 
-                    OutlinedButton(
+                    TuiActionButton(
+                        label = stringResource(R.string.mission_request_hint),
                         onClick = viewModel::requestHint,
-                        modifier = Modifier.semantics { contentDescription = "Request hint" },
-                    ) {
-                        Text(stringResource(R.string.mission_request_hint))
-                    }
+                        accent = NhColors.PhosphorBlue,
+                        contentDescription = "Request hint",
+                    )
                     state.visibleHintTexts.forEachIndexed { index, hint ->
                         Text(
                             text = stringResource(R.string.mission_hint_item, index + 1, hint),
@@ -247,22 +249,22 @@ fun MissionSessionScreen(
                     }
 
                     state.session.lastActionMessage?.let { message ->
-                        Text(message, color = MaterialTheme.colorScheme.primary)
+                        Text(message, color = NhColors.PhosphorGreen)
                     }
 
-                    OutlinedButton(
+                    TuiActionButton(
+                        label = stringResource(R.string.mission_reset),
                         onClick = viewModel::resetMission,
-                        modifier = Modifier.semantics { contentDescription = "Reset mission" },
-                    ) {
-                        Text(stringResource(R.string.mission_reset))
-                    }
+                        accent = NhColors.PhosphorRed,
+                        contentDescription = "Reset mission",
+                    )
                 }
 
                 if (state.session.phase == MissionPhase.Completed) {
                     Text(
                         text = stringResource(R.string.mission_completed),
                         style = MaterialTheme.typography.titleLarge,
-                        color = MaterialTheme.colorScheme.primary,
+                        color = NhColors.PhosphorGreen,
                     )
                     state.debrief?.let { debrief ->
                         MissionDebriefPanel(debrief = debrief)
@@ -275,22 +277,21 @@ fun MissionSessionScreen(
 
 @Composable
 private fun MissionDebriefPanel(debrief: com.nullhorizon.app.progression.DebriefSummary) {
-    Column(
+    TuiPanel(
+        title = stringResource(R.string.debrief_title),
+        accent = NhColors.PhosphorGreen,
         modifier = Modifier
             .fillMaxWidth()
             .semantics { contentDescription = "Mission debrief" },
-        verticalArrangement = Arrangement.spacedBy(6.dp),
     ) {
-        Text(
-            text = stringResource(R.string.debrief_title),
-            style = MaterialTheme.typography.titleMedium,
-        )
         Text(
             text = stringResource(
                 if (debrief.assisted) R.string.debrief_assisted else R.string.debrief_unassisted,
                 debrief.hintLevelUsed,
             ),
             style = MaterialTheme.typography.bodyMedium,
+            color = NhColors.PhosphorWhite,
+            fontFamily = NhTheme.fontFamily,
         )
         if (debrief.newlyAwardedClearance > 0) {
             Text(
@@ -299,21 +300,29 @@ private fun MissionDebriefPanel(debrief: com.nullhorizon.app.progression.Debrief
                     debrief.newlyAwardedClearance,
                 ),
                 style = MaterialTheme.typography.bodyMedium,
+                color = NhColors.PhosphorAmber,
+                fontFamily = NhTheme.fontFamily,
             )
         }
         Text(
-            text = stringResource(R.string.debrief_rank, debrief.rank),
+            text = stringResource(R.string.debrief_rank, debrief.rank).uppercase(),
             style = MaterialTheme.typography.bodyMedium,
+            color = NhColors.PhosphorGreen,
+            fontFamily = NhTheme.fontFamily,
         )
         if (debrief.masteryUpdates.isNotEmpty()) {
             Text(
-                text = stringResource(R.string.debrief_mastery),
+                text = stringResource(R.string.debrief_mastery).uppercase(),
                 style = MaterialTheme.typography.labelLarge,
+                color = NhColors.PhosphorDim,
+                fontFamily = NhTheme.fontFamily,
             )
             debrief.masteryUpdates.forEach { skill ->
                 Text(
                     text = "${skill.skillId}: ${skill.masteryLevel.name.lowercase()}",
                     style = MaterialTheme.typography.bodySmall,
+                    color = NhColors.PhosphorWhite,
+                    fontFamily = NhTheme.fontFamily,
                 )
             }
         }
@@ -324,12 +333,16 @@ private fun MissionDebriefPanel(debrief: com.nullhorizon.app.progression.Debrief
                     debrief.unlockedRewards.joinToString(),
                 ),
                 style = MaterialTheme.typography.bodyMedium,
+                color = NhColors.PhosphorAmber,
+                fontFamily = NhTheme.fontFamily,
             )
         }
         if (debrief.reviewRecommendations.isNotEmpty()) {
             Text(
-                text = stringResource(R.string.debrief_review),
+                text = stringResource(R.string.debrief_review).uppercase(),
                 style = MaterialTheme.typography.labelLarge,
+                color = NhColors.PhosphorDim,
+                fontFamily = NhTheme.fontFamily,
             )
             debrief.reviewRecommendations.forEach { rec ->
                 Text(
@@ -368,12 +381,12 @@ private fun SystemsPanel(
                 verticalArrangement = Arrangement.spacedBy(8.dp),
             ) {
                 actions.forEach { (id, label) ->
-                    Button(
+                    TuiActionButton(
+                        label = label,
                         onClick = { onAction(id) },
-                        modifier = Modifier.semantics { contentDescription = "Action $label" },
-                    ) {
-                        Text(label.uppercase())
-                    }
+                        accent = NhColors.PhosphorAmber,
+                        contentDescription = "Action $label",
+                    )
                 }
             }
         }
@@ -471,10 +484,10 @@ private fun GitPanel(
 ) {
     var input by rememberSaveable { mutableStateOf("") }
 
-    Text(
-        text = stringResource(R.string.mission_git),
-        style = MaterialTheme.typography.titleMedium,
-    )
+    TuiPanel(
+        title = stringResource(R.string.mission_git),
+        accent = NhColors.PhosphorBlue,
+    ) {
     Text(
         text = stringResource(R.string.mission_git_branch, git.currentBranch),
         style = MaterialTheme.typography.labelLarge,
@@ -520,22 +533,18 @@ private fun GitPanel(
                     horizontalArrangement = Arrangement.spacedBy(8.dp),
                     verticalArrangement = Arrangement.spacedBy(8.dp),
                 ) {
-                    OutlinedButton(
+                    TuiActionButton(
+                        label = stringResource(R.string.mission_git_use_ours),
                         onClick = { onResolveConflict(path, "ours") },
-                        modifier = Modifier.semantics {
-                            contentDescription = "Resolve $path with ours"
-                        },
-                    ) {
-                        Text(stringResource(R.string.mission_git_use_ours))
-                    }
-                    OutlinedButton(
+                        accent = NhColors.PhosphorGreen,
+                        contentDescription = "Resolve $path with ours",
+                    )
+                    TuiActionButton(
+                        label = stringResource(R.string.mission_git_use_theirs),
                         onClick = { onResolveConflict(path, "theirs") },
-                        modifier = Modifier.semantics {
-                            contentDescription = "Resolve $path with theirs"
-                        },
-                    ) {
-                        Text(stringResource(R.string.mission_git_use_theirs))
-                    }
+                        accent = NhColors.PhosphorAmber,
+                        contentDescription = "Resolve $path with theirs",
+                    )
                 }
             }
         }
@@ -596,6 +605,7 @@ private fun GitPanel(
             contentDescription = "Git input",
         )
     }
+    }
 }
 
 private fun commitGraphLines(git: GitRepositoryState): List<String> {
@@ -625,10 +635,10 @@ private fun SqlPanel(
 ) {
     var input by rememberSaveable { mutableStateOf("") }
 
-    Text(
-        text = stringResource(R.string.mission_sql),
-        style = MaterialTheme.typography.titleMedium,
-    )
+    TuiPanel(
+        title = stringResource(R.string.mission_sql),
+        accent = NhColors.PhosphorGreen,
+    ) {
     Text(
         text = stringResource(R.string.mission_sql_database, sql.databaseId, sql.policy),
         style = MaterialTheme.typography.labelLarge,
@@ -752,6 +762,7 @@ private fun SqlPanel(
             contentDescription = "SQL input",
         )
     }
+    }
 }
 
 private val editorSymbols = listOf(
@@ -776,11 +787,12 @@ private fun EditorPanel(
     onRunTests: () -> Unit,
 ) {
     val active = editor.activeFile()
+    val fontFamily = NhTheme.fontFamily
 
-    Text(
-        text = stringResource(R.string.mission_editor),
-        style = MaterialTheme.typography.titleMedium,
-    )
+    TuiPanel(
+        title = stringResource(R.string.mission_editor),
+        accent = NhColors.PhosphorBlue,
+    ) {
 
     FlowRow(
         horizontalArrangement = Arrangement.spacedBy(8.dp),
@@ -789,21 +801,13 @@ private fun EditorPanel(
         editor.files.forEach { file ->
             val selected = file.path == active?.path
             val label = file.path.substringAfterLast('/')
-            if (selected) {
-                Button(
-                    onClick = { onSelectFile(file.path) },
-                    modifier = Modifier.semantics { contentDescription = "File tab $label" },
-                ) {
-                    Text(label + if (!file.editable) " (ro)" else "")
-                }
-            } else {
-                OutlinedButton(
-                    onClick = { onSelectFile(file.path) },
-                    modifier = Modifier.semantics { contentDescription = "File tab $label" },
-                ) {
-                    Text(label + if (!file.editable) " (ro)" else "")
-                }
-            }
+            TuiActionButton(
+                label = label + if (!file.editable) " (ro)" else "",
+                onClick = { onSelectFile(file.path) },
+                accent = if (selected) NhColors.PhosphorAmber else NhColors.PhosphorDim,
+                contentDescription = "File tab $label",
+                inverted = selected,
+            )
         }
     }
 
@@ -812,27 +816,27 @@ private fun EditorPanel(
             horizontalArrangement = Arrangement.spacedBy(8.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp),
         ) {
-            OutlinedButton(
+            TuiActionButton(
+                label = stringResource(R.string.mission_editor_undo),
                 onClick = onUndo,
                 enabled = enabled && active.editable && active.undoStack.isNotEmpty(),
-            ) {
-                Text(stringResource(R.string.mission_editor_undo))
-            }
-            OutlinedButton(
+                accent = NhColors.PhosphorBlue,
+            )
+            TuiActionButton(
+                label = stringResource(R.string.mission_editor_redo),
                 onClick = onRedo,
                 enabled = enabled && active.editable && active.redoStack.isNotEmpty(),
-            ) {
-                Text(stringResource(R.string.mission_editor_redo))
-            }
-            OutlinedButton(onClick = onToggleDiff) {
-                Text(
-                    if (editor.showDiff) {
-                        stringResource(R.string.mission_editor_hide_diff)
-                    } else {
-                        stringResource(R.string.mission_editor_show_diff)
-                    },
-                )
-            }
+                accent = NhColors.PhosphorBlue,
+            )
+            TuiActionButton(
+                label = if (editor.showDiff) {
+                    stringResource(R.string.mission_editor_hide_diff)
+                } else {
+                    stringResource(R.string.mission_editor_show_diff)
+                },
+                onClick = onToggleDiff,
+                accent = NhColors.PhosphorAmber,
+            )
         }
 
         if (editor.showDiff) {
@@ -847,12 +851,12 @@ private fun EditorPanel(
                 EditorWorkspace.diffLines(active.starterContent, active.content).forEach { line ->
                     Text(
                         text = line,
-                        fontFamily = FontFamily.Monospace,
+                        fontFamily = fontFamily,
                         style = MaterialTheme.typography.bodySmall,
                         color = when {
-                            line.startsWith("+") -> MaterialTheme.colorScheme.primary
-                            line.startsWith("-") -> MaterialTheme.colorScheme.error
-                            else -> MaterialTheme.colorScheme.onSurface
+                            line.startsWith("+") -> NhColors.PhosphorGreen
+                            line.startsWith("-") -> NhColors.PhosphorRed
+                            else -> NhColors.PhosphorWhite
                         },
                     )
                 }
@@ -868,20 +872,22 @@ private fun EditorPanel(
         ) {
             Text(
                 text = lineNumbers.ifBlank { "1" },
-                fontFamily = FontFamily.Monospace,
+                fontFamily = fontFamily,
                 style = MaterialTheme.typography.labelSmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
-            OutlinedTextField(
+            TuiTextField(
                 value = active.content,
                 onValueChange = { if (enabled && active.editable) onContentChange(active.path, it) },
+                label = active.path,
                 modifier = Modifier
                     .fillMaxWidth()
                     .semantics { contentDescription = "Editor content ${active.path}" },
                 enabled = enabled && active.editable,
-                textStyle = MaterialTheme.typography.bodyMedium.copy(fontFamily = FontFamily.Monospace),
+                singleLine = false,
                 minLines = 8,
                 maxLines = 16,
+                textStyle = MaterialTheme.typography.bodyMedium,
             )
         }
 
@@ -895,12 +901,12 @@ private fun EditorPanel(
                 verticalArrangement = Arrangement.spacedBy(4.dp),
             ) {
                 editorSymbols.forEach { symbol ->
-                    OutlinedButton(
+                    TuiActionButton(
+                        label = if (symbol.isBlank()) "tab" else symbol,
                         onClick = { onInsertSymbol(symbol) },
-                        modifier = Modifier.semantics { contentDescription = "Insert symbol $symbol" },
-                    ) {
-                        Text(if (symbol.isBlank()) "tab" else symbol)
-                    }
+                        accent = NhColors.PhosphorDim,
+                        contentDescription = "Insert symbol $symbol",
+                    )
                 }
             }
         }
@@ -912,15 +918,15 @@ private fun EditorPanel(
             style = MaterialTheme.typography.titleMedium,
         )
         if (enabled) {
-            Button(
+            TuiActionButton(
+                label = stringResource(R.string.mission_run_tests),
                 onClick = onRunTests,
-                modifier = Modifier.semantics { contentDescription = "Run tests" },
-            ) {
-                Text(stringResource(R.string.mission_run_tests))
-            }
+                accent = NhColors.PhosphorGreen,
+                contentDescription = "Run tests",
+            )
         }
         editor.lastRunMessage?.let { message ->
-            Text(message, color = MaterialTheme.colorScheme.primary)
+            Text(message, color = NhColors.PhosphorGreen)
         }
         Column(
             modifier = Modifier
@@ -950,9 +956,9 @@ private fun EditorPanel(
                         fontFamily = FontFamily.Monospace,
                         style = MaterialTheme.typography.bodyMedium,
                         color = when (test.status) {
-                            TestStatus.Passed -> MaterialTheme.colorScheme.primary
+                            TestStatus.Passed -> NhColors.PhosphorGreen
                             TestStatus.Skipped -> MaterialTheme.colorScheme.onSurfaceVariant
-                            else -> MaterialTheme.colorScheme.error
+                            else -> NhColors.PhosphorRed
                         },
                     )
                     test.message?.let { msg ->
@@ -969,6 +975,7 @@ private fun EditorPanel(
             }
         }
     }
+    }
 }
 
 @Composable
@@ -978,10 +985,10 @@ private fun ServiceMapPanel(
     enabled: Boolean,
     onAction: (String) -> Unit,
 ) {
-    Text(
-        text = stringResource(R.string.mission_service_map),
-        style = MaterialTheme.typography.titleMedium,
-    )
+    TuiPanel(
+        title = stringResource(R.string.mission_service_map),
+        accent = NhColors.PhosphorBlue,
+    ) {
     GraphStatusList(
         title = stringResource(R.string.mission_service_map_nodes),
         lines = serviceMap.nodes.values.map { node ->
@@ -1002,12 +1009,13 @@ private fun ServiceMapPanel(
         )
     }
     serviceMap.lastExplanation?.let {
-        Text(it, style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.primary)
+        Text(it, style = MaterialTheme.typography.bodyMedium, color = NhColors.PhosphorGreen)
     }
     serviceMap.lastError?.let {
-        Text(it, style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.error)
+        Text(it, style = MaterialTheme.typography.bodyMedium, color = NhColors.PhosphorRed)
     }
     ActionButtonRow(actions = actions, enabled = enabled, onAction = onAction)
+    }
 }
 
 @Composable
@@ -1017,17 +1025,19 @@ private fun PipelinePanel(
     enabled: Boolean,
     onAction: (String) -> Unit,
 ) {
-    Text(
-        text = stringResource(R.string.mission_pipeline),
-        style = MaterialTheme.typography.titleMedium,
-    )
+    TuiPanel(
+        title = stringResource(R.string.mission_pipeline),
+        accent = NhColors.PhosphorAmber,
+    ) {
     Text(
         text = stringResource(
             R.string.mission_pipeline_run,
             pipeline.runId,
             pipeline.lastRunOutcome,
-        ),
+        ).uppercase(),
         style = MaterialTheme.typography.bodyMedium,
+        color = NhColors.PhosphorWhite,
+        fontFamily = NhTheme.fontFamily,
     )
     GraphStatusList(
         title = stringResource(R.string.mission_pipeline_stages),
@@ -1039,12 +1049,13 @@ private fun PipelinePanel(
         contentDescription = "Pipeline stages",
     )
     pipeline.lastExplanation?.let {
-        Text(it, style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.primary)
+        Text(it, style = MaterialTheme.typography.bodyMedium, color = NhColors.PhosphorGreen)
     }
     pipeline.lastError?.let {
-        Text(it, style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.error)
+        Text(it, style = MaterialTheme.typography.bodyMedium, color = NhColors.PhosphorRed)
     }
     ActionButtonRow(actions = actions, enabled = enabled, onAction = onAction)
+    }
 }
 
 @Composable
@@ -1054,10 +1065,10 @@ private fun MlOpsPanel(
     enabled: Boolean,
     onAction: (String) -> Unit,
 ) {
-    Text(
-        text = stringResource(R.string.mission_mlops),
-        style = MaterialTheme.typography.titleMedium,
-    )
+    TuiPanel(
+        title = stringResource(R.string.mission_mlops),
+        accent = NhColors.PhosphorRed,
+    ) {
     GraphStatusList(
         title = stringResource(R.string.mission_mlops_artifacts),
         lines = mlops.artifacts.values.map { art ->
@@ -1069,12 +1080,13 @@ private fun MlOpsPanel(
         contentDescription = "ML ops artifacts",
     )
     mlops.lastExplanation?.let {
-        Text(it, style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.primary)
+        Text(it, style = MaterialTheme.typography.bodyMedium, color = NhColors.PhosphorGreen)
     }
     mlops.lastError?.let {
-        Text(it, style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.error)
+        Text(it, style = MaterialTheme.typography.bodyMedium, color = NhColors.PhosphorRed)
     }
     ActionButtonRow(actions = actions, enabled = enabled, onAction = onAction)
+    }
 }
 
 @Composable
@@ -1125,12 +1137,12 @@ private fun ActionButtonRow(
         verticalArrangement = Arrangement.spacedBy(8.dp),
     ) {
         actions.forEach { (id, label) ->
-            OutlinedButton(
+            TuiActionButton(
+                label = label,
                 onClick = { onAction(id) },
-                modifier = Modifier.semantics { contentDescription = "Action $label" },
-            ) {
-                Text(label)
-            }
+                accent = NhColors.PhosphorAmber,
+                contentDescription = "Action $label",
+            )
         }
     }
 }

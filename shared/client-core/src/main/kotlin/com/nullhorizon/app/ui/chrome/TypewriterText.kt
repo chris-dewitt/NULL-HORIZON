@@ -15,7 +15,7 @@ import com.nullhorizon.app.ui.theme.NhTheme
 import kotlinx.coroutines.delay
 
 /**
- * Typewriter reveal for ORION/MICA dialogue. Instant when reduced motion is on.
+ * Typewriter reveal for ORION/MICA dialogue. Instant when animated chrome is disabled.
  */
 @Composable
 fun TypewriterText(
@@ -26,14 +26,14 @@ fun TypewriterText(
     charsPerSecond: Int = 42,
     onFinished: (() -> Unit)? = null,
 ) {
-    val reducedMotion = NhTheme.accessibility.reducedMotion
+    val animated = NhTheme.accessibility.animatedChromeEnabled
     val fontFamily = NhTheme.fontFamily
-    var visibleChars by remember(text, reducedMotion) {
-        mutableIntStateOf(if (reducedMotion) text.length else 0)
+    var visibleChars by remember(text, animated) {
+        mutableIntStateOf(if (animated) 0 else text.length)
     }
 
-    LaunchedEffect(text, reducedMotion, charsPerSecond) {
-        if (reducedMotion) {
+    LaunchedEffect(text, animated, charsPerSecond) {
+        if (!animated) {
             visibleChars = text.length
             onFinished?.invoke()
             return@LaunchedEffect

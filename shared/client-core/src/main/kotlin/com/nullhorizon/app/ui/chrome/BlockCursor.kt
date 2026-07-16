@@ -18,7 +18,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
 
 /**
- * Blinking block cursor for terminal-style inputs. Static when reduced motion.
+ * Blinking block cursor for terminal-style inputs. Static when animated chrome is disabled.
  */
 @Composable
 fun BlockCursor(
@@ -26,10 +26,10 @@ fun BlockCursor(
     color: Color = MaterialTheme.colorScheme.primary,
     blinkMillis: Long = 530L,
 ) {
-    val reducedMotion = NhTheme.accessibility.reducedMotion
+    val animated = NhTheme.accessibility.animatedChromeEnabled
     var visible by remember { mutableStateOf(true) }
 
-    if (!reducedMotion) {
+    if (animated) {
         LaunchedEffect(blinkMillis) {
             while (isActive) {
                 delay(blinkMillis)
@@ -39,7 +39,7 @@ fun BlockCursor(
     }
 
     Text(
-        text = if (visible || reducedMotion) "█" else " ",
+        text = if (visible || !animated) "█" else " ",
         modifier = modifier.semantics { contentDescription = "Cursor" },
         color = color,
         style = MaterialTheme.typography.bodyMedium,

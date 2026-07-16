@@ -8,9 +8,12 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.font.Font
@@ -19,6 +22,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Density
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.nullhorizon.app.navigation.NullHorizonNavHost
+import com.nullhorizon.app.ui.chrome.BootSequenceScreen
 import com.nullhorizon.app.ui.chrome.CrtFrame
 import com.nullhorizon.app.ui.chrome.CrtProfile
 import com.nullhorizon.app.ui.theme.NullHorizonTheme
@@ -59,6 +63,7 @@ fun NullHorizonApp(
             ),
         )
     }
+    var bootComplete by rememberSaveable { mutableStateOf(false) }
 
     NullHorizonTheme(
         highContrast = accessibility.highContrast,
@@ -72,9 +77,13 @@ fun NullHorizonApp(
                 modifier = Modifier.fillMaxSize(),
                 profile = CrtProfile.Lean,
             ) {
-                Surface(modifier = Modifier.fillMaxSize()) {
-                    Box(modifier = Modifier.fillMaxSize()) {
-                        NullHorizonNavHost(appContainer = app.container)
+                if (!bootComplete) {
+                    BootSequenceScreen(onFinished = { bootComplete = true })
+                } else {
+                    Surface(modifier = Modifier.fillMaxSize()) {
+                        Box(modifier = Modifier.fillMaxSize()) {
+                            NullHorizonNavHost(appContainer = app.container)
+                        }
                     }
                 }
             }

@@ -16,24 +16,24 @@ data class NhAccessibilityVisuals(
     val disableCrt: Boolean = false,
 ) {
     /**
-     * CRT overlays (scanlines, curvature, vignette, bloom, flicker).
-     * Forced off by Disable CRT or high contrast. Reduced motion alone does
-     * not remove static CRT — only animated chrome.
+     * CRT overlays (scanlines and vignette only).
+     * Forced off by Disable CRT or high contrast. Reduced motion alone keeps
+     * static overlays but removes animated chrome.
      */
     val crtEffectsEnabled: Boolean
         get() = !disableCrt && !highContrast
 
     val animatedChromeEnabled: Boolean
-        get() = !reducedMotion
+        get() = !reducedMotion && !highContrast
 }
 
 val LocalNhAccessibility = staticCompositionLocalOf { NhAccessibilityVisuals() }
 val LocalNhFontFamily = staticCompositionLocalOf { NhFontFamilyFallback }
 
 private fun standardColorScheme() = darkColorScheme(
-    primary = NhColors.PhosphorAmber,
+    primary = NhColors.PhosphorGreen,
     onPrimary = NhColors.CrtBlack,
-    secondary = NhColors.PhosphorGreen,
+    secondary = NhColors.PhosphorAmber,
     onSecondary = NhColors.CrtBlack,
     tertiary = NhColors.PhosphorBlue,
     onTertiary = NhColors.CrtBlack,

@@ -1,9 +1,9 @@
 # NULL HORIZON Design System
 
-**Status:** Active redesign baseline (ADR-0021)  
-**Design canvas:** PC Compose Desktop first; Android back-port  
-**North star:** Dense operator terminal — **tmux × Palantir × Fallout** (MU-TH-UR is
-inspirational tone only, not a costume to copy)
+**Status:** Active redesign baseline (ADR-0021, amended by ADR-0022)
+**Design canvas:** PC Compose Desktop first; Android distilled
+**North star:** Dense green phosphor operator terminal - **tmux x Palantir x
+Nostromo** mood, without kitsch or glow-heavy cyberpunk
 
 This document is the living visual contract for tokens, chrome, motion, and
 accessibility. Implementation primitives live under
@@ -11,16 +11,16 @@ accessibility. Implementation primitives live under
 
 ---
 
-## 1. Locked product decisions (2026-07-13)
+## 1. Locked product decisions (2026-07-14)
 
 | # | Topic | Decision |
 |---|---|---|
-| 1 | Identity | **tmux / Palantir / Fallout terminal** is the primary look. MU-TH-UR is a north-star mood (cold ship OS), not a mandatory homage. |
+| 1 | Identity | **Modern TUI / tmux terminal** is the primary look: box-drawing panes, indexed tabs, status glyphs, dense operator copy. |
 | 2 | Region accents | §3.2 table **confirmed** |
-| 3 | CRT | **Medium** intensity + **real geometric curvature** (not vignette-only) |
+| 3 | CRT | **Scanlines + vignette only**. No glow, no curvature, no bloom, no global flicker. |
 | 4 | Boot | Every cold start; click/key skips (**current**) |
-| 5 | ALL-CAPS | **System chrome only** (nav, panel titles, status lines). ORION/MICA dialogue stays sentence case. |
-| 6 | Android CRT | **Lean CRT on phones** (lighter scanlines, milder curve, no idle flicker). Same tokens/TUI; full medium CRT on PC. See §6.1. |
+| 5 | ALL-CAPS | **System chrome/status voice** is ALL-CAPS and dense. Long-form teaching/body text stays readable. |
+| 6 | Android CRT | **Lean CRT on phones** (lighter scanlines/vignette). Same tokens/TUI; stronger static overlay on PC. See §6.1. |
 | 7 | Disable CRT | **Separate accessibility pref** (`disableCrt`). Independent of reduced motion. High contrast still forces CRT off for readability. |
 | 8 | Font | **Terminal** — VT323 (DEC VT320 console glyphs, SIL OFL). See `shared/client-core/.../fonts/`. |
 
@@ -51,14 +51,15 @@ accessibility. Implementation primitives live under
 
 | Token | Role | Default |
 |---|---|---|
-| `CrtBlack` | App background | `#000000` |
-| `CrtRaised` | Nested panel fill | `#0A0A0A` |
-| `PhosphorWhite` | Primary readable text | `#E6E6E6` |
-| `PhosphorGreen` | Nominal / OK / system | `#33FF66` |
+| `CrtBlack` | App background | `#000703` |
+| `CrtRaised` | Nested panel fill | `#03180D` |
+| `CrtPanel` | Panel fill | `#011009` |
+| `PhosphorWhite` | Primary readable text | `#DFFFE3` |
+| `PhosphorGreen` | Nominal / OK / system | `#35FF6B` |
 | `PhosphorAmber` | Warning / emergency accent | `#FFB000` |
 | `PhosphorRed` | Critical / Black Vault shift | `#FF3344` |
 | `PhosphorBlue` | Info / cold systems | `#44AAFF` |
-| `PhosphorDim` | Secondary labels | `#7A7A7A` |
+| `PhosphorDim` | Secondary labels | `#6FA67A` |
 | `Scanline` | Overlay stroke | white @ profile alpha |
 
 High-contrast mode: pure black background, near-white foreground, accent kept
@@ -100,27 +101,27 @@ for focus only; CRT overlays forced off.
 | Primitive | Purpose | A11y notes |
 |---|---|---|
 | `TuiPanel` | Box-drawing bordered section | Title is text; not color-only |
-| `CrtFrame` | Curvature + scanlines + vignette + bloom | Off if `disableCrt` or high contrast |
-| `TypewriterText` | ORION/MICA dialogue reveal | Instant if reduced motion |
-| `BlockCursor` | Blinking input caret | Static block if reduced motion |
-| `BootSequence` | Launch OS check theatre | Every cold start; skippable; instant if reduced motion |
-| `RegionStatusLine` | ALL-CAPS region + status | Accent + textual status |
+| `CrtFrame` | Scanlines + vignette | Off if `disableCrt` or high contrast |
+| `TypewriterText` | ORION/MICA dialogue reveal | Instant if animated chrome is disabled |
+| `BlockCursor` | Blinking input caret | Static block if animated chrome is disabled |
+| `BootSequence` | Launch OS check theatre | Every cold start; skippable; instant if animated chrome is disabled |
+| `TuiRegionChip` | ALL-CAPS region + glyph status | Damaged blink respects animated chrome |
 
 ---
 
 ## 6. CRT profiles
 
-| Profile | Where | Scanlines | Curvature | Flicker | Bloom |
-|---|---|---|---|---|---|
-| `Medium` | PC default | Medium density/alpha | Real barrel-style warp + bezel | Rare idle | Soft phosphor edge |
-| `Lean` | Android phones | Lighter | Milder warp | Off | Minimal |
+| Profile | Where | Scanlines | Vignette | Curvature / bloom / flicker |
+|---|---|---|---|---|
+| `Medium` | PC default | Medium density/alpha | Stronger edge falloff | Off |
+| `Lean` | Android phones | Lighter | Softer edge falloff | Off |
 
 ### 6.1 What “Android CRT” meant
 
 Not “does Android get the redesign?” — tokens and TUI chrome ship to both.
-The question was whether phones should also draw the **full CRT overlay**
-(scanlines / curve / flicker), which can hurt readability and battery on small
-screens. **Decision:** phones use **Lean** CRT by default; PC uses **Medium**.
+The question was whether phones should also draw the stronger static CRT overlay,
+which can hurt readability and battery on small screens. **Decision:** phones use
+**Lean** CRT by default; PC uses **Medium**.
 `disableCrt` turns overlays off on every platform.
 
 ---
@@ -129,9 +130,9 @@ screens. **Decision:** phones use **Lean** CRT by default; PC uses **Medium**.
 
 | Pref | Effect |
 |---|---|
-| High contrast | White-on-black; CRT forced off |
-| Reduced motion | No boot animation, typewriter, cursor blink, or flicker (static CRT may remain) |
-| Disable CRT | No scanlines, curvature, vignette, bloom, or flicker |
+| High contrast | White-on-black; CRT overlays and animated chrome forced off |
+| Reduced motion | No boot animation, typewriter, cursor blink, or status blink (static CRT may remain) |
+| Disable CRT | No scanlines or vignette |
 | Larger text | `fontScale` boost; panels reflow; no clipped primary CTAs |
 | Color-blind / color-only | Status always includes text or symbol, not hue alone |
 
@@ -141,14 +142,14 @@ screens. **Decision:** phones use **Lean** CRT by default; PC uses **Medium**.
 
 1. Docs + tokens + shared primitives — done
 2. PC shell: boot, CRT Medium, ship map `TuiPanel` — done
-3. Disable CRT pref + Medium real curvature + Lean Android CRT — done
+3. Disable CRT pref + Medium/Lean scanline-vignette CRT profiles - done
 4. Terminal typeface (VT323) — done
 5. PC mission session / list / skills / settings / profile — done
 6. Android ship map lean TUI — done
 7. Android missions / skills / settings / profile / mission session — done (this slice)
 8. PC editor / service-map / pipeline / mlops TUI panels — done (this slice)
-9. Residual polish: Material buttons/text fields inside editor, nav rail → pure TUI column — done (PC `TuiNavColumn` + `TuiActionButton`)
-10. Optional later: replace remaining OutlinedTextField editor bodies with terminal fields; Android bottom nav TUI
+9. Residual polish: Material buttons/text fields inside onboarding/settings/mission surfaces - done
+10. Optional later: Android bottom nav TUI density tuning
 
 Do not rewrite mission engines or content YAML for cosmetics.
 
@@ -159,7 +160,7 @@ Do not rewrite mission engines or content YAML for cosmetics.
 ### Still open
 - Global OK green vs region accent for success (default: global OK green)
 - Black Vault red exact hue
-- Flicker: rare idle OK, or boot-only?
+- Damaged-status blink cadence and seizure-safety caps
 - Replace PC `NavigationRail` with pure TUI column? **Done** (`TuiNavColumn`)
 - Mission panel migration pace
 - Keybind hints always on vs toggle

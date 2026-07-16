@@ -4,6 +4,10 @@
 - Date: 2026-07-13
 - Deciders: Product + client design direction (PC-first redesign)
 
+> Superseded in part by ADR-0022. ADR-0021 remains the baseline for shared TUI
+> chrome, but ADR-0022 replaces the curvature, bloom, and idle-flicker CRT
+> decisions with scanlines plus vignette only.
+
 ## Context
 
 Section 15 of `PRODUCT_SPEC.md` described “functional retro-future” as dark

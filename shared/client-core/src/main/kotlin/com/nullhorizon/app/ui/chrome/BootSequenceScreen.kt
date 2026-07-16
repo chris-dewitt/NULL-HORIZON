@@ -25,7 +25,7 @@ import com.nullhorizon.app.ui.theme.NhTheme
 import kotlinx.coroutines.delay
 
 /**
- * Full-screen boot theatre. Instant-complete when reduced motion is enabled.
+ * Full-screen boot theatre. Instant-complete when animated chrome is disabled.
  * Click anywhere (or wait) to finish.
  */
 @Composable
@@ -34,13 +34,13 @@ fun BootSequenceScreen(
     modifier: Modifier = Modifier,
     lines: List<BootSequence.Line> = BootSequence.defaultLines(),
 ) {
-    val reducedMotion = NhTheme.accessibility.reducedMotion
-    var visibleCount by remember(reducedMotion) {
-        mutableIntStateOf(if (reducedMotion) lines.size else 0)
+    val animated = NhTheme.accessibility.animatedChromeEnabled
+    var visibleCount by remember(animated) {
+        mutableIntStateOf(if (animated) 0 else lines.size)
     }
 
-    LaunchedEffect(reducedMotion, lines) {
-        if (reducedMotion) {
+    LaunchedEffect(animated, lines) {
+        if (!animated) {
             visibleCount = lines.size
             delay(200)
             onFinished()
@@ -77,7 +77,7 @@ fun BootSequenceScreen(
                     fontFamily = FontFamily.Monospace,
                 )
             }
-            if (visibleCount < lines.size && !reducedMotion) {
+            if (visibleCount < lines.size && animated) {
                 BlockCursor(color = NhColors.PhosphorGreen)
             } else {
                 Text(

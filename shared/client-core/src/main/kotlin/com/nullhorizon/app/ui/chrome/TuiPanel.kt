@@ -8,6 +8,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Offset
@@ -20,6 +25,8 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.nullhorizon.app.ui.theme.NhColors
 import com.nullhorizon.app.ui.theme.NhTheme
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.isActive
 
 /**
  * TUI-style panel with box-drawing border and ALL-CAPS title.
@@ -74,6 +81,42 @@ fun TuiRegionChip(
     onClick: () -> Unit,
 ) {
     val borderColor = if (selected) accent else NhColors.PhosphorDim
+    val normalizedStatus = status.uppercase()
+    val isRestored = normalizedStatus.contains("RESTORED") ||
+        normalizedStatus.contains("COMPLETED") ||
+        normalizedStatus.contains("ONLINE") ||
+        normalizedStatus.contains("OK")
+    val isOffline = normalizedStatus.contains("OFFLINE") ||
+        normalizedStatus.contains("LOCKED") ||
+        normalizedStatus.contains("BLOCKED")
+    val isDamaged = !isRestored && (
+        isOffline ||
+            normalizedStatus.contains("DEGRADED") ||
+            normalizedStatus.contains("FAILED") ||
+            normalizedStatus.contains("ERROR")
+        )
+    val statusGlyph = when {
+        isRestored -> "●"
+        isOffline -> "○"
+        isDamaged -> "◐"
+        else -> "●"
+    }
+    val animatedStatus = isDamaged && NhTheme.accessibility.animatedChromeEnabled
+    var statusAlpha by remember(normalizedStatus, animatedStatus) { mutableFloatStateOf(1f) }
+
+    LaunchedEffect(normalizedStatus, animatedStatus) {
+        if (!animatedStatus) {
+            statusAlpha = 1f
+            return@LaunchedEffect
+        }
+        while (isActive) {
+            statusAlpha = 0.58f
+            delay(180)
+            statusAlpha = 1f
+            delay(920)
+        }
+    }
+
     Column(
         modifier = modifier
             .semantics { contentDescription = onClickLabel }
@@ -90,9 +133,9 @@ fun TuiRegionChip(
             overflow = TextOverflow.Ellipsis,
         )
         Text(
-            text = status.uppercase(),
+            text = "$statusGlyph $normalizedStatus",
             style = MaterialTheme.typography.labelMedium,
-            color = if (selected) accent else NhColors.PhosphorDim,
+            color = (if (selected) accent else NhColors.PhosphorDim).copy(alpha = statusAlpha),
             fontFamily = NhTheme.fontFamily,
             maxLines = 1,
             overflow = TextOverflow.Ellipsis,

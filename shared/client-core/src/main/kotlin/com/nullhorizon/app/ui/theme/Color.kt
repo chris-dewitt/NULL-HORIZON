@@ -3,18 +3,18 @@ package com.nullhorizon.app.ui.theme
 import androidx.compose.ui.graphics.Color
 
 /**
- * CRT / MU-TH-UR console design tokens (ADR-0021).
+ * Green phosphor terminal design tokens (ADR-0022).
  *
  * Phosphor text on near-black. Region accents are separate ([NhRegionAccent]).
  * Avoid purple neon, cream/terracotta brochure looks, and glow-heavy chrome.
  */
 object NhColors {
-    val CrtBlack = Color(0xFF000000)
-    val CrtRaised = Color(0xFF0A0A0A)
-    val CrtPanel = Color(0xFF050505)
-    val PhosphorWhite = Color(0xFFE6E6E6)
-    val PhosphorDim = Color(0xFF7A7A7A)
-    val PhosphorGreen = Color(0xFF33FF66)
+    val CrtBlack = Color(0xFF000703)
+    val CrtRaised = Color(0xFF03180D)
+    val CrtPanel = Color(0xFF011009)
+    val PhosphorWhite = Color(0xFFDFFFE3)
+    val PhosphorDim = Color(0xFF6FA67A)
+    val PhosphorGreen = Color(0xFF35FF6B)
     val PhosphorAmber = Color(0xFFFFB000)
     val PhosphorRed = Color(0xFFFF3344)
     val PhosphorBlue = Color(0xFF44AAFF)
