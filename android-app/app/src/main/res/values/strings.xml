@@ -129,4 +129,5 @@
     <string name="settings_reduced_motion">Reduced motion</string>
     <string name="settings_larger_text">Larger text</string>
     <string name="settings_disable_crt">Disable CRT effects</string>
+    <string name="settings_sound">Sound effects</string>
 </resources>

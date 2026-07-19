@@ -15,6 +15,9 @@ interface SettingsRepository {
 
     suspend fun setDisableCrt(enabled: Boolean)
 
+    /** Default no-op so platform impls can adopt audio incrementally. */
+    suspend fun setSoundEnabled(enabled: Boolean) {}
+
     suspend fun setAnalyticsEnabled(enabled: Boolean)
 
     suspend fun setCrashReportingEnabled(enabled: Boolean)

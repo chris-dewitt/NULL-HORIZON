@@ -12,4 +12,6 @@ data class AccessibilitySettings(
     val largerText: Boolean = false,
     /** When true, CRT overlays (scanlines and vignette) are off. */
     val disableCrt: Boolean = false,
+    /** Master switch for UI sound effects (and later ambient audio). */
+    val soundEnabled: Boolean = true,
 )
