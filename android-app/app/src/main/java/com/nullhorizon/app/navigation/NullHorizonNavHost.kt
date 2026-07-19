@@ -107,6 +107,14 @@ fun NullHorizonNavHost(
             MissionSessionScreen(
                 viewModel = viewModel,
                 onBack = { navController.popBackStack() },
+                onNextMission = { nextId ->
+                    // Replace the finished mission on the stack so Back still
+                    // returns to the mission list, not a chain of missions.
+                    navController.navigate(Routes.missionSession(nextId)) {
+                        popUpTo(Routes.MissionSession) { inclusive = true }
+                        launchSingleTop = true
+                    }
+                },
             )
         }
     }

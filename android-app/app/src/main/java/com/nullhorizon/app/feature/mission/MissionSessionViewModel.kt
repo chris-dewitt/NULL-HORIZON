@@ -7,6 +7,7 @@ import androidx.lifecycle.createSavedStateHandle
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
+import com.nullhorizon.app.content.CampaignOrder
 import com.nullhorizon.app.content.ContentRepository
 import com.nullhorizon.app.content.MissionProgressRepository
 import com.nullhorizon.app.content.model.DialogueDefinition
@@ -33,6 +34,8 @@ data class MissionSessionUiState(
     val session: MissionSessionState = MissionSessionState(),
     val visibleHintTexts: List<String> = emptyList(),
     val debrief: DebriefSummary? = null,
+    val nextMissionId: String? = null,
+    val nextMissionTitle: String? = null,
     val errorMessage: String? = null,
 )
 
@@ -45,6 +48,8 @@ class MissionSessionViewModel(
     private val hintEngine = HintEngine()
     private val json = Json { ignoreUnknownKeys = true }
     private var stateMachine: MissionStateMachine? = null
+    private var nextMissionId: String? = null
+    private var nextMissionTitle: String? = null
 
     private val _uiState = MutableStateFlow(MissionSessionUiState())
     val uiState: StateFlow<MissionSessionUiState> = _uiState.asStateFlow()
@@ -63,6 +68,7 @@ class MissionSessionViewModel(
             }
             val machine = MissionStateMachine(mission)
             stateMachine = machine
+            resolveNextMission(mission)
             val restoredJson = savedStateHandle.get<String>(KEY_SESSION_JSON)
             val session = if (restoredJson != null) {
                 json.decodeFromString<MissionSessionState>(restoredJson)
@@ -73,6 +79,19 @@ class MissionSessionViewModel(
         }.onFailure { error ->
             _uiState.update {
                 it.copy(isLoading = false, errorMessage = error.message ?: "Failed to load mission")
+            }
+        }
+    }
+
+    private suspend fun resolveNextMission(mission: MissionDefinition) {
+        nextMissionId = null
+        nextMissionTitle = null
+        runCatching {
+            val chapterIds = contentRepository.manifest().chapters
+            val chapters = chapterIds.map { contentRepository.chapter(it) }
+            CampaignOrder.nextMissionId(chapters, mission.missionId)?.let { id ->
+                nextMissionId = id
+                nextMissionTitle = contentRepository.mission(id).title
             }
         }
     }
@@ -239,6 +258,8 @@ class MissionSessionViewModel(
             session = session,
             visibleHintTexts = hints,
             debrief = _uiState.value.debrief,
+            nextMissionId = nextMissionId,
+            nextMissionTitle = nextMissionTitle,
             errorMessage = null,
         )
     }

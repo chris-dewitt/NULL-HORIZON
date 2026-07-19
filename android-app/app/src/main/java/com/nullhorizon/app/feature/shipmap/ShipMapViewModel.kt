@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.createSavedStateHandle
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.CreationExtras
+import com.nullhorizon.app.content.CampaignOrder
 import com.nullhorizon.app.content.ContentRepository
 import com.nullhorizon.app.content.MissionProgressRepository
 import com.nullhorizon.app.content.model.ChapterDefinition
@@ -66,7 +67,7 @@ class ShipMapViewModel(
         viewModelScope.launch {
             runCatching {
                 val manifest = contentRepository.manifest()
-                val chapters = orderChapters(manifest.chapters)
+                val chapters = CampaignOrder.orderedRegionChapterIds(manifest.chapters)
                     .map { contentRepository.chapter(it) }
                 val missionsById = contentRepository.listMissions()
                     .associateBy { it.missionId }
@@ -95,18 +96,6 @@ class ShipMapViewModel(
     fun selectRegion(regionId: String) {
         savedStateHandle[KEY_SELECTED_REGION] = regionId
         _uiState.update { it.copy(selectedRegionId = regionId) }
-    }
-
-    /**
-     * Campaign order first (spec §11 chapter sequence), then any chapters the
-     * bundle adds later. The vertical-slice playlist is a curated path across
-     * other regions, not a ship region itself.
-     */
-    private fun orderChapters(chapterIds: List<String>): List<String> {
-        val available = chapterIds.filterNot { it in NON_REGION_CHAPTERS }
-        val ordered = CAMPAIGN_ORDER.filter { it in available }
-        val remainder = available.filterNot { it in CAMPAIGN_ORDER }
-        return ordered + remainder
     }
 
     private fun toRegion(
@@ -141,25 +130,6 @@ class ShipMapViewModel(
 
     companion object {
         const val KEY_SELECTED_REGION = "selected_region_id"
-
-        private val NON_REGION_CHAPTERS = setOf("vertical_slice")
-
-        private val CAMPAIGN_ORDER = listOf(
-            "emergency_interface",
-            "maintenance_deck",
-            "version_vault",
-            "archive_core",
-            "automation_lab",
-            "drone_foundry",
-            "navigation_array",
-            "communications_spire",
-            "verification_chamber",
-            "black_vault",
-            "data_foundry",
-            "reactor_kernel",
-            "prediction_observatory",
-            "horizon_core",
-        )
 
         fun factory(
             contentRepository: ContentRepository,
