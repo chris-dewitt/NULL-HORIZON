@@ -49,6 +49,7 @@ import com.nullhorizon.app.simulation.terminal.TerminalSessionState
 fun MissionSessionScreen(
     viewModel: MissionSessionViewModel,
     onBack: () -> Unit,
+    onNextMission: (String) -> Unit = {},
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
     val mission = state.mission
@@ -268,6 +269,18 @@ fun MissionSessionScreen(
                     )
                     state.debrief?.let { debrief ->
                         MissionDebriefPanel(debrief = debrief)
+                    }
+                    state.nextMissionId?.let { nextId ->
+                        TuiActionButton(
+                            label = state.nextMissionTitle?.let { title ->
+                                stringResource(R.string.mission_next_titled, title)
+                            } ?: stringResource(R.string.mission_next),
+                            onClick = { onNextMission(nextId) },
+                            accent = NhColors.PhosphorGreen,
+                            contentDescription = state.nextMissionTitle?.let {
+                                "Next mission: $it"
+                            } ?: "Next mission",
+                        )
                     }
                 }
             }

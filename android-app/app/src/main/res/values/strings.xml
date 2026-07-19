@@ -37,6 +37,8 @@
     <string name="mission_status_locked">Locked</string>
     <string name="mission_status_completed">Completed</string>
     <string name="mission_back">BACK TO MISSIONS</string>
+    <string name="mission_next">NEXT REPAIR ▸</string>
+    <string name="mission_next_titled">NEXT REPAIR ▸ %1$s</string>
     <string name="mission_begin">BEGIN REPAIR</string>
     <string name="mission_offline_fallback">OFFLINE FALLBACK</string>
     <string name="mission_systems_panel">SYSTEMS</string>
