@@ -89,6 +89,7 @@
     <string name="mission_reset">RESET MISSION</string>
     <string name="mission_completed">MISSION COMPLETE</string>
     <string name="mission_phase">PHASE: %1$s</string>
+    <string name="rank_up_title">Rank achieved</string>
     <string name="debrief_title">DEBRIEF</string>
     <string name="debrief_assisted">Assisted completion (hint level %1$d)</string>
     <string name="debrief_unassisted">Unassisted completion (hint level %1$d)</string>

@@ -22,6 +22,8 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import androidx.compose.runtime.collectAsState
 import com.nullhorizon.app.ui.chrome.DialogueLines
+import com.nullhorizon.app.ui.chrome.RankUpBanner
+import com.nullhorizon.app.ui.chrome.animatedCount
 import com.nullhorizon.app.ui.chrome.TerminalPromptField
 import com.nullhorizon.app.ui.chrome.TuiActionButton
 import com.nullhorizon.app.ui.chrome.TuiPanel
@@ -265,6 +267,13 @@ fun MissionSessionScreen(
                         color = MaterialTheme.colorScheme.primary,
                     )
                     state.debrief?.let { debrief ->
+                        if (debrief.rankChanged) {
+                            RankUpBanner(
+                                title = Strings.rank_up_title,
+                                previousRank = debrief.previousRank,
+                                newRank = debrief.rank,
+                            )
+                        }
                         MissionDebriefPanel(debrief = debrief)
                     }
                 }
@@ -294,8 +303,8 @@ private fun MissionDebriefPanel(debrief: com.nullhorizon.app.progression.Debrief
         )
         if (debrief.newlyAwardedClearance > 0) {
             Text(
-                text = Strings.debrief_clearance(debrief.newlyAwardedClearance),
-                style = MaterialTheme.typography.bodyMedium,
+                text = Strings.debrief_clearance(animatedCount(debrief.newlyAwardedClearance)),
+                style = MaterialTheme.typography.titleMedium,
                 color = NhColors.PhosphorAmber,
                 fontFamily = NhTheme.fontFamily,
             )
