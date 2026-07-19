@@ -28,7 +28,10 @@ import com.nullhorizon.app.ui.theme.NhTheme
 import com.nullhorizon.app.ui.theme.NhRegionAccent
 import com.nullhorizon.app.ui.theme.NhColors
 import com.nullhorizon.app.ui.chrome.DialogueLines
+import com.nullhorizon.app.ui.chrome.RankUpBanner
+import com.nullhorizon.app.ui.chrome.animatedCount
 import com.nullhorizon.app.ui.chrome.TerminalPromptField
+import com.nullhorizon.app.ui.feedback.HapticPulse
 import com.nullhorizon.app.ui.chrome.TuiActionButton
 import com.nullhorizon.app.ui.chrome.TuiPanel
 import com.nullhorizon.app.ui.chrome.TuiTextField
@@ -262,12 +265,21 @@ fun MissionSessionScreen(
                 }
 
                 if (state.session.phase == MissionPhase.Completed) {
+                    // Buzz once when the debrief lands, then celebrate.
+                    HapticPulse(key = state.debrief?.missionId)
                     Text(
                         text = stringResource(R.string.mission_completed),
                         style = MaterialTheme.typography.titleLarge,
                         color = NhColors.PhosphorGreen,
                     )
                     state.debrief?.let { debrief ->
+                        if (debrief.rankChanged) {
+                            RankUpBanner(
+                                title = stringResource(R.string.rank_up_title),
+                                previousRank = debrief.previousRank,
+                                newRank = debrief.rank,
+                            )
+                        }
                         MissionDebriefPanel(debrief = debrief)
                     }
                     state.nextMissionId?.let { nextId ->
@@ -310,9 +322,9 @@ private fun MissionDebriefPanel(debrief: com.nullhorizon.app.progression.Debrief
             Text(
                 text = stringResource(
                     R.string.debrief_clearance,
-                    debrief.newlyAwardedClearance,
+                    animatedCount(debrief.newlyAwardedClearance),
                 ),
-                style = MaterialTheme.typography.bodyMedium,
+                style = MaterialTheme.typography.titleMedium,
                 color = NhColors.PhosphorAmber,
                 fontFamily = NhTheme.fontFamily,
             )

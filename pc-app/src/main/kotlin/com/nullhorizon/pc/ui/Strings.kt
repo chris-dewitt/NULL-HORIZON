@@ -82,6 +82,7 @@ object Strings {
     const val mission_reset = "RESET MISSION"
     const val mission_completed = "MISSION COMPLETE"
     fun mission_phase(arg1: String): String = "PHASE: $arg1"
+    const val rank_up_title = "Rank achieved"
     const val debrief_title = "DEBRIEF"
     fun debrief_assisted(arg1: Int): String = "Assisted completion (hint level $arg1)"
     fun debrief_unassisted(arg1: Int): String = "Unassisted completion (hint level $arg1)"
