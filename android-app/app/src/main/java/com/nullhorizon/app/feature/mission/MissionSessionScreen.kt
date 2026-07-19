@@ -27,6 +27,8 @@ import com.nullhorizon.app.R
 import com.nullhorizon.app.ui.theme.NhTheme
 import com.nullhorizon.app.ui.theme.NhRegionAccent
 import com.nullhorizon.app.ui.theme.NhColors
+import com.nullhorizon.app.audio.GameSound
+import com.nullhorizon.app.audio.PlaySoundOnce
 import com.nullhorizon.app.ui.chrome.DialogueLines
 import com.nullhorizon.app.ui.chrome.RankUpBanner
 import com.nullhorizon.app.ui.chrome.animatedCount
@@ -265,8 +267,13 @@ fun MissionSessionScreen(
                 }
 
                 if (state.session.phase == MissionPhase.Completed) {
-                    // Buzz once when the debrief lands, then celebrate.
+                    // Buzz + chime once when the debrief lands, then celebrate.
                     HapticPulse(key = state.debrief?.missionId)
+                    PlaySoundOnce(key = state.debrief?.missionId, sound = GameSound.Success)
+                    PlaySoundOnce(
+                        key = state.debrief?.takeIf { it.rankChanged }?.rank,
+                        sound = GameSound.RankUp,
+                    )
                     Text(
                         text = stringResource(R.string.mission_completed),
                         style = MaterialTheme.typography.titleLarge,
