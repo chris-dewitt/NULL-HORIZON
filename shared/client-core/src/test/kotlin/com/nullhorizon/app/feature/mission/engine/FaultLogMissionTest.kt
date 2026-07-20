@@ -38,6 +38,18 @@ class FaultLogMissionTest {
     }
 
     @Test
+    fun quotedGrep_stillSatisfiesLastCommandObjective() {
+        // Regression: a player typing grep with quotes around the pattern (or
+        // extra spaces) must satisfy an objective authored without quotes.
+        var state = machine.begin(machine.initialState())
+        state = machine.runCommand(state, "cd /var/log/life_support")
+        state = machine.runCommand(state, "cat fault.log")
+        state = machine.runCommand(state, "grep 'valve-3'  fault.log")
+        assertThat(state.completedObjectiveIds).contains("confirm_with_grep")
+        assertThat(state.phase).isEqualTo(MissionPhase.Completed)
+    }
+
+    @Test
     fun reset_restoresInitialCwdAndClearsHistory() {
         var state = machine.begin(machine.initialState())
         state = machine.runCommand(state, "cd /var/log")

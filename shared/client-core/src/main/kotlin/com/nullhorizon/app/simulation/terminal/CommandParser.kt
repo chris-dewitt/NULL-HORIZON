@@ -19,6 +19,36 @@ data class ParsedCommand(
     val args: List<String>,
 )
 
+/**
+ * Best-effort canonical form of a command line for objective matching: strips
+ * single/double quotes and collapses whitespace so `grep 'ERROR' log`,
+ * `grep "ERROR"  log`, and `grep ERROR log` all compare equal. Never throws;
+ * an unterminated quote simply absorbs to the end of the line.
+ */
+fun canonicalizeCommandLine(line: String): String {
+    val tokens = mutableListOf<String>()
+    val current = StringBuilder()
+    var inSingle = false
+    var inDouble = false
+    for (ch in line.trim()) {
+        when {
+            ch == '\'' && !inDouble -> inSingle = !inSingle
+            ch == '"' && !inSingle -> inDouble = !inDouble
+            ch.isWhitespace() && !inSingle && !inDouble -> {
+                if (current.isNotEmpty()) {
+                    tokens += current.toString()
+                    current.clear()
+                }
+            }
+            else -> current.append(ch)
+        }
+    }
+    if (current.isNotEmpty()) {
+        tokens += current.toString()
+    }
+    return tokens.joinToString(" ")
+}
+
 class CommandParser {
     fun parse(line: String): Result<ParsedCommand> {
         val trimmed = line.trim()
