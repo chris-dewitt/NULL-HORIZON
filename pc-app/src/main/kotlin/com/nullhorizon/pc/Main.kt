@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -42,6 +43,9 @@ fun main() = application {
         val terminalFont = rememberTerminalFontFamily()
         val soundPlayer = remember { DesktopSoundPlayer(enabled = accessibility.soundEnabled) }
         soundPlayer.enabled = accessibility.soundEnabled
+        LaunchedEffect(accessibility.soundEnabled) {
+            soundPlayer.setAmbient(accessibility.soundEnabled)
+        }
         DisposableEffect(Unit) {
             onDispose { soundPlayer.release() }
         }

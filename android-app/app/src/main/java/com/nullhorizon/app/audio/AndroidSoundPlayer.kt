@@ -2,6 +2,7 @@ package com.nullhorizon.app.audio
 
 import android.content.Context
 import android.media.AudioAttributes
+import android.media.MediaPlayer
 import android.media.SoundPool
 import com.nullhorizon.app.R
 
@@ -36,6 +37,8 @@ class AndroidSoundPlayer(
         }.toMap()
     } ?: emptyMap()
 
+    private var ambient: MediaPlayer? = null
+
     override fun play(sound: GameSound) {
         if (!enabled) return
         val p = pool ?: return
@@ -43,13 +46,36 @@ class AndroidSoundPlayer(
         runCatching { p.play(id, 1f, 1f, 1, 0, 1f) }
     }
 
+    override fun setAmbient(enabled: Boolean) {
+        if (enabled && this.enabled) startAmbient() else stopAmbient()
+    }
+
+    private fun startAmbient() {
+        runCatching {
+            if (ambient == null) {
+                ambient = MediaPlayer.create(appContext, R.raw.ambient_hum)?.apply {
+                    isLooping = true
+                    setVolume(0.5f, 0.5f)
+                }
+            }
+            ambient?.let { if (!it.isPlaying) it.start() }
+        }
+    }
+
+    private fun stopAmbient() {
+        runCatching { ambient?.let { if (it.isPlaying) it.pause() } }
+    }
+
     fun release() {
         runCatching { pool?.release() }
+        runCatching { ambient?.release() }
+        ambient = null
     }
 
     private fun resourceFor(sound: GameSound): Int = when (sound) {
         GameSound.Success -> R.raw.ui_success
         GameSound.RankUp -> R.raw.ui_rankup
         GameSound.Error -> R.raw.ui_error
+        GameSound.Click -> R.raw.ui_click
     }
 }

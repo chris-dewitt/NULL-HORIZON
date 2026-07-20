@@ -9,4 +9,5 @@ enum class GameSound(val assetName: String) {
     Success("ui_success"),
     RankUp("ui_rankup"),
     Error("ui_error"),
+    Click("ui_click"),
 }

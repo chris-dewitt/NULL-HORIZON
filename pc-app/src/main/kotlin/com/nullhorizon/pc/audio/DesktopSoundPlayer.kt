@@ -18,6 +18,8 @@ class DesktopSoundPlayer(
         loadClip("/audio/${sound.assetName}.wav")?.let { sound to it }
     }.toMap()
 
+    private val ambient: Clip? = loadClip("/audio/ambient_hum.wav")
+
     override fun play(sound: GameSound) {
         if (!enabled) return
         val clip = clips[sound] ?: return
@@ -28,8 +30,23 @@ class DesktopSoundPlayer(
         }
     }
 
+    override fun setAmbient(enabled: Boolean) {
+        val clip = ambient ?: return
+        runCatching {
+            if (enabled && this.enabled) {
+                if (!clip.isRunning) {
+                    clip.framePosition = 0
+                    clip.loop(Clip.LOOP_CONTINUOUSLY)
+                }
+            } else {
+                clip.stop()
+            }
+        }
+    }
+
     fun release() {
         clips.values.forEach { runCatching { it.close() } }
+        runCatching { ambient?.close() }
     }
 
     private fun loadClip(resource: String): Clip? = runCatching {
