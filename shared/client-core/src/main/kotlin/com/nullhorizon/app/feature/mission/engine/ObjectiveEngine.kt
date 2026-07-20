@@ -2,6 +2,7 @@ package com.nullhorizon.app.feature.mission.engine
 
 import com.nullhorizon.app.content.model.MissionDefinition
 import com.nullhorizon.app.content.toStateMap
+import com.nullhorizon.app.simulation.terminal.canonicalizeCommandLine
 
 class ObjectiveEngine {
     fun completedObjectiveIds(
@@ -72,7 +73,8 @@ class ObjectiveEngine {
         val terminal = state.terminal ?: return false
         return expected.all { (key, value) ->
             when (key) {
-                "last_command" -> terminal.lastCommand == value
+                "last_command" ->
+                    canonicalizeCommandLine(terminal.lastCommand) == canonicalizeCommandLine(value)
                 "stdout_equals" -> terminal.lastStdout == value
                 "stdout_contains" -> terminal.lastStdout.contains(value)
                 "stderr_contains" -> terminal.lastStderr.contains(value)
@@ -126,7 +128,8 @@ class ObjectiveEngine {
                 key == "head_message_contains" -> git.headCommit.message.contains(value)
                 key == "head_hash" -> git.headHash == value
                 key == "head_hash_prefix" -> git.headHash.startsWith(value)
-                key == "last_command" -> git.lastCommand == value
+                key == "last_command" ->
+                    canonicalizeCommandLine(git.lastCommand) == canonicalizeCommandLine(value)
                 key == "stdout_contains" -> git.lastStdout.contains(value)
                 key.startsWith("file_contains:") -> {
                     val path = key.removePrefix("file_contains:")
