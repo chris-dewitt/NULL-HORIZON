@@ -16,6 +16,8 @@ import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
+import com.nullhorizon.app.audio.GameSound
+import com.nullhorizon.app.audio.LocalSoundPlayer
 import com.nullhorizon.app.ui.theme.NhColors
 import com.nullhorizon.app.ui.theme.NhTheme
 
@@ -34,6 +36,11 @@ fun TerminalPromptField(
     runLabel: String = "RUN",
 ) {
     val fontFamily = NhTheme.fontFamily
+    val soundPlayer = LocalSoundPlayer.current
+    val submitWithClick: () -> Unit = {
+        soundPlayer.play(GameSound.Click)
+        onSubmit()
+    }
     Row(
         modifier = modifier
             .fillMaxWidth()
@@ -73,7 +80,7 @@ fun TerminalPromptField(
         )
         TuiActionButton(
             label = runLabel,
-            onClick = onSubmit,
+            onClick = submitWithClick,
             enabled = enabled && value.isNotBlank(),
             accent = NhColors.PhosphorAmber,
             contentDescription = "Run command",

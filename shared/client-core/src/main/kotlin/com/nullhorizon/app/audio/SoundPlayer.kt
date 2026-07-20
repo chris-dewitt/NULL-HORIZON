@@ -12,6 +12,12 @@ import androidx.compose.runtime.staticCompositionLocalOf
  */
 interface SoundPlayer {
     fun play(sound: GameSound)
+
+    /**
+     * Starts or stops the looping ambient reactor hum. Default no-op so a
+     * player can adopt ambient audio without breaking the contract.
+     */
+    fun setAmbient(enabled: Boolean) {}
 }
 
 object NoOpSoundPlayer : SoundPlayer {

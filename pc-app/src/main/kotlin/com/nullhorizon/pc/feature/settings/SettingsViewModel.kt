@@ -82,6 +82,10 @@ class SettingsViewModel(
         viewModelScope.launch { settingsRepository.setDisableCrt(enabled) }
     }
 
+    fun setSoundEnabled(enabled: Boolean) {
+        viewModelScope.launch { settingsRepository.setSoundEnabled(enabled) }
+    }
+
     fun setAnalyticsEnabled(enabled: Boolean) {
         viewModelScope.launch { settingsRepository.setAnalyticsEnabled(enabled) }
     }

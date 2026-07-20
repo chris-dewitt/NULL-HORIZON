@@ -10,6 +10,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -73,6 +74,9 @@ fun NullHorizonApp(
     val context = LocalContext.current
     val soundPlayer = remember { AndroidSoundPlayer(context, enabled = accessibility.soundEnabled) }
     soundPlayer.enabled = accessibility.soundEnabled
+    LaunchedEffect(accessibility.soundEnabled) {
+        soundPlayer.setAmbient(accessibility.soundEnabled)
+    }
     DisposableEffect(Unit) {
         onDispose { soundPlayer.release() }
     }

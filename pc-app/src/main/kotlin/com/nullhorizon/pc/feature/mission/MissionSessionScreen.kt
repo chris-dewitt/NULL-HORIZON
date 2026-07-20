@@ -21,6 +21,8 @@ import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import androidx.compose.runtime.collectAsState
+import com.nullhorizon.app.audio.GameSound
+import com.nullhorizon.app.audio.PlaySoundOnce
 import com.nullhorizon.app.ui.chrome.DialogueLines
 import com.nullhorizon.app.ui.chrome.RankUpBanner
 import com.nullhorizon.app.ui.chrome.animatedCount
@@ -261,6 +263,11 @@ fun MissionSessionScreen(
                 }
 
                 if (state.session.phase == MissionPhase.Completed) {
+                    PlaySoundOnce(key = state.debrief?.missionId, sound = GameSound.Success)
+                    PlaySoundOnce(
+                        key = state.debrief?.takeIf { it.rankChanged }?.rank,
+                        sound = GameSound.RankUp,
+                    )
                     Text(
                         text = Strings.mission_completed,
                         style = MaterialTheme.typography.titleLarge,
