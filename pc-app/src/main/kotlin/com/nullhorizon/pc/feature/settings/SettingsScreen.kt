@@ -162,6 +162,12 @@ fun SettingsScreen(
                 contentDescription = "Disable CRT effects",
                 onCheckedChange = viewModel::setDisableCrt,
             )
+            SettingsToggle(
+                title = Strings.settings_sound,
+                checked = state.accessibility.soundEnabled,
+                contentDescription = "Sound effects",
+                onCheckedChange = viewModel::setSoundEnabled,
+            )
         }
     }
 

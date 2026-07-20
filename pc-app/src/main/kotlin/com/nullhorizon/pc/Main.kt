@@ -3,17 +3,21 @@ package com.nullhorizon.pc
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.application
+import com.nullhorizon.app.audio.LocalSoundPlayer
 import com.nullhorizon.app.data.settings.AccessibilitySettings
 import com.nullhorizon.app.ui.chrome.CrtFrame
 import com.nullhorizon.app.ui.chrome.CrtProfile
 import com.nullhorizon.app.ui.theme.NullHorizonTheme
+import com.nullhorizon.pc.audio.DesktopSoundPlayer
 import com.nullhorizon.pc.di.PcAppContainer
 import com.nullhorizon.pc.ui.rememberTerminalFontFamily
 
@@ -36,6 +40,11 @@ fun main() = application {
             density
         }
         val terminalFont = rememberTerminalFontFamily()
+        val soundPlayer = remember { DesktopSoundPlayer(enabled = accessibility.soundEnabled) }
+        soundPlayer.enabled = accessibility.soundEnabled
+        DisposableEffect(Unit) {
+            onDispose { soundPlayer.release() }
+        }
         NullHorizonTheme(
             highContrast = accessibility.highContrast,
             reducedMotion = accessibility.reducedMotion,
@@ -43,7 +52,10 @@ fun main() = application {
             disableCrt = accessibility.disableCrt,
             fontFamily = terminalFont,
         ) {
-            CompositionLocalProvider(LocalDensity provides contentDensity) {
+            CompositionLocalProvider(
+                LocalDensity provides contentDensity,
+                LocalSoundPlayer provides soundPlayer,
+            ) {
                 CrtFrame(
                     modifier = Modifier.fillMaxSize(),
                     profile = CrtProfile.Medium,
