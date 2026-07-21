@@ -54,7 +54,7 @@ fun TerminalPromptField(
                 modifier = Modifier
                     .fillMaxWidth()
                     .horizontalScroll(rememberScrollState())
-                    .semantics { contentDescription = "Command suggestions" },
+                    .semantics { this.contentDescription = "Command suggestions" },
                 horizontalArrangement = Arrangement.spacedBy(6.dp),
             ) {
                 suggestions.forEach { suggestion ->
@@ -70,7 +70,7 @@ fun TerminalPromptField(
                                 onValueChange("$suggestion ")
                             }
                             .padding(horizontal = 10.dp, vertical = 6.dp)
-                            .semantics { contentDescription = "Insert $suggestion" },
+                            .semantics { this.contentDescription = "Insert $suggestion" },
                     )
                 }
             }
