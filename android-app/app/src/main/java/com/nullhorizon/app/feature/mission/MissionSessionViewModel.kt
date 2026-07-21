@@ -16,8 +16,11 @@ import com.nullhorizon.app.feature.mission.engine.HintEngine
 import com.nullhorizon.app.feature.mission.engine.MissionPhase
 import com.nullhorizon.app.feature.mission.engine.MissionSessionState
 import com.nullhorizon.app.feature.mission.engine.MissionStateMachine
+import com.nullhorizon.app.progression.AuditorFragment
+import com.nullhorizon.app.progression.AuditorLog
 import com.nullhorizon.app.progression.DebriefSummary
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
@@ -34,6 +37,7 @@ data class MissionSessionUiState(
     val session: MissionSessionState = MissionSessionState(),
     val visibleHintTexts: List<String> = emptyList(),
     val debrief: DebriefSummary? = null,
+    val auditorFragment: AuditorFragment? = null,
     val nextMissionId: String? = null,
     val nextMissionTitle: String? = null,
     val errorMessage: String? = null,
@@ -50,6 +54,7 @@ class MissionSessionViewModel(
     private var stateMachine: MissionStateMachine? = null
     private var nextMissionId: String? = null
     private var nextMissionTitle: String? = null
+    private var auditorFragment: AuditorFragment? = null
 
     private val _uiState = MutableStateFlow(MissionSessionUiState())
     val uiState: StateFlow<MissionSessionUiState> = _uiState.asStateFlow()
@@ -219,7 +224,9 @@ class MissionSessionViewModel(
                     mission = mission,
                     hintLevelUsed = next.hintLevel,
                 )
-                _uiState.update { it.copy(debrief = debrief) }
+                val completedCount = progressRepository.completedMissionIds.first().size
+                auditorFragment = AuditorLog.fragmentFor(completedCount)
+                _uiState.update { it.copy(debrief = debrief, auditorFragment = auditorFragment) }
             }
         }
     }
@@ -258,6 +265,7 @@ class MissionSessionViewModel(
             session = session,
             visibleHintTexts = hints,
             debrief = _uiState.value.debrief,
+            auditorFragment = auditorFragment,
             nextMissionId = nextMissionId,
             nextMissionTitle = nextMissionTitle,
             errorMessage = null,

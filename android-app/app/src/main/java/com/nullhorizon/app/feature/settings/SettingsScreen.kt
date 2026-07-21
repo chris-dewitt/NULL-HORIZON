@@ -36,6 +36,7 @@ import com.nullhorizon.app.ui.theme.NhTheme
 @Composable
 fun SettingsScreen(
     viewModel: SettingsViewModel,
+    clearance: Int = 0,
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
     var confirmDelete by rememberSaveable { mutableStateOf(false) }
@@ -185,6 +186,7 @@ fun SettingsScreen(
             PalettePicker(
                 selectedId = state.accessibility.paletteId,
                 onSelect = viewModel::setPaletteId,
+                clearance = clearance,
             )
         }
     }

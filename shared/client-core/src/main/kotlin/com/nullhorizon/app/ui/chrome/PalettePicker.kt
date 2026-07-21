@@ -29,6 +29,7 @@ fun PalettePicker(
     selectedId: String,
     onSelect: (String) -> Unit,
     modifier: Modifier = Modifier,
+    clearance: Int = Int.MAX_VALUE,
 ) {
     Column(
         modifier = modifier.fillMaxWidth(),
@@ -36,33 +37,52 @@ fun PalettePicker(
     ) {
         NhPalette.all.forEach { palette ->
             val selected = palette.id == selectedId
+            val locked = palette.unlockClearance > clearance
+            val edge = when {
+                selected -> palette.accent
+                locked -> NhColors.PhosphorDim.copy(alpha = 0.4f)
+                else -> NhColors.PhosphorDim
+            }
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .background(palette.ground)
-                    .drawTuiBorder(color = if (selected) palette.accent else NhColors.PhosphorDim)
-                    .clickable { onSelect(palette.id) }
+                    .background(palette.ground.copy(alpha = if (locked) 0.5f else 1f))
+                    .drawTuiBorder(color = edge)
+                    .clickable(enabled = !locked) { onSelect(palette.id) }
                     .padding(horizontal = 12.dp, vertical = 10.dp)
                     .semantics {
-                        this.contentDescription =
+                        this.contentDescription = if (locked) {
+                            "${palette.displayName} palette, locked, unlocks at " +
+                                "${palette.unlockClearance} clearance"
+                        } else {
                             "${palette.displayName} palette${if (selected) ", selected" else ""}"
+                        }
                     },
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(10.dp),
             ) {
+                val fade = if (locked) 0.5f else 1f
                 Text(
-                    text = if (selected) "[x]" else "[ ]",
+                    text = when {
+                        locked -> "[-]"
+                        selected -> "[x]"
+                        else -> "[ ]"
+                    },
                     style = MaterialTheme.typography.labelLarge,
-                    color = palette.accent,
+                    color = palette.accent.copy(alpha = fade),
                     fontFamily = NhTheme.fontFamily,
                 )
-                Swatch(palette.primary)
-                Swatch(palette.accent)
-                Swatch(palette.text)
+                Swatch(palette.primary.copy(alpha = fade))
+                Swatch(palette.accent.copy(alpha = fade))
+                Swatch(palette.text.copy(alpha = fade))
                 Text(
-                    text = palette.displayName.uppercase(),
+                    text = if (locked) {
+                        "${palette.displayName.uppercase()} — UNLOCKS AT ${palette.unlockClearance}"
+                    } else {
+                        palette.displayName.uppercase()
+                    },
                     style = MaterialTheme.typography.labelLarge,
-                    color = palette.text,
+                    color = palette.text.copy(alpha = fade),
                     fontFamily = NhTheme.fontFamily,
                 )
             }
