@@ -1,0 +1,16 @@
+schema_version: 1
+signal_id: auditor.thread.01
+title: The Auditor
+description: >-
+  Intercepted transmissions from an unauthorised audit process. Each repair
+  decodes the next.
+fragments:
+  - "An audit was already running when you woke. No one authorised it. It has not stopped."
+  - "Crew manifest: 2,400 sleepers. Registry acknowledges 2,399. The missing entry was overwritten, not deleted."
+  - "ORION's logs skip fourteen days. ORION insists the fourteen days did not happen."
+  - "Every system you repair reports itself to a channel that isn't on the ship's map."
+  - "The Auditor is not a fault. It is a process with credentials higher than the Commander's."
+  - "You found the reserve-power drain. It routes to a compartment sealed from the inside."
+  - "MICA left a note in a table you weren't meant to query: \"It grades us. Do not pass.\""
+  - "The signature on the sealed orders is yours. Dated before you were revived."
+  - "The Auditor has begun a new pass. This time it is auditing you."

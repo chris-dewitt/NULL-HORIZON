@@ -23,6 +23,7 @@ KIND_DIRS = {
     "mission": CONTENT / "missions",
     "dialogue": CONTENT / "dialogue",
     "reward": CONTENT / "rewards",
+    "signal": CONTENT / "signals",
 }
 
 ID_FIELDS = {
@@ -31,6 +32,7 @@ ID_FIELDS = {
     "mission": "mission_id",
     "dialogue": "dialogue_id",
     "reward": "reward_id",
+    "signal": "signal_id",
 }
 
 

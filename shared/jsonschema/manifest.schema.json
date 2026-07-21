@@ -49,6 +49,11 @@
       "type": "array",
       "items": { "type": "string" },
       "uniqueItems": true
+    },
+    "signals": {
+      "type": "array",
+      "items": { "type": "string" },
+      "uniqueItems": true
     }
   }
 }

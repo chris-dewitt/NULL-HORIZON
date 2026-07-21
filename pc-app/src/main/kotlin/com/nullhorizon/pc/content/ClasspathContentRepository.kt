@@ -6,6 +6,7 @@ import com.nullhorizon.app.content.model.ContentManifest
 import com.nullhorizon.app.content.model.DialogueDefinition
 import com.nullhorizon.app.content.model.MissionDefinition
 import com.nullhorizon.app.content.model.RewardDefinition
+import com.nullhorizon.app.content.model.SignalDefinition
 import com.nullhorizon.app.content.model.SkillDefinition
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -38,6 +39,9 @@ class ClasspathContentRepository(
     override suspend fun reward(rewardId: String): RewardDefinition =
         decode("rewards/$rewardId.json")
 
+    override suspend fun signal(signalId: String): SignalDefinition =
+        decode("signals/$signalId.json")
+
     override suspend fun listMissions(): List<MissionDefinition> {
         val manifest = manifest()
         return manifest.missions.map { mission(it) }
@@ -51,6 +55,11 @@ class ClasspathContentRepository(
     override suspend fun listRewards(): List<RewardDefinition> {
         val manifest = manifest()
         return manifest.rewards.map { reward(it) }
+    }
+
+    override suspend fun listSignals(): List<SignalDefinition> {
+        val manifest = manifest()
+        return manifest.signals.map { signal(it) }
     }
 
     private suspend inline fun <reified T> decode(relativePath: String): T =

@@ -337,6 +337,9 @@
     "lore.version.unsigned_change.01"
   ],
   "schema_version": 1,
+  "signals": [
+    "auditor.thread.01"
+  ],
   "skills": [
     "api.auth",
     "api.http",
