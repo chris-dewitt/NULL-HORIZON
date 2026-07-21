@@ -125,4 +125,5 @@ object Strings {
     const val settings_larger_text = "Larger text"
     const val settings_disable_crt = "Disable CRT effects"
     const val settings_sound = "Sound effects"
+    const val settings_palette = "Terminal palette"
 }

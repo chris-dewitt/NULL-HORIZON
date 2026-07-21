@@ -130,4 +130,5 @@
     <string name="settings_larger_text">Larger text</string>
     <string name="settings_disable_crt">Disable CRT effects</string>
     <string name="settings_sound">Sound effects</string>
+    <string name="settings_palette">Terminal palette</string>
 </resources>

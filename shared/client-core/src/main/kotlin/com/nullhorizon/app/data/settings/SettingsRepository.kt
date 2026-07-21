@@ -18,6 +18,9 @@ interface SettingsRepository {
     /** Default no-op so platform impls can adopt audio incrementally. */
     suspend fun setSoundEnabled(enabled: Boolean) {}
 
+    /** Default no-op so platform impls can adopt palette selection incrementally. */
+    suspend fun setPaletteId(paletteId: String) {}
+
     suspend fun setAnalyticsEnabled(enabled: Boolean)
 
     suspend fun setCrashReportingEnabled(enabled: Boolean)

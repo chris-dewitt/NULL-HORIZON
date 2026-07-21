@@ -1,7 +1,7 @@
 package com.nullhorizon.app.ui.chrome
 
 import com.nullhorizon.app.ui.theme.NhAccessibilityVisuals
-import com.nullhorizon.app.ui.theme.NhColors
+import com.nullhorizon.app.ui.theme.NhPalette
 import com.nullhorizon.app.ui.theme.NhRegionAccent
 import com.nullhorizon.app.ui.theme.ShipRegionId
 import org.junit.Assert.assertEquals
@@ -22,14 +22,15 @@ class DesignSystemTokensTest {
     fun regionAccent_archiveIsGreen() {
         val accent = NhRegionAccent.forRegionId("archive")
         assertEquals(ShipRegionId.Archive, accent.region)
-        assertEquals(NhColors.PhosphorGreen, accent.accent)
+        // Region accents are fixed semantic colours, independent of the active palette.
+        assertEquals(NhPalette.GreenPhosphor.primary, accent.accent)
     }
 
     @Test
     fun regionAccent_blackVaultIsRed() {
         val accent = NhRegionAccent.forRegionId("black_vault")
         assertEquals(ShipRegionId.BlackVault, accent.region)
-        assertEquals(NhColors.PhosphorRed, accent.accent)
+        assertEquals(NhPalette.GreenPhosphor.danger, accent.accent)
     }
 
     @Test

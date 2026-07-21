@@ -26,6 +26,7 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.nullhorizon.app.R
+import com.nullhorizon.app.ui.chrome.PalettePicker
 import com.nullhorizon.app.ui.chrome.TuiActionButton
 import com.nullhorizon.app.ui.chrome.TuiPanel
 import com.nullhorizon.app.ui.chrome.drawTuiBorder
@@ -174,6 +175,16 @@ fun SettingsScreen(
                 checked = state.accessibility.soundEnabled,
                 contentDescription = "Sound effects",
                 onCheckedChange = viewModel::setSoundEnabled,
+            )
+            Text(
+                text = stringResource(R.string.settings_palette).uppercase(),
+                style = MaterialTheme.typography.labelLarge,
+                color = NhColors.PhosphorDim,
+                fontFamily = NhTheme.fontFamily,
+            )
+            PalettePicker(
+                selectedId = state.accessibility.paletteId,
+                onSelect = viewModel::setPaletteId,
             )
         }
     }
