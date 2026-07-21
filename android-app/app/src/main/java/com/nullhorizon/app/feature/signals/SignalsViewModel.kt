@@ -15,6 +15,7 @@ import kotlinx.coroutines.launch
 data class SignalsUiState(
     val isLoading: Boolean = true,
     val title: String = "The Auditor",
+    val description: String? = null,
     val fragments: List<String> = emptyList(),
     val decodedCount: Int = 0,
     val errorMessage: String? = null,
@@ -36,6 +37,7 @@ class SignalsViewModel(
                         it.copy(
                             isLoading = false,
                             title = signal.title,
+                            description = signal.description,
                             fragments = signal.fragments,
                             decodedCount = completed.size,
                             errorMessage = null,

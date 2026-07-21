@@ -29,6 +29,7 @@ fun SignalsLog(
     fragments: List<String>,
     decodedCount: Int,
     modifier: Modifier = Modifier,
+    description: String? = null,
 ) {
     val total = fragments.size
     val decoded = decodedCount.coerceIn(0, total)
@@ -54,8 +55,8 @@ fun SignalsLog(
                 text = if (decoded == 0) {
                     "NO SIGNALS DECODED. COMPLETE A REPAIR TO INTERCEPT THE FIRST TRANSMISSION."
                 } else {
-                    "INTERCEPTED TRANSMISSIONS FROM AN UNAUTHORISED AUDIT PROCESS. " +
-                        "EACH REPAIR DECODES THE NEXT."
+                    description?.takeIf { it.isNotBlank() }?.uppercase()
+                        ?: "EACH REPAIR DECODES THE NEXT TRANSMISSION."
                 },
                 style = MaterialTheme.typography.bodyMedium,
                 color = NhColors.PhosphorDim,

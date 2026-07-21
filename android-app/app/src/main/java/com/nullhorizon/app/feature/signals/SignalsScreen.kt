@@ -12,5 +12,6 @@ fun SignalsScreen(viewModel: SignalsViewModel) {
         title = state.title,
         fragments = state.fragments,
         decodedCount = state.decodedCount,
+        description = state.description,
     )
 }
