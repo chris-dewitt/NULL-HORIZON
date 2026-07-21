@@ -1,10 +1,13 @@
 package com.nullhorizon.app.ui.chrome
 
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -34,6 +37,7 @@ fun TerminalPromptField(
     enabled: Boolean = true,
     contentDescription: String = "Terminal input",
     runLabel: String = "RUN",
+    suggestions: List<String> = emptyList(),
 ) {
     val fontFamily = NhTheme.fontFamily
     val soundPlayer = LocalSoundPlayer.current
@@ -41,8 +45,38 @@ fun TerminalPromptField(
         soundPlayer.play(GameSound.Click)
         onSubmit()
     }
+    Column(
+        modifier = modifier.fillMaxWidth(),
+        verticalArrangement = Arrangement.spacedBy(6.dp),
+    ) {
+        if (enabled && suggestions.isNotEmpty()) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .horizontalScroll(rememberScrollState())
+                    .semantics { contentDescription = "Command suggestions" },
+                horizontalArrangement = Arrangement.spacedBy(6.dp),
+            ) {
+                suggestions.forEach { suggestion ->
+                    Text(
+                        text = suggestion,
+                        style = MaterialTheme.typography.labelMedium,
+                        color = NhColors.PhosphorAmber,
+                        fontFamily = fontFamily,
+                        modifier = Modifier
+                            .drawTuiBorder(color = NhColors.PhosphorDim)
+                            .clickable {
+                                soundPlayer.play(GameSound.Click)
+                                onValueChange("$suggestion ")
+                            }
+                            .padding(horizontal = 10.dp, vertical = 6.dp)
+                            .semantics { contentDescription = "Insert $suggestion" },
+                    )
+                }
+            }
+        }
     Row(
-        modifier = modifier
+        modifier = Modifier
             .fillMaxWidth()
             .drawTuiBorder(color = NhColors.PhosphorGreen)
             .padding(horizontal = 10.dp, vertical = 8.dp),
@@ -85,6 +119,7 @@ fun TerminalPromptField(
             accent = NhColors.PhosphorAmber,
             contentDescription = "Run command",
         )
+    }
     }
 }
 
