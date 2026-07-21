@@ -1,25 +1,21 @@
 package com.nullhorizon.app.simulation.sql
 
-import java.sql.Connection
-import java.sql.DriverManager
-import java.sql.ResultSet
-import java.sql.SQLException
-import java.sql.Statement
-
 /**
- * Mission-scoped SQLite console. Connection is private to the mission instance
- * and never shares storage with application DataStore/Room databases.
+ * Mission-scoped SQLite console. The database is private to the mission
+ * instance and never shares storage with application DataStore/Room databases.
+ * The actual SQLite engine comes from [SqlEngine.factory] so each platform uses
+ * a SQLite that runs there (JDBC on desktop, android.database on device).
  */
 class SqlSimulator(
     private val definition: MissionDatabaseDefinition,
 ) {
-    private var connection: Connection = openFreshConnection()
+    private var database: SqlDatabase = openFresh()
 
     fun initialState(): SqlSessionState = snapshotState()
 
     fun reset(): SqlSessionState {
         closeQuietly()
-        connection = openFreshConnection()
+        database = openFresh()
         return snapshotState()
     }
 
@@ -29,31 +25,23 @@ class SqlSimulator(
             return recordFailure(state, query, policyError)
         }
         return try {
-            connection.createStatement().use { statement ->
-                statement.maxRows = MAX_ROWS
-                val hasResult = statement.execute(query)
-                if (!hasResult) {
-                    return recordFailure(state, query, "Query did not return a result set.")
-                }
-                statement.resultSet.use { rs ->
-                    val result = readResultSet(rs)
-                    val entry = SqlHistoryEntry(
-                        query = query.trim(),
-                        ok = true,
-                        message = "${result.rowCount} row(s)",
-                        rowCount = result.rowCount,
-                    )
-                    state.copy(
-                        lastQuery = query.trim(),
-                        lastResult = result,
-                        lastError = null,
-                        lastOk = true,
-                        history = state.history + entry,
-                        tableRowCounts = readTableRowCounts(),
-                    )
-                }
-            }
-        } catch (error: SQLException) {
+            val raw = database.query(query, MAX_ROWS)
+            val result = SqlQueryResult(columns = raw.columns, rows = raw.rows)
+            val entry = SqlHistoryEntry(
+                query = query.trim(),
+                ok = true,
+                message = "${result.rowCount} row(s)",
+                rowCount = result.rowCount,
+            )
+            state.copy(
+                lastQuery = query.trim(),
+                lastResult = result,
+                lastError = null,
+                lastOk = true,
+                history = state.history + entry,
+                tableRowCounts = readTableRowCounts(),
+            )
+        } catch (error: SqlExecutionException) {
             recordFailure(state, query, error.message ?: "SQL error")
         }
     }
@@ -86,87 +74,26 @@ class SqlSimulator(
         )
     }
 
-    private fun openFreshConnection(): Connection {
-        Class.forName("org.sqlite.JDBC")
-        val connection = DriverManager.getConnection("jdbc:sqlite::memory:")
-        connection.autoCommit = true
-        connection.createStatement().use { statement ->
-            runCatching { statement.execute("PRAGMA trusted_schema = OFF") }
-            installSeed(statement)
-        }
-        return connection
-    }
+    private fun openFresh(): SqlDatabase = SqlEngine.factory.open(definition.seedSql)
 
-    private fun installSeed(statement: Statement) {
-        val script = definition.seedSql.trim()
-        require(script.isNotEmpty()) { "seed_sql must not be empty" }
-        for (part in script.split(';')) {
-            val sql = part.trim()
-            if (sql.isNotEmpty()) {
-                statement.execute(sql)
-            }
-        }
-    }
-
-    private fun readSchema(): List<SqlTableInfo> {
-        val tables = mutableListOf<String>()
-        connection.createStatement().use { statement ->
-            statement.executeQuery(
-                "SELECT name FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%' ORDER BY name",
-            ).use { rs ->
-                while (rs.next()) tables += rs.getString(1)
-            }
-        }
-        return tables.map { name ->
-            val columns = mutableListOf<SqlColumnInfo>()
-            connection.createStatement().use { statement ->
-                statement.executeQuery("PRAGMA table_info($name)").use { rs ->
-                    while (rs.next()) {
-                        columns += SqlColumnInfo(
-                            name = rs.getString("name"),
-                            type = rs.getString("type") ?: "",
-                        )
-                    }
-                }
-            }
-            SqlTableInfo(name = name, columns = columns)
-        }
-    }
+    private fun readSchema(): List<SqlTableInfo> =
+        database.tableNames().map { name -> SqlTableInfo(name = name, columns = database.columns(name)) }
 
     private fun sampleRows(table: String, limit: Int = 5): SqlQueryResult {
-        connection.createStatement().use { statement ->
-            statement.executeQuery("SELECT * FROM \"$table\" LIMIT $limit").use { rs ->
-                return readResultSet(rs)
-            }
-        }
+        val raw = database.query("SELECT * FROM \"$table\" LIMIT $limit", limit)
+        return SqlQueryResult(columns = raw.columns, rows = raw.rows)
     }
 
     private fun readTableRowCounts(): Map<String, Int> {
         val counts = linkedMapOf<String, Int>()
-        for (table in readSchema()) {
-            connection.createStatement().use { statement ->
-                statement.executeQuery("SELECT COUNT(*) FROM \"${table.name}\"").use { rs ->
-                    if (rs.next()) counts[table.name] = rs.getInt(1)
-                }
-            }
+        for (name in database.tableNames()) {
+            counts[name] = database.rowCount(name)
         }
         return counts
     }
 
-    private fun readResultSet(rs: ResultSet): SqlQueryResult {
-        val meta = rs.metaData
-        val columns = (1..meta.columnCount).map { meta.getColumnLabel(it) }
-        val rows = mutableListOf<List<String>>()
-        while (rs.next()) {
-            rows += columns.indices.map { index ->
-                rs.getString(index + 1) ?: "NULL"
-            }
-        }
-        return SqlQueryResult(columns = columns, rows = rows)
-    }
-
     private fun closeQuietly() {
-        runCatching { connection.close() }
+        runCatching { database.close() }
     }
 
     companion object {
