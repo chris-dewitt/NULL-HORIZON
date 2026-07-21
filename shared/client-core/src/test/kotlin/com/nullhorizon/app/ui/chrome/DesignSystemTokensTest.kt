@@ -1,7 +1,6 @@
 package com.nullhorizon.app.ui.chrome
 
 import com.nullhorizon.app.ui.theme.NhAccessibilityVisuals
-import com.nullhorizon.app.ui.theme.NhColors
 import com.nullhorizon.app.ui.theme.NhPalette
 import com.nullhorizon.app.ui.theme.NhRegionAccent
 import com.nullhorizon.app.ui.theme.ShipRegionId
