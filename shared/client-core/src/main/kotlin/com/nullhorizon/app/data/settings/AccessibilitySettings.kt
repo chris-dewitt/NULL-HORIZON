@@ -14,4 +14,6 @@ data class AccessibilitySettings(
     val disableCrt: Boolean = false,
     /** Master switch for UI sound effects (and later ambient audio). */
     val soundEnabled: Boolean = true,
+    /** Selected terminal palette id (see NhPalette); "green" is the default. */
+    val paletteId: String = "green",
 )

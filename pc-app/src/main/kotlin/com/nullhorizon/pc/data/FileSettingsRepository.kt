@@ -56,6 +56,10 @@ class FileSettingsRepository(
         update { it.copy(accessibility = it.accessibility.copy(soundEnabled = enabled)) }
     }
 
+    override suspend fun setPaletteId(paletteId: String) {
+        update { it.copy(accessibility = it.accessibility.copy(paletteId = paletteId)) }
+    }
+
     override suspend fun setAnalyticsEnabled(enabled: Boolean) {
         update { it.copy(privacy = it.privacy.copy(analyticsEnabled = enabled)) }
     }

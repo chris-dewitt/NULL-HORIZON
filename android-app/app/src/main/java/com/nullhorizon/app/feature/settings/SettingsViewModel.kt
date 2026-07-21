@@ -88,6 +88,10 @@ class SettingsViewModel(
         viewModelScope.launch { settingsRepository.setSoundEnabled(enabled) }
     }
 
+    fun setPaletteId(paletteId: String) {
+        viewModelScope.launch { settingsRepository.setPaletteId(paletteId) }
+    }
+
     fun setAnalyticsEnabled(enabled: Boolean) {
         viewModelScope.launch { settingsRepository.setAnalyticsEnabled(enabled) }
     }

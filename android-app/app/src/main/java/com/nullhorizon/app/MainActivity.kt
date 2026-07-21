@@ -30,6 +30,8 @@ import com.nullhorizon.app.navigation.NullHorizonNavHost
 import com.nullhorizon.app.ui.chrome.BootSequenceScreen
 import com.nullhorizon.app.ui.chrome.CrtFrame
 import com.nullhorizon.app.ui.chrome.CrtProfile
+import com.nullhorizon.app.ui.theme.NhColors
+import com.nullhorizon.app.ui.theme.NhPalette
 import com.nullhorizon.app.ui.theme.NullHorizonTheme
 
 class MainActivity : ComponentActivity() {
@@ -76,6 +78,14 @@ fun NullHorizonApp(
     soundPlayer.enabled = accessibility.soundEnabled
     LaunchedEffect(accessibility.soundEnabled) {
         soundPlayer.setAmbient(accessibility.soundEnabled)
+    }
+    // Apply the selected terminal palette app-wide; high contrast overrides it.
+    LaunchedEffect(accessibility.paletteId, accessibility.highContrast) {
+        NhColors.palette = if (accessibility.highContrast) {
+            NhPalette.HighContrast
+        } else {
+            NhPalette.byId(accessibility.paletteId)
+        }
     }
     DisposableEffect(Unit) {
         onDispose { soundPlayer.release() }

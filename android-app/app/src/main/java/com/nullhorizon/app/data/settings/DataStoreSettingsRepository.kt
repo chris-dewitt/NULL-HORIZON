@@ -4,6 +4,7 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
+import androidx.datastore.preferences.core.stringPreferencesKey
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
@@ -17,6 +18,7 @@ class DataStoreSettingsRepository(
             largerText = prefs[Keys.LargerText] ?: false,
             disableCrt = prefs[Keys.DisableCrt] ?: false,
             soundEnabled = prefs[Keys.SoundEnabled] ?: true,
+            paletteId = prefs[Keys.PaletteId] ?: "green",
         )
     }
 
@@ -47,6 +49,10 @@ class DataStoreSettingsRepository(
         dataStore.edit { it[Keys.SoundEnabled] = enabled }
     }
 
+    override suspend fun setPaletteId(paletteId: String) {
+        dataStore.edit { it[Keys.PaletteId] = paletteId }
+    }
+
     override suspend fun setAnalyticsEnabled(enabled: Boolean) {
         dataStore.edit { it[Keys.AnalyticsEnabled] = enabled }
     }
@@ -62,6 +68,7 @@ class DataStoreSettingsRepository(
             prefs.remove(Keys.LargerText)
             prefs.remove(Keys.DisableCrt)
             prefs.remove(Keys.SoundEnabled)
+            prefs.remove(Keys.PaletteId)
             prefs.remove(Keys.AnalyticsEnabled)
             prefs.remove(Keys.CrashReportingEnabled)
         }
@@ -73,6 +80,7 @@ class DataStoreSettingsRepository(
         val LargerText = booleanPreferencesKey("a11y_larger_text")
         val DisableCrt = booleanPreferencesKey("a11y_disable_crt")
         val SoundEnabled = booleanPreferencesKey("a11y_sound_enabled")
+        val PaletteId = stringPreferencesKey("a11y_palette_id")
         val AnalyticsEnabled = booleanPreferencesKey("privacy_analytics_enabled")
         val CrashReportingEnabled = booleanPreferencesKey("privacy_crash_reporting_enabled")
     }

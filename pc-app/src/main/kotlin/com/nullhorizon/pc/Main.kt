@@ -17,6 +17,8 @@ import com.nullhorizon.app.audio.LocalSoundPlayer
 import com.nullhorizon.app.data.settings.AccessibilitySettings
 import com.nullhorizon.app.ui.chrome.CrtFrame
 import com.nullhorizon.app.ui.chrome.CrtProfile
+import com.nullhorizon.app.ui.theme.NhColors
+import com.nullhorizon.app.ui.theme.NhPalette
 import com.nullhorizon.app.ui.theme.NullHorizonTheme
 import com.nullhorizon.pc.audio.DesktopSoundPlayer
 import com.nullhorizon.pc.di.PcAppContainer
@@ -45,6 +47,13 @@ fun main() = application {
         soundPlayer.enabled = accessibility.soundEnabled
         LaunchedEffect(accessibility.soundEnabled) {
             soundPlayer.setAmbient(accessibility.soundEnabled)
+        }
+        LaunchedEffect(accessibility.paletteId, accessibility.highContrast) {
+            NhColors.palette = if (accessibility.highContrast) {
+                NhPalette.HighContrast
+            } else {
+                NhPalette.byId(accessibility.paletteId)
+            }
         }
         DisposableEffect(Unit) {
             onDispose { soundPlayer.release() }
