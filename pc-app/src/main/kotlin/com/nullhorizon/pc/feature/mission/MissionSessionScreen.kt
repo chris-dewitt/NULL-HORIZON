@@ -23,6 +23,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.runtime.collectAsState
 import com.nullhorizon.app.audio.GameSound
 import com.nullhorizon.app.audio.PlaySoundOnce
+import com.nullhorizon.app.ui.chrome.AuditorPanel
 import com.nullhorizon.app.ui.chrome.DialogueLines
 import com.nullhorizon.app.ui.chrome.RankUpBanner
 import com.nullhorizon.app.ui.chrome.animatedCount
@@ -283,6 +284,9 @@ fun MissionSessionScreen(
                             )
                         }
                         MissionDebriefPanel(debrief = debrief)
+                    }
+                    state.auditorFragment?.let { fragment ->
+                        AuditorPanel(fragment = fragment)
                     }
                 }
             }

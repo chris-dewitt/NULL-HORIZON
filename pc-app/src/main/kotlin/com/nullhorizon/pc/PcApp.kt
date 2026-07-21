@@ -20,6 +20,7 @@ import androidx.compose.ui.unit.dp
 import com.nullhorizon.app.ui.chrome.BootSequenceScreen
 import com.nullhorizon.app.ui.chrome.TuiNavColumn
 import com.nullhorizon.app.ui.chrome.TuiNavItem
+import com.nullhorizon.app.progression.ProgressionSnapshot
 import com.nullhorizon.app.ui.theme.NhColors
 import com.nullhorizon.pc.di.PcAppContainer
 import com.nullhorizon.pc.feature.mission.MissionListScreen
@@ -141,6 +142,8 @@ private fun MainShell(
             crashReporter = appContainer.crashReporter,
         )
     }
+    val progression by appContainer.progressionRepository.snapshot
+        .collectAsState(initial = ProgressionSnapshot())
 
     Row(modifier = Modifier.fillMaxSize()) {
         TuiNavColumn(
@@ -169,7 +172,10 @@ private fun MainShell(
                     onMissionSelected = onOpenMission,
                 )
                 TopLevelTab.Skills -> SkillMapScreen(viewModel = skillMapViewModel)
-                TopLevelTab.Settings -> SettingsScreen(viewModel = settingsViewModel)
+                TopLevelTab.Settings -> SettingsScreen(
+                    viewModel = settingsViewModel,
+                    clearance = progression.clearancePoints,
+                )
             }
         }
     }

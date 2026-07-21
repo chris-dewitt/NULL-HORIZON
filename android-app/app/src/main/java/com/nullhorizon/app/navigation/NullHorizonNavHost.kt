@@ -205,7 +205,7 @@ private fun MainShell(
                         crashReporter = appContainer.crashReporter,
                     ),
                 )
-                SettingsScreen(viewModel = viewModel)
+                SettingsScreen(viewModel = viewModel, clearance = progression.clearancePoints)
             }
         }
     }
