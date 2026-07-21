@@ -13,10 +13,12 @@
     <string name="nav_ship_map">SHIP MAP</string>
     <string name="nav_missions">MISSIONS</string>
     <string name="nav_skills">SKILLS</string>
+    <string name="nav_signals">SIGNALS</string>
     <string name="nav_settings">SETTINGS</string>
     <string name="nav_ship_map_a11y">Navigate to ship map</string>
     <string name="nav_missions_a11y">Navigate to mission list</string>
     <string name="nav_skills_a11y">Navigate to skill map</string>
+    <string name="nav_signals_a11y">Navigate to signals log</string>
     <string name="nav_settings_a11y">Navigate to settings</string>
 
     <string name="ship_map_title">SHIP MAP</string>

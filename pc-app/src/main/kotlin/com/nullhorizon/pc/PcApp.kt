@@ -33,6 +33,8 @@ import com.nullhorizon.pc.feature.settings.SettingsScreen
 import com.nullhorizon.pc.feature.settings.SettingsViewModel
 import com.nullhorizon.pc.feature.shipmap.ShipMapScreen
 import com.nullhorizon.pc.feature.shipmap.ShipMapViewModel
+import com.nullhorizon.pc.feature.signals.SignalsScreen
+import com.nullhorizon.pc.feature.signals.SignalsViewModel
 import com.nullhorizon.pc.feature.skills.SkillMapScreen
 import com.nullhorizon.pc.feature.skills.SkillMapViewModel
 import com.nullhorizon.pc.navigation.PcRoutes
@@ -142,6 +144,12 @@ private fun MainShell(
             crashReporter = appContainer.crashReporter,
         )
     }
+    val signalsViewModel = rememberPcViewModel {
+        SignalsViewModel(
+            contentRepository = appContainer.contentRepository,
+            progressRepository = appContainer.missionProgressRepository,
+        )
+    }
     val progression by appContainer.progressionRepository.snapshot
         .collectAsState(initial = ProgressionSnapshot())
 
@@ -172,6 +180,7 @@ private fun MainShell(
                     onMissionSelected = onOpenMission,
                 )
                 TopLevelTab.Skills -> SkillMapScreen(viewModel = skillMapViewModel)
+                TopLevelTab.Signals -> SignalsScreen(viewModel = signalsViewModel)
                 TopLevelTab.Settings -> SettingsScreen(
                     viewModel = settingsViewModel,
                     clearance = progression.clearancePoints,

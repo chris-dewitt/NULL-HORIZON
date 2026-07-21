@@ -30,6 +30,8 @@ import com.nullhorizon.app.feature.settings.SettingsScreen
 import com.nullhorizon.app.feature.settings.SettingsViewModel
 import com.nullhorizon.app.feature.shipmap.ShipMapScreen
 import com.nullhorizon.app.feature.shipmap.ShipMapViewModel
+import com.nullhorizon.app.feature.signals.SignalsScreen
+import com.nullhorizon.app.feature.signals.SignalsViewModel
 import com.nullhorizon.app.feature.skills.SkillMapScreen
 import com.nullhorizon.app.feature.skills.SkillMapViewModel
 import com.nullhorizon.app.progression.ProgressionSnapshot
@@ -195,6 +197,15 @@ private fun MainShell(
                     ),
                 )
                 SkillMapScreen(viewModel = viewModel)
+            }
+            composable(TopLevelDestination.Signals.route) {
+                val viewModel: SignalsViewModel = viewModel(
+                    factory = SignalsViewModel.factory(
+                        contentRepository = appContainer.contentRepository,
+                        progressRepository = appContainer.missionProgressRepository,
+                    ),
+                )
+                SignalsScreen(viewModel = viewModel)
             }
             composable(TopLevelDestination.Settings.route) {
                 val viewModel: SettingsViewModel = viewModel(

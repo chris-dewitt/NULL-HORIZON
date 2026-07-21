@@ -44,6 +44,7 @@ class MissionSessionViewModel(
     private var stateMachine: MissionStateMachine? = null
     private var sessionJson: String? = null
     private var auditorFragment: AuditorFragment? = null
+    private var auditorFragments: List<String> = emptyList()
 
     private val _uiState = MutableStateFlow(MissionSessionUiState())
     val uiState: StateFlow<MissionSessionUiState> = _uiState.asStateFlow()
@@ -62,6 +63,9 @@ class MissionSessionViewModel(
             }
             val machine = MissionStateMachine(mission)
             stateMachine = machine
+            auditorFragments = runCatching {
+                contentRepository.signal(AuditorLog.SIGNAL_ID).fragments
+            }.getOrDefault(emptyList())
             val restoredJson = sessionJson
             val session = if (restoredJson != null) {
                 json.decodeFromString<MissionSessionState>(restoredJson)
@@ -200,7 +204,7 @@ class MissionSessionViewModel(
                     hintLevelUsed = next.hintLevel,
                 )
                 val completedCount = progressRepository.completedMissionIds.first().size
-                auditorFragment = AuditorLog.fragmentFor(completedCount)
+                auditorFragment = AuditorLog.fragmentFor(auditorFragments, completedCount)
                 _uiState.update { it.copy(debrief = debrief, auditorFragment = auditorFragment) }
             }
         }

@@ -16,6 +16,7 @@ import com.nullhorizon.app.content.model.MissionRewards
 import com.nullhorizon.app.content.model.MissionSkills
 import com.nullhorizon.app.content.model.ObjectiveDefinition
 import com.nullhorizon.app.content.model.RewardDefinition
+import com.nullhorizon.app.content.model.SignalDefinition
 import com.nullhorizon.app.content.model.SkillDefinition
 import com.nullhorizon.app.progression.DebriefSummary
 import kotlinx.coroutines.Dispatchers
@@ -258,11 +259,16 @@ private class FakeContentRepository(
     override suspend fun reward(rewardId: String): RewardDefinition =
         error("not used")
 
+    override suspend fun signal(signalId: String): SignalDefinition =
+        error("not used")
+
     override suspend fun listMissions(): List<MissionDefinition> = missions
 
     override suspend fun listSkills(): List<SkillDefinition> = emptyList()
 
     override suspend fun listRewards(): List<RewardDefinition> = emptyList()
+
+    override suspend fun listSignals(): List<SignalDefinition> = emptyList()
 }
 
 private class FakeMissionProgressRepository : MissionProgressRepository {

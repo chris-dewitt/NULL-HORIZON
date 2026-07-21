@@ -18,6 +18,7 @@ data class ContentManifest(
     val skills: List<String> = emptyList(),
     val dialogues: List<String> = emptyList(),
     val rewards: List<String> = emptyList(),
+    val signals: List<String> = emptyList(),
 )
 
 @Serializable
@@ -178,4 +179,13 @@ data class RewardDefinition(
     val kind: String,
     val name: String,
     val description: String? = null,
+)
+
+@Serializable
+data class SignalDefinition(
+    @SerialName("schema_version") val schemaVersion: Int,
+    @SerialName("signal_id") val signalId: String,
+    val title: String,
+    val description: String? = null,
+    val fragments: List<String>,
 )

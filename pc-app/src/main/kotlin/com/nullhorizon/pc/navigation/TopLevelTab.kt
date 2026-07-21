@@ -4,6 +4,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.List
 import androidx.compose.material.icons.filled.AccountTree
 import androidx.compose.material.icons.filled.Place
+import androidx.compose.material.icons.filled.Sensors
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.ui.graphics.vector.ImageVector
 import com.nullhorizon.pc.ui.Strings
@@ -27,6 +28,11 @@ enum class TopLevelTab(
         label = Strings.nav_skills,
         contentDescription = Strings.nav_skills_a11y,
         icon = Icons.Filled.AccountTree,
+    ),
+    Signals(
+        label = Strings.nav_signals,
+        contentDescription = Strings.nav_signals_a11y,
+        icon = Icons.Filled.Sensors,
     ),
     Settings(
         label = Strings.nav_settings,
