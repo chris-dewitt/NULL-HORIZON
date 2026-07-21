@@ -55,20 +55,20 @@ data class RegionAccent(
 
 object NhRegionAccent {
     val catalog: Map<ShipRegionId, RegionAccent> = mapOf(
-        ShipRegionId.Emergency to RegionAccent(ShipRegionId.Emergency, NhColors.PhosphorAmber),
-        ShipRegionId.Maintenance to RegionAccent(ShipRegionId.Maintenance, NhColors.PhosphorGreen),
-        ShipRegionId.Archive to RegionAccent(ShipRegionId.Archive, NhColors.PhosphorGreen),
-        ShipRegionId.VersionVault to RegionAccent(ShipRegionId.VersionVault, NhColors.PhosphorBlue),
-        ShipRegionId.Automation to RegionAccent(ShipRegionId.Automation, NhColors.PhosphorGreen),
-        ShipRegionId.Drone to RegionAccent(ShipRegionId.Drone, NhColors.PhosphorWhite),
-        ShipRegionId.Navigation to RegionAccent(ShipRegionId.Navigation, NhColors.PhosphorBlue),
-        ShipRegionId.Comms to RegionAccent(ShipRegionId.Comms, NhColors.PhosphorBlue),
-        ShipRegionId.Verification to RegionAccent(ShipRegionId.Verification, NhColors.PhosphorAmber),
-        ShipRegionId.BlackVault to RegionAccent(ShipRegionId.BlackVault, NhColors.PhosphorRed),
-        ShipRegionId.DataFoundry to RegionAccent(ShipRegionId.DataFoundry, NhColors.PhosphorAmber),
-        ShipRegionId.Reactor to RegionAccent(ShipRegionId.Reactor, NhColors.PhosphorRed),
-        ShipRegionId.Prediction to RegionAccent(ShipRegionId.Prediction, NhColors.PhosphorBlue),
-        ShipRegionId.Horizon to RegionAccent(ShipRegionId.Horizon, NhColors.PhosphorWhite),
+        ShipRegionId.Emergency to RegionAccent(ShipRegionId.Emergency, NhPalette.GreenPhosphor.accent),
+        ShipRegionId.Maintenance to RegionAccent(ShipRegionId.Maintenance, NhPalette.GreenPhosphor.primary),
+        ShipRegionId.Archive to RegionAccent(ShipRegionId.Archive, NhPalette.GreenPhosphor.primary),
+        ShipRegionId.VersionVault to RegionAccent(ShipRegionId.VersionVault, NhPalette.GreenPhosphor.info),
+        ShipRegionId.Automation to RegionAccent(ShipRegionId.Automation, NhPalette.GreenPhosphor.primary),
+        ShipRegionId.Drone to RegionAccent(ShipRegionId.Drone, NhPalette.GreenPhosphor.text),
+        ShipRegionId.Navigation to RegionAccent(ShipRegionId.Navigation, NhPalette.GreenPhosphor.info),
+        ShipRegionId.Comms to RegionAccent(ShipRegionId.Comms, NhPalette.GreenPhosphor.info),
+        ShipRegionId.Verification to RegionAccent(ShipRegionId.Verification, NhPalette.GreenPhosphor.accent),
+        ShipRegionId.BlackVault to RegionAccent(ShipRegionId.BlackVault, NhPalette.GreenPhosphor.danger),
+        ShipRegionId.DataFoundry to RegionAccent(ShipRegionId.DataFoundry, NhPalette.GreenPhosphor.accent),
+        ShipRegionId.Reactor to RegionAccent(ShipRegionId.Reactor, NhPalette.GreenPhosphor.danger),
+        ShipRegionId.Prediction to RegionAccent(ShipRegionId.Prediction, NhPalette.GreenPhosphor.info),
+        ShipRegionId.Horizon to RegionAccent(ShipRegionId.Horizon, NhPalette.GreenPhosphor.text),
     )
 
     fun forRegionId(rawId: String): RegionAccent {
