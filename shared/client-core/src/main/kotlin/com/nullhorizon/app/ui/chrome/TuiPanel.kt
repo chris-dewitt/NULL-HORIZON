@@ -101,19 +101,35 @@ fun TuiRegionChip(
         isDamaged -> "◐"
         else -> "●"
     }
-    val animatedStatus = isDamaged && NhTheme.accessibility.animatedChromeEnabled
+    // Damaged regions flicker (unstable); restored regions breathe slowly
+    // (powered/alive). Both respect reduced motion.
+    val animatedStatus =
+        (isDamaged || isRestored) && NhTheme.accessibility.animatedChromeEnabled
     var statusAlpha by remember(normalizedStatus, animatedStatus) { mutableFloatStateOf(1f) }
 
-    LaunchedEffect(normalizedStatus, animatedStatus) {
+    LaunchedEffect(normalizedStatus, animatedStatus, isDamaged) {
         if (!animatedStatus) {
             statusAlpha = 1f
             return@LaunchedEffect
         }
-        while (isActive) {
-            statusAlpha = 0.58f
-            delay(180)
-            statusAlpha = 1f
-            delay(920)
+        if (isDamaged) {
+            while (isActive) {
+                statusAlpha = 0.58f
+                delay(180)
+                statusAlpha = 1f
+                delay(920)
+            }
+        } else {
+            while (isActive) {
+                statusAlpha = 1f
+                delay(720)
+                statusAlpha = 0.9f
+                delay(300)
+                statusAlpha = 0.8f
+                delay(300)
+                statusAlpha = 0.9f
+                delay(300)
+            }
         }
     }
 

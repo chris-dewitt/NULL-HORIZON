@@ -48,6 +48,7 @@ import com.nullhorizon.app.simulation.pipeline.PipelineSessionState
 import com.nullhorizon.app.simulation.servicemap.ServiceMapSessionState
 import com.nullhorizon.app.simulation.sql.SqlSessionState
 import com.nullhorizon.app.simulation.terminal.TerminalSessionState
+import com.nullhorizon.app.simulation.terminal.commandSuggestions
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
@@ -500,6 +501,7 @@ private fun TerminalPanel(
                 },
                 prompt = "$ ",
                 runLabel = stringResource(R.string.mission_terminal_run).uppercase(),
+                suggestions = commandSuggestions(input),
                 contentDescription = "Terminal input",
             )
         }
