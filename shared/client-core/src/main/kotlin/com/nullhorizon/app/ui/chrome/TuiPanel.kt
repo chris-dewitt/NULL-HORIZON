@@ -1,5 +1,6 @@
 package com.nullhorizon.app.ui.chrome
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -13,10 +14,13 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Shadow
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
@@ -45,17 +49,40 @@ fun TuiPanel(
     Box(
         modifier = modifier
             .fillMaxWidth()
+            .background(
+                Brush.verticalGradient(
+                    0f to accent.copy(alpha = 0.06f),
+                    0.42f to Color.Transparent,
+                ),
+            )
             .semantics { contentDescription = "Panel $normalizedTitle" }
             .drawTuiBorder(color = accent),
     ) {
         Text(
             text = "┌─ $normalizedTitle ─┐",
-            style = MaterialTheme.typography.labelMedium,
+            style = MaterialTheme.typography.labelMedium.copy(
+                shadow = Shadow(color = accent.copy(alpha = 0.55f), blurRadius = 12f),
+            ),
             color = accent,
             fontFamily = NhTheme.fontFamily,
             maxLines = 1,
             overflow = TextOverflow.Clip,
             modifier = Modifier.padding(start = 6.dp, top = 2.dp),
+        )
+        // Bottom corner glyphs complete the box-drawing frame.
+        Text(
+            text = "└",
+            style = MaterialTheme.typography.labelMedium,
+            color = accent,
+            fontFamily = NhTheme.fontFamily,
+            modifier = Modifier.align(Alignment.BottomStart).padding(start = 6.dp, bottom = 1.dp),
+        )
+        Text(
+            text = "┘",
+            style = MaterialTheme.typography.labelMedium,
+            color = accent,
+            fontFamily = NhTheme.fontFamily,
+            modifier = Modifier.align(Alignment.BottomEnd).padding(end = 6.dp, bottom = 1.dp),
         )
         Column(
             modifier = Modifier
@@ -168,19 +195,27 @@ fun Modifier.drawTuiBorder(
     val top = inset
     val right = size.width - inset
     val bottom = size.height - inset
-    // Top and bottom
-    drawLine(color, Offset(left + 8f, top), Offset(right - 8f, top), strokeWidth, StrokeCap.Square)
-    drawLine(color, Offset(left + 8f, bottom), Offset(right - 8f, bottom), strokeWidth, StrokeCap.Square)
-    // Sides
-    drawLine(color, Offset(left, top + 8f), Offset(left, bottom - 8f), strokeWidth, StrokeCap.Square)
-    drawLine(color, Offset(right, top + 8f), Offset(right, bottom - 8f), strokeWidth, StrokeCap.Square)
-    // Corner ticks approximating box-drawing corners
-    drawLine(color, Offset(left, top + 8f), Offset(left, top), strokeWidth, StrokeCap.Square)
-    drawLine(color, Offset(left, top), Offset(left + 8f, top), strokeWidth, StrokeCap.Square)
-    drawLine(color, Offset(right, top + 8f), Offset(right, top), strokeWidth, StrokeCap.Square)
-    drawLine(color, Offset(right, top), Offset(right - 8f, top), strokeWidth, StrokeCap.Square)
-    drawLine(color, Offset(left, bottom - 8f), Offset(left, bottom), strokeWidth, StrokeCap.Square)
-    drawLine(color, Offset(left, bottom), Offset(left + 8f, bottom), strokeWidth, StrokeCap.Square)
-    drawLine(color, Offset(right, bottom - 8f), Offset(right, bottom), strokeWidth, StrokeCap.Square)
-    drawLine(color, Offset(right, bottom), Offset(right - 8f, bottom), strokeWidth, StrokeCap.Square)
+
+    // Each segment of the box-drawing frame, drawn once per pass.
+    fun frame(sw: Float, c: Color) {
+        // Top and bottom
+        drawLine(c, Offset(left + 8f, top), Offset(right - 8f, top), sw, StrokeCap.Square)
+        drawLine(c, Offset(left + 8f, bottom), Offset(right - 8f, bottom), sw, StrokeCap.Square)
+        // Sides
+        drawLine(c, Offset(left, top + 8f), Offset(left, bottom - 8f), sw, StrokeCap.Square)
+        drawLine(c, Offset(right, top + 8f), Offset(right, bottom - 8f), sw, StrokeCap.Square)
+        // Corner ticks approximating box-drawing corners
+        drawLine(c, Offset(left, top + 8f), Offset(left, top), sw, StrokeCap.Square)
+        drawLine(c, Offset(left, top), Offset(left + 8f, top), sw, StrokeCap.Square)
+        drawLine(c, Offset(right, top + 8f), Offset(right, top), sw, StrokeCap.Square)
+        drawLine(c, Offset(right, top), Offset(right - 8f, top), sw, StrokeCap.Square)
+        drawLine(c, Offset(left, bottom - 8f), Offset(left, bottom), sw, StrokeCap.Square)
+        drawLine(c, Offset(left, bottom), Offset(left + 8f, bottom), sw, StrokeCap.Square)
+        drawLine(c, Offset(right, bottom - 8f), Offset(right, bottom), sw, StrokeCap.Square)
+        drawLine(c, Offset(right, bottom), Offset(right - 8f, bottom), sw, StrokeCap.Square)
+    }
+
+    // Soft phosphor bloom underlay, then the crisp line on top.
+    frame(strokeWidth * 3.4f, color.copy(alpha = 0.16f))
+    frame(strokeWidth, color)
 }

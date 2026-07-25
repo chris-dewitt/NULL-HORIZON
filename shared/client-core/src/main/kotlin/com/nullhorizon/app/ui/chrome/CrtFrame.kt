@@ -35,11 +35,27 @@ fun CrtFrame(
         return
     }
 
+    val gridColor = NhColors.PhosphorGreen.copy(alpha = 0.04f)
     Box(
         modifier = modifier
             .fillMaxSize()
-            .background(NhColors.CrtBlack)
+            .background(
+                Brush.verticalGradient(listOf(NhColors.CrtRaised, NhColors.CrtBlack)),
+            )
             .drawWithContent {
+                // Faint reactor grid sits under the content for physical depth.
+                val step = 34f
+                var gx = 0f
+                while (gx < size.width) {
+                    drawLine(gridColor, Offset(gx, 0f), Offset(gx, size.height), 1f)
+                    gx += step
+                }
+                var gy = 0f
+                while (gy < size.height) {
+                    drawLine(gridColor, Offset(0f, gy), Offset(size.width, gy), 1f)
+                    gy += step
+                }
+
                 drawContent()
 
                 val scanColor = Color.White.copy(alpha = profile.scanlineAlpha)
