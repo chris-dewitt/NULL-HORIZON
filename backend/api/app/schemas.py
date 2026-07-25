@@ -110,6 +110,8 @@ class ContentManifestResponse(BaseModel):
     skills: list[str] = []
     dialogues: list[str] = []
     rewards: list[str] = []
+    signals: list[str] = []
+    consequences: list[str] = []
 
 
 class ExecutionFile(BaseModel):
