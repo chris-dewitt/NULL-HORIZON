@@ -16,15 +16,15 @@ data class CrtProfile(
         val Medium = CrtProfile(
             name = "medium",
             scanlineStepPx = 2.5f,
-            scanlineAlpha = 0.10f,
-            vignetteStrength = 0.46f,
+            scanlineAlpha = 0.20f,
+            vignetteStrength = 0.60f,
         )
 
         val Lean = CrtProfile(
             name = "lean",
-            scanlineStepPx = 3.5f,
-            scanlineAlpha = 0.045f,
-            vignetteStrength = 0.30f,
+            scanlineStepPx = 3.0f,
+            scanlineAlpha = 0.11f,
+            vignetteStrength = 0.46f,
         )
     }
 }

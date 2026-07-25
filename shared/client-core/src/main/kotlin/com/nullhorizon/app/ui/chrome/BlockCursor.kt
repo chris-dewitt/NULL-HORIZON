@@ -45,7 +45,7 @@ fun BlockCursor(
         modifier = modifier.semantics { contentDescription = "Cursor" },
         color = color,
         style = MaterialTheme.typography.bodyMedium.copy(
-            shadow = Shadow(color = color, blurRadius = 14f),
+            shadow = Shadow(color = color, blurRadius = 24f),
         ),
         fontFamily = FontFamily.Monospace,
     )

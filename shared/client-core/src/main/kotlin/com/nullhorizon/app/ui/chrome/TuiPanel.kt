@@ -51,8 +51,8 @@ fun TuiPanel(
             .fillMaxWidth()
             .background(
                 Brush.verticalGradient(
-                    0f to accent.copy(alpha = 0.06f),
-                    0.42f to Color.Transparent,
+                    0f to accent.copy(alpha = 0.14f),
+                    0.5f to Color.Transparent,
                 ),
             )
             .semantics { contentDescription = "Panel $normalizedTitle" }
@@ -61,7 +61,7 @@ fun TuiPanel(
         Text(
             text = "┌─ $normalizedTitle ─┐",
             style = MaterialTheme.typography.labelMedium.copy(
-                shadow = Shadow(color = accent.copy(alpha = 0.55f), blurRadius = 12f),
+                shadow = Shadow(color = accent, blurRadius = 22f),
             ),
             color = accent,
             fontFamily = NhTheme.fontFamily,
@@ -215,7 +215,8 @@ fun Modifier.drawTuiBorder(
         drawLine(c, Offset(right, bottom), Offset(right - 8f, bottom), sw, StrokeCap.Square)
     }
 
-    // Soft phosphor bloom underlay, then the crisp line on top.
-    frame(strokeWidth * 3.4f, color.copy(alpha = 0.16f))
-    frame(strokeWidth, color)
+    // Fat phosphor bloom: wide halo, inner bloom, then a bold crisp line on top.
+    frame(strokeWidth * 7f, color.copy(alpha = 0.12f))
+    frame(strokeWidth * 3.6f, color.copy(alpha = 0.30f))
+    frame(strokeWidth * 1.5f, color)
 }

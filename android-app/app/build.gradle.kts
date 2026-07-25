@@ -13,7 +13,9 @@ android {
         applicationId = "com.nullhorizon.app"
         minSdk = libs.versions.minSdk.get().toInt()
         targetSdk = libs.versions.targetSdk.get().toInt()
-        versionCode = 1
+        // Auto-increment on CI (GitHub run number) so each published debug APK
+        // installs as a real update; falls back to 1 for local builds.
+        versionCode = (System.getenv("GITHUB_RUN_NUMBER") ?: "1").toInt()
         versionName = "0.1.0-epic1"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
