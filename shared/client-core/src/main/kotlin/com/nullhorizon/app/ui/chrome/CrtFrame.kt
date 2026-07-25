@@ -10,6 +10,7 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.TileMode
+import androidx.compose.ui.graphics.compositeOver
 import com.nullhorizon.app.ui.theme.NhColors
 import com.nullhorizon.app.ui.theme.NhTheme
 import kotlin.math.sqrt
@@ -35,16 +36,21 @@ fun CrtFrame(
         return
     }
 
-    val gridColor = NhColors.PhosphorGreen.copy(alpha = 0.04f)
+    val gridColor = NhColors.PhosphorGreen.copy(alpha = 0.10f)
+    val groundGlow = NhColors.PhosphorGreen.copy(alpha = 0.10f)
     Box(
         modifier = modifier
             .fillMaxSize()
             .background(
-                Brush.verticalGradient(listOf(NhColors.CrtRaised, NhColors.CrtBlack)),
+                Brush.verticalGradient(
+                    0.0f to groundGlow.compositeOver(NhColors.CrtRaised),
+                    0.55f to NhColors.CrtBlack,
+                    1.0f to NhColors.CrtBlack,
+                ),
             )
             .drawWithContent {
-                // Faint reactor grid sits under the content for physical depth.
-                val step = 34f
+                // Reactor grid sits under the content for physical depth.
+                val step = 32f
                 var gx = 0f
                 while (gx < size.width) {
                     drawLine(gridColor, Offset(gx, 0f), Offset(gx, size.height), 1f)
