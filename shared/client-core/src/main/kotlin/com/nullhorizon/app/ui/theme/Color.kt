@@ -29,6 +29,9 @@ object NhColors {
     val PhosphorWhite: Color get() = paletteState.value.text
     val PhosphorDim: Color get() = paletteState.value.dim
     val PhosphorGreen: Color get() = paletteState.value.primary
+
+    /** Lifted phosphor tint for emphasis, headers, glow and the cursor. */
+    val PhosphorHot: Color get() = paletteState.value.hot
     val PhosphorAmber: Color get() = paletteState.value.accent
     val PhosphorRed: Color get() = paletteState.value.danger
     val PhosphorBlue: Color get() = paletteState.value.info

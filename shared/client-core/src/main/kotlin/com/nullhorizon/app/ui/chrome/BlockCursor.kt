@@ -10,9 +10,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Shadow
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontFamily
+import com.nullhorizon.app.ui.theme.NhColors
 import com.nullhorizon.app.ui.theme.NhTheme
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
@@ -23,7 +25,7 @@ import kotlinx.coroutines.isActive
 @Composable
 fun BlockCursor(
     modifier: Modifier = Modifier,
-    color: Color = MaterialTheme.colorScheme.primary,
+    color: Color = NhColors.PhosphorHot,
     blinkMillis: Long = 530L,
 ) {
     val animated = NhTheme.accessibility.animatedChromeEnabled
@@ -42,7 +44,9 @@ fun BlockCursor(
         text = if (visible || !animated) "█" else " ",
         modifier = modifier.semantics { contentDescription = "Cursor" },
         color = color,
-        style = MaterialTheme.typography.bodyMedium,
+        style = MaterialTheme.typography.bodyMedium.copy(
+            shadow = Shadow(color = color, blurRadius = 14f),
+        ),
         fontFamily = FontFamily.Monospace,
     )
 }
