@@ -20,6 +20,7 @@ skills:
 narrative:
   briefing_dialogue_id: dialogue.testing.boundary_capstone.01.briefing
   success_dialogue_id: dialogue.testing.boundary_capstone.01.success
+  failure_consequence_id: consequence.regression_shipped
 
 tools:
   - python_editor

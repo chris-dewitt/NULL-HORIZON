@@ -236,6 +236,9 @@ class MissionStateMachine(
             state.copy(
                 editor = editor.copy(lastResult = result, lastRunMessage = message),
                 lastActionMessage = message,
+                // A failing test run is a concrete setback: surface the mission's
+                // consequence until the operator recovers or completes.
+                setbackActive = !result.allPassed,
             ),
         )
     }
@@ -322,6 +325,7 @@ class MissionStateMachine(
         return state.copy(
             completedObjectiveIds = completed,
             phase = if (isComplete) MissionPhase.Completed else state.phase,
+            setbackActive = if (isComplete) false else state.setbackActive,
         )
     }
 }

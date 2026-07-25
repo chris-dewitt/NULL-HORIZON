@@ -1,0 +1,18 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://nullhorizon.local/schema/consequence.schema.json",
+  "title": "Consequence",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "consequence_id", "title", "symptom", "fallout"],
+  "properties": {
+    "schema_version": { "type": "integer", "const": 1 },
+    "consequence_id": {
+      "type": "string",
+      "pattern": "^[a-z0-9_]+(\\.[a-z0-9_]+)+$"
+    },
+    "title": { "type": "string", "minLength": 1 },
+    "symptom": { "type": "string", "minLength": 1 },
+    "fallout": { "type": "string", "minLength": 1 }
+  }
+}

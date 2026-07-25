@@ -101,6 +101,7 @@
   "mission_id": "automation.oxygen_capstone.01",
   "narrative": {
     "briefing_dialogue_id": "dialogue.automation.oxygen_capstone.01.briefing",
+    "failure_consequence_id": "consequence.oxygen_recycler_stall",
     "success_dialogue_id": "dialogue.automation.oxygen_capstone.01.success"
   },
   "objectives": [

@@ -700,6 +700,22 @@
             "type": "array",
             "title": "Rewards",
             "default": []
+          },
+          "signals": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Signals",
+            "default": []
+          },
+          "consequences": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Consequences",
+            "default": []
           }
         },
         "type": "object",

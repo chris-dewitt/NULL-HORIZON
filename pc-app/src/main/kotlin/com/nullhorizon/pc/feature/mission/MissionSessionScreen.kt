@@ -24,6 +24,7 @@ import androidx.compose.runtime.collectAsState
 import com.nullhorizon.app.audio.GameSound
 import com.nullhorizon.app.audio.PlaySoundOnce
 import com.nullhorizon.app.ui.chrome.AuditorPanel
+import com.nullhorizon.app.ui.chrome.ConsequencePanel
 import com.nullhorizon.app.ui.chrome.DialogueLines
 import com.nullhorizon.app.ui.chrome.RankUpBanner
 import com.nullhorizon.app.ui.chrome.animatedCount
@@ -254,6 +255,10 @@ fun MissionSessionScreen(
 
                     state.session.lastActionMessage?.let { message ->
                         Text(message, color = NhColors.PhosphorGreen)
+                    }
+
+                    if (state.session.setbackActive) {
+                        state.consequence?.let { ConsequencePanel(consequence = it) }
                     }
 
                     TuiActionButton(

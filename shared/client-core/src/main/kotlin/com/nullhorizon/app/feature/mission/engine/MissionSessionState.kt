@@ -29,6 +29,7 @@ data class MissionSessionState(
     val completedObjectiveIds: Set<String> = emptySet(),
     val hintLevel: Int = 0,
     val lastActionMessage: String? = null,
+    val setbackActive: Boolean = false,
 ) {
     fun isObjectiveComplete(objectiveId: String): Boolean = objectiveId in completedObjectiveIds
 }

@@ -4,6 +4,7 @@ import com.nullhorizon.app.content.model.ChapterDefinition
 import com.nullhorizon.app.content.model.ContentManifest
 import com.nullhorizon.app.content.model.DialogueDefinition
 import com.nullhorizon.app.content.model.MissionDefinition
+import com.nullhorizon.app.content.model.ConsequenceDefinition
 import com.nullhorizon.app.content.model.RewardDefinition
 import com.nullhorizon.app.content.model.SignalDefinition
 import com.nullhorizon.app.content.model.SkillDefinition
@@ -23,6 +24,8 @@ interface ContentRepository {
 
     suspend fun signal(signalId: String): SignalDefinition
 
+    suspend fun consequence(consequenceId: String): ConsequenceDefinition
+
     suspend fun listMissions(): List<MissionDefinition>
 
     suspend fun listSkills(): List<SkillDefinition>
@@ -30,4 +33,6 @@ interface ContentRepository {
     suspend fun listRewards(): List<RewardDefinition>
 
     suspend fun listSignals(): List<SignalDefinition>
+
+    suspend fun listConsequences(): List<ConsequenceDefinition>
 }

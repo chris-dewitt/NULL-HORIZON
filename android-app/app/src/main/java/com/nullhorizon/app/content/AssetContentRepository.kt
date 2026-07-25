@@ -5,6 +5,7 @@ import com.nullhorizon.app.content.model.ChapterDefinition
 import com.nullhorizon.app.content.model.ContentManifest
 import com.nullhorizon.app.content.model.DialogueDefinition
 import com.nullhorizon.app.content.model.MissionDefinition
+import com.nullhorizon.app.content.model.ConsequenceDefinition
 import com.nullhorizon.app.content.model.RewardDefinition
 import com.nullhorizon.app.content.model.SignalDefinition
 import com.nullhorizon.app.content.model.SkillDefinition
@@ -42,6 +43,9 @@ class AssetContentRepository(
     override suspend fun signal(signalId: String): SignalDefinition =
         decode("signals/$signalId.json")
 
+    override suspend fun consequence(consequenceId: String): ConsequenceDefinition =
+        decode("consequences/$consequenceId.json")
+
     override suspend fun listMissions(): List<MissionDefinition> {
         val manifest = manifest()
         return manifest.missions.map { mission(it) }
@@ -60,6 +64,11 @@ class AssetContentRepository(
     override suspend fun listSignals(): List<SignalDefinition> {
         val manifest = manifest()
         return manifest.signals.map { signal(it) }
+    }
+
+    override suspend fun listConsequences(): List<ConsequenceDefinition> {
+        val manifest = manifest()
+        return manifest.consequences.map { consequence(it) }
     }
 
     private suspend inline fun <reified T> decode(relativePath: String): T =

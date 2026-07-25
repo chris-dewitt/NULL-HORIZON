@@ -32,6 +32,8 @@ class PressureThresholdMissionTest {
         state = machine.runTests(state)
         assertThat(state.editor!!.lastResult!!.allPassed).isFalse()
         assertThat(state.completedObjectiveIds).doesNotContain("tests_pass")
+        // A failing test run raises the setback flag that drives consequence UI.
+        assertThat(state.setbackActive).isTrue()
 
         state = machine.updateEditorContent(
             state,
@@ -43,6 +45,8 @@ class PressureThresholdMissionTest {
         state = machine.runTests(state)
         assertThat(state.phase).isEqualTo(MissionPhase.Completed)
         assertThat(state.editor!!.lastResult!!.allPassed).isTrue()
+        // Recovery clears the setback.
+        assertThat(state.setbackActive).isFalse()
     }
 
     @Test

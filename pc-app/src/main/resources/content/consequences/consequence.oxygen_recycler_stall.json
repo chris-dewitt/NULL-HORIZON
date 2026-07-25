@@ -1,0 +1,7 @@
+{
+  "consequence_id": "consequence.oxygen_recycler_stall",
+  "fallout": "Bad allocations route breathable air into sealed compartments. The sleepers in Bay 3 drop to reserve until the numbers balance.",
+  "schema_version": 1,
+  "symptom": "The oxygen recycler cycles and stalls; cabin O2 ticks down.",
+  "title": "Recycler Stall"
+}

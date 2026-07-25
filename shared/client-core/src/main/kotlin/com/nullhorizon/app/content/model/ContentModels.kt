@@ -19,6 +19,7 @@ data class ContentManifest(
     val dialogues: List<String> = emptyList(),
     val rewards: List<String> = emptyList(),
     val signals: List<String> = emptyList(),
+    val consequences: List<String> = emptyList(),
 )
 
 @Serializable
@@ -188,4 +189,13 @@ data class SignalDefinition(
     val title: String,
     val description: String? = null,
     val fragments: List<String>,
+)
+
+@Serializable
+data class ConsequenceDefinition(
+    @SerialName("schema_version") val schemaVersion: Int,
+    @SerialName("consequence_id") val consequenceId: String,
+    val title: String,
+    val symptom: String,
+    val fallout: String,
 )
