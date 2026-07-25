@@ -24,6 +24,7 @@ KIND_DIRS = {
     "dialogue": CONTENT / "dialogue",
     "reward": CONTENT / "rewards",
     "signal": CONTENT / "signals",
+    "consequence": CONTENT / "consequences",
 }
 
 ID_FIELDS = {
@@ -33,6 +34,7 @@ ID_FIELDS = {
     "dialogue": "dialogue_id",
     "reward": "reward_id",
     "signal": "signal_id",
+    "consequence": "consequence_id",
 }
 
 
@@ -100,6 +102,7 @@ def referential_errors(docs: dict[str, list[tuple[Path, dict[str, Any]]]]) -> li
     dialogue_ids = ids.get("dialogue", set())
     mission_ids = ids.get("mission", set())
     reward_ids = ids.get("reward", set())
+    consequence_ids = ids.get("consequence", set())
 
     for path, chapter in docs.get("chapter", []):
         for mission_id in chapter.get("mission_ids", []):
@@ -131,6 +134,11 @@ def referential_errors(docs: dict[str, list[tuple[Path, dict[str, Any]]]]) -> li
         offline_fallback = mission["narrative"].get("offline_fallback_dialogue_id")
         if offline_fallback and offline_fallback not in dialogue_ids:
             errors.append(f"{path}: offline fallback dialogue '{offline_fallback}' does not exist")
+        failure_consequence = mission["narrative"].get("failure_consequence_id")
+        if failure_consequence and failure_consequence not in consequence_ids:
+            errors.append(
+                f"{path}: failure consequence '{failure_consequence}' does not exist"
+            )
         if mission["requirements"]["online"] and not offline_fallback:
             errors.append(f"{path}: online mission requires offline_fallback_dialogue_id")
 

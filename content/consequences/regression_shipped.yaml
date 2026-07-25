@@ -1,0 +1,7 @@
+schema_version: 1
+consequence_id: consequence.regression_shipped
+title: Regression Shipped
+symptom: The boundary test flips red — a defect just slipped past review.
+fallout: >-
+  The inclusive upper bound over-allocates one slot every batch. It compounds
+  quietly until someone downstream is left without one.

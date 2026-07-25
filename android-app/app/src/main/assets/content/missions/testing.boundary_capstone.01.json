@@ -101,6 +101,7 @@
   "mission_id": "testing.boundary_capstone.01",
   "narrative": {
     "briefing_dialogue_id": "dialogue.testing.boundary_capstone.01.briefing",
+    "failure_consequence_id": "consequence.regression_shipped",
     "success_dialogue_id": "dialogue.testing.boundary_capstone.01.success"
   },
   "objectives": [

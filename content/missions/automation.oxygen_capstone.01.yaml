@@ -20,6 +20,7 @@ skills:
 narrative:
   briefing_dialogue_id: dialogue.automation.oxygen_capstone.01.briefing
   success_dialogue_id: dialogue.automation.oxygen_capstone.01.success
+  failure_consequence_id: consequence.oxygen_recycler_stall
 
 tools:
   - python_editor

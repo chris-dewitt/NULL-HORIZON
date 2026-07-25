@@ -18,6 +18,11 @@
     "version_vault",
     "vertical_slice"
   ],
+  "consequences": [
+    "consequence.health_check_flapping",
+    "consequence.oxygen_recycler_stall",
+    "consequence.regression_shipped"
+  ],
   "content_schema_version": 1,
   "dialogues": [
     "dialogue.archive.aggregate.01.briefing",

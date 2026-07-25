@@ -1,0 +1,7 @@
+{
+  "consequence_id": "consequence.health_check_flapping",
+  "fallout": "Automation keeps bouncing the service instead of reporting green. Every downstream job queues behind it, waiting for a signal that never settles.",
+  "schema_version": 1,
+  "symptom": "The deck health check restarts on a loop; the log spools fast.",
+  "title": "Health Check Flapping"
+}

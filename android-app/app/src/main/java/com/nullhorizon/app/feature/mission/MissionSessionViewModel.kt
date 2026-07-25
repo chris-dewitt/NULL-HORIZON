@@ -10,6 +10,7 @@ import androidx.lifecycle.viewmodel.viewModelFactory
 import com.nullhorizon.app.content.CampaignOrder
 import com.nullhorizon.app.content.ContentRepository
 import com.nullhorizon.app.content.MissionProgressRepository
+import com.nullhorizon.app.content.model.ConsequenceDefinition
 import com.nullhorizon.app.content.model.DialogueDefinition
 import com.nullhorizon.app.content.model.MissionDefinition
 import com.nullhorizon.app.feature.mission.engine.HintEngine
@@ -38,6 +39,7 @@ data class MissionSessionUiState(
     val visibleHintTexts: List<String> = emptyList(),
     val debrief: DebriefSummary? = null,
     val auditorFragment: AuditorFragment? = null,
+    val consequence: ConsequenceDefinition? = null,
     val nextMissionId: String? = null,
     val nextMissionTitle: String? = null,
     val errorMessage: String? = null,
@@ -56,6 +58,7 @@ class MissionSessionViewModel(
     private var nextMissionTitle: String? = null
     private var auditorFragment: AuditorFragment? = null
     private var auditorFragments: List<String> = emptyList()
+    private var consequence: ConsequenceDefinition? = null
 
     private val _uiState = MutableStateFlow(MissionSessionUiState())
     val uiState: StateFlow<MissionSessionUiState> = _uiState.asStateFlow()
@@ -78,6 +81,9 @@ class MissionSessionViewModel(
             auditorFragments = runCatching {
                 contentRepository.signal(AuditorLog.SIGNAL_ID).fragments
             }.getOrDefault(emptyList())
+            consequence = mission.narrative.failureConsequenceId?.let { id ->
+                runCatching { contentRepository.consequence(id) }.getOrNull()
+            }
             val restoredJson = savedStateHandle.get<String>(KEY_SESSION_JSON)
             val session = if (restoredJson != null) {
                 json.decodeFromString<MissionSessionState>(restoredJson)
@@ -270,6 +276,7 @@ class MissionSessionViewModel(
             visibleHintTexts = hints,
             debrief = _uiState.value.debrief,
             auditorFragment = auditorFragment,
+            consequence = consequence,
             nextMissionId = nextMissionId,
             nextMissionTitle = nextMissionTitle,
             errorMessage = null,

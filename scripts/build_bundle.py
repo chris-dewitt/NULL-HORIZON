@@ -67,6 +67,9 @@ def build_bundle(channel: str, out_root: Path) -> Path:
     dialogues = compile_kind(CONTENT / "dialogue", bundle_dir / "dialogues", "dialogue_id")
     rewards = compile_kind(CONTENT / "rewards", bundle_dir / "rewards", "reward_id")
     signals = compile_kind(CONTENT / "signals", bundle_dir / "signals", "signal_id")
+    consequences = compile_kind(
+        CONTENT / "consequences", bundle_dir / "consequences", "consequence_id"
+    )
 
     manifest = {
         "schema_version": 1,
@@ -82,6 +85,7 @@ def build_bundle(channel: str, out_root: Path) -> Path:
         "dialogues": dialogues,
         "rewards": rewards,
         "signals": signals,
+        "consequences": consequences,
     }
     write_json(bundle_dir / "manifest.json", manifest)
 

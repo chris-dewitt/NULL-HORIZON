@@ -1,0 +1,7 @@
+{
+  "consequence_id": "consequence.regression_shipped",
+  "fallout": "The inclusive upper bound over-allocates one slot every batch. It compounds quietly until someone downstream is left without one.",
+  "schema_version": 1,
+  "symptom": "The boundary test flips red \u2014 a defect just slipped past review.",
+  "title": "Regression Shipped"
+}
