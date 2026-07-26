@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -144,6 +145,15 @@ fun MissionSessionScreen(
                 if (state.session.phase == MissionPhase.InProgress ||
                     state.session.phase == MissionPhase.Completed
                 ) {
+                    // Directions live above the workspace so the soft keyboard,
+                    // which resizes the window when a prompt field is focused,
+                    // never covers the objectives the player is working toward.
+                    ObjectivesList(
+                        objectives = mission.objectives.filter { it.visible }
+                            .map { it.id to it.description },
+                        isComplete = state.session::isObjectiveComplete,
+                    )
+
                     if (mission.tools.contains("systems_panel") &&
                         mission.environment.actions.isNotEmpty()
                     ) {
@@ -227,23 +237,6 @@ fun MissionSessionScreen(
                         )
                     }
 
-                    Text(
-                        text = stringResource(R.string.mission_objectives),
-                        style = MaterialTheme.typography.titleMedium,
-                        color = NhColors.PhosphorAmber,
-                    )
-                    mission.objectives.filter { it.visible }.forEach { objective ->
-                        val done = state.session.isObjectiveComplete(objective.id)
-                        Text(
-                            text = "${if (done) "[x]" else "[ ]"} ${objective.description}",
-                            color = if (done) NhColors.PhosphorGreen else NhColors.PhosphorWhite,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .drawTuiBorder(color = if (done) NhColors.PhosphorGreen else NhColors.PhosphorDim)
-                                .padding(8.dp),
-                        )
-                    }
-
                     TuiActionButton(
                         label = stringResource(R.string.mission_request_hint),
                         onClick = viewModel::requestHint,
@@ -312,6 +305,35 @@ fun MissionSessionScreen(
                         )
                     }
                 }
+            }
+        }
+    }
+}
+
+@Composable
+private fun ObjectivesList(
+    objectives: List<Pair<String, String>>,
+    isComplete: (String) -> Boolean,
+) {
+    Text(
+        text = stringResource(R.string.mission_objectives),
+        style = MaterialTheme.typography.titleMedium,
+        color = NhColors.PhosphorAmber,
+    )
+    // Selectable so players can long-press to copy a path or filename out of an
+    // objective and paste it straight into a terminal command (e.g. `cd <dir>`).
+    SelectionContainer {
+        Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+            objectives.forEach { (id, description) ->
+                val done = isComplete(id)
+                Text(
+                    text = "${if (done) "[x]" else "[ ]"} $description",
+                    color = if (done) NhColors.PhosphorGreen else NhColors.PhosphorWhite,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .drawTuiBorder(color = if (done) NhColors.PhosphorGreen else NhColors.PhosphorDim)
+                        .padding(8.dp),
+                )
             }
         }
     }
@@ -455,6 +477,9 @@ private fun TerminalPanel(
             color = NhColors.PhosphorDim,
             modifier = Modifier.semantics { contentDescription = "Terminal cwd ${terminal.cwd}" },
         )
+        // Selectable history: long-press to copy a path or command so it can be
+        // pasted back into the prompt (e.g. copy a folder name, then `cd` into it).
+        SelectionContainer {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
@@ -496,6 +521,7 @@ private fun TerminalPanel(
                     }
                 }
             }
+        }
         }
         if (enabled) {
             TerminalPromptField(
@@ -593,6 +619,8 @@ private fun GitPanel(
         }
     }
 
+    // Selectable so commit hashes and command output can be copied out.
+    SelectionContainer {
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -631,6 +659,7 @@ private fun GitPanel(
                 }
             }
         }
+    }
     }
     if (enabled) {
         TerminalPromptField(
@@ -746,6 +775,8 @@ private fun SqlPanel(
         text = stringResource(R.string.mission_sql_result),
         style = MaterialTheme.typography.titleSmall,
     )
+    // Selectable so query results can be copied out of the console.
+    SelectionContainer {
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -788,6 +819,7 @@ private fun SqlPanel(
                 }
             }
         }
+    }
     }
 
     if (enabled) {
