@@ -102,29 +102,22 @@ fun MissionSessionScreen(
                     MissionPhase.Completed -> state.success
                     else -> state.briefing
                 }
-                dialogue?.lines?.let { lines ->
-                    TuiPanel(
-                        title = "COMMS",
-                        accent = NhColors.PhosphorAmber,
-                    ) {
-                        DialogueLines(
-                            lines = lines.map { it.speaker to it.text },
-                        )
-                    }
-                }
-
-                if (mission.requirements.online &&
+                val commsLines = dialogue?.lines?.map { it.speaker to it.text }
+                val showOfflineFallback = mission.requirements.online &&
                     state.offlineFallback != null &&
                     state.session.phase != MissionPhase.Completed
-                ) {
-                    TuiPanel(
-                        title = stringResource(R.string.mission_offline_fallback),
-                        accent = NhColors.PhosphorBlue,
-                    ) {
-                        DialogueLines(
-                            lines = state.offlineFallback!!.lines.map { it.speaker to it.text },
-                        )
-                    }
+                val offlineTitle = stringResource(R.string.mission_offline_fallback)
+                val offlineLines = state.offlineFallback?.lines?.map { it.speaker to it.text }
+
+                // During active play the narrative moves below the workspace so the
+                // terminal sits near the top of the screen. While briefing (pre-play)
+                // or on completion it stays up top for reading and the payoff.
+                if (state.session.phase != MissionPhase.InProgress) {
+                    MissionNarrative(
+                        commsLines = commsLines,
+                        offlineTitle = if (showOfflineFallback) offlineTitle else null,
+                        offlineLines = if (showOfflineFallback) offlineLines else null,
+                    )
                 }
 
                 Text(
@@ -237,6 +230,16 @@ fun MissionSessionScreen(
                         )
                     }
 
+                    // Narrative sits here during play — below the workspace — so the
+                    // terminal and directions stay near the top of the screen.
+                    if (state.session.phase == MissionPhase.InProgress) {
+                        MissionNarrative(
+                            commsLines = commsLines,
+                            offlineTitle = if (showOfflineFallback) offlineTitle else null,
+                            offlineLines = if (showOfflineFallback) offlineLines else null,
+                        )
+                    }
+
                     TuiActionButton(
                         label = stringResource(R.string.mission_request_hint),
                         onClick = viewModel::requestHint,
@@ -306,6 +309,30 @@ fun MissionSessionScreen(
                     }
                 }
             }
+        }
+    }
+}
+
+@Composable
+private fun MissionNarrative(
+    commsLines: List<Pair<String, String>>?,
+    offlineTitle: String?,
+    offlineLines: List<Pair<String, String>>?,
+) {
+    commsLines?.let { lines ->
+        TuiPanel(
+            title = "COMMS",
+            accent = NhColors.PhosphorAmber,
+        ) {
+            DialogueLines(lines = lines)
+        }
+    }
+    if (offlineTitle != null && offlineLines != null) {
+        TuiPanel(
+            title = offlineTitle,
+            accent = NhColors.PhosphorBlue,
+        ) {
+            DialogueLines(lines = offlineLines)
         }
     }
 }
