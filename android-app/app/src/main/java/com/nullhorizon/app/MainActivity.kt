@@ -6,6 +6,7 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
@@ -110,7 +111,12 @@ fun NullHorizonApp(
                     BootSequenceScreen(onFinished = { bootComplete = true })
                 } else {
                     Surface(modifier = Modifier.fillMaxSize()) {
-                        Box(modifier = Modifier.fillMaxSize()) {
+                        // enableEdgeToEdge() draws behind the IME, so adjustResize no
+                        // longer shrinks the window on its own. Consume the keyboard
+                        // inset here so focused text fields (terminal / SQL / git /
+                        // python prompts) scroll into view above the keyboard instead
+                        // of being covered by it. The CRT frame stays full-bleed behind.
+                        Box(modifier = Modifier.fillMaxSize().imePadding()) {
                             NullHorizonNavHost(appContainer = app.container)
                         }
                     }
