@@ -15,7 +15,7 @@ serialization = "1.7.3"
 junit = "4.13.2"
 androidxJunit = "1.2.1"
 espresso = "3.7.0"
-truth = "1.4.4"
+truth = "1.4.5"
 sqliteJdbc = "3.45.3.0"
 
 [libraries]
