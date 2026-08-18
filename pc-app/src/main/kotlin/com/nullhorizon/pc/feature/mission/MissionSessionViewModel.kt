@@ -31,6 +31,7 @@ data class MissionSessionUiState(
     val session: MissionSessionState = MissionSessionState(),
     val visibleHintTexts: List<String> = emptyList(),
     val debrief: DebriefSummary? = null,
+    val unlockedRewardNames: List<String> = emptyList(),
     val auditorFragment: AuditorFragment? = null,
     val consequence: ConsequenceDefinition? = null,
     val errorMessage: String? = null,
@@ -211,7 +212,18 @@ class MissionSessionViewModel(
                 )
                 val completedCount = progressRepository.completedMissionIds.first().size
                 auditorFragment = AuditorLog.fragmentFor(auditorFragments, completedCount)
-                _uiState.update { it.copy(debrief = debrief, auditorFragment = auditorFragment) }
+                // Reward ids are internal; the debrief shows the record's title
+                // so the unlock reads as a thing the player just recovered.
+                val rewardNames = debrief.unlockedRewards.map { rewardId ->
+                    runCatching { contentRepository.reward(rewardId).name }.getOrDefault(rewardId)
+                }
+                _uiState.update {
+                    it.copy(
+                        debrief = debrief,
+                        unlockedRewardNames = rewardNames,
+                        auditorFragment = auditorFragment,
+                    )
+                }
             }
         }
     }
@@ -250,6 +262,7 @@ class MissionSessionViewModel(
             session = session,
             visibleHintTexts = hints,
             debrief = _uiState.value.debrief,
+            unlockedRewardNames = _uiState.value.unlockedRewardNames,
             auditorFragment = auditorFragment,
             consequence = consequence,
             errorMessage = null,

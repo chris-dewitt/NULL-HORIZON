@@ -3,15 +3,12 @@ package com.nullhorizon.app.feature.shipmap
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.ExperimentalLayoutApi
-import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.widthIn
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -24,14 +21,16 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.nullhorizon.app.R
+import com.nullhorizon.app.ui.chrome.SchematicRegion
+import com.nullhorizon.app.ui.chrome.SchematicStatus
+import com.nullhorizon.app.ui.chrome.ShipSchematic
+import com.nullhorizon.app.ui.chrome.ShipVitalsStrip
 import com.nullhorizon.app.ui.chrome.TuiPanel
-import com.nullhorizon.app.ui.chrome.TuiRegionChip
 import com.nullhorizon.app.ui.chrome.drawTuiBorder
 import com.nullhorizon.app.ui.theme.NhColors
 import com.nullhorizon.app.ui.theme.NhRegionAccent
 import com.nullhorizon.app.ui.theme.NhTheme
 
-@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun ShipMapScreen(
     viewModel: ShipMapViewModel,
@@ -43,6 +42,7 @@ fun ShipMapScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
+            .verticalScroll(rememberScrollState())
             .padding(12.dp)
             .semantics { contentDescription = "Ship map" },
         verticalArrangement = Arrangement.spacedBy(10.dp),
@@ -58,6 +58,13 @@ fun ShipMapScreen(
             style = MaterialTheme.typography.labelMedium,
             color = NhColors.PhosphorDim,
             fontFamily = fontFamily,
+        )
+        // Ship-wide condition sits above the hull so progress is the first
+        // thing the operator reads on the hub screen.
+        ShipVitalsStrip(
+            hullPercent = state.vitals.hullPercent,
+            powerPercent = state.vitals.powerPercent,
+            dataPercent = state.vitals.dataPercent,
         )
         when {
             state.isLoading -> Text(
@@ -78,34 +85,16 @@ fun ShipMapScreen(
                     accent = NhColors.PhosphorGreen,
                     modifier = Modifier.fillMaxWidth(),
                 ) {
-                    FlowRow(
-                        horizontalArrangement = Arrangement.spacedBy(8.dp),
-                        verticalArrangement = Arrangement.spacedBy(8.dp),
-                        modifier = Modifier.fillMaxWidth(),
-                    ) {
-                        state.regions.forEach { region ->
-                            val selected = region.id == state.selectedRegionId
-                            val status = statusLabel(region.status)
-                            val accent = NhRegionAccent.forRegionId(region.id).accent
-                            TuiRegionChip(
-                                name = region.name,
-                                status = "$status · ${region.completedCount}/${region.missionCount}",
-                                selected = selected,
-                                accent = accent,
-                                onClickLabel =
-                                    "Ship region ${region.name}, status $status, " +
-                                        "${region.completedCount} of ${region.missionCount} systems restored",
-                                modifier = Modifier.widthIn(min = 140.dp, max = 200.dp),
-                                onClick = { viewModel.selectRegion(region.id) },
-                            )
-                        }
-                    }
+                    ShipSchematic(
+                        regions = state.regions.map { it.toSchematicRegion() },
+                        selectedRegionId = state.selectedRegionId,
+                        onSelectRegion = viewModel::selectRegion,
+                    )
                 }
                 state.selectedRegion?.let { selected ->
                     SelectedRegionPanel(
                         region = selected,
                         onOpenMission = onOpenMission,
-                        modifier = Modifier.weight(1f, fill = false),
                     )
                 }
             }
@@ -151,10 +140,10 @@ private fun SelectedRegionPanel(
             color = NhColors.PhosphorWhite,
             fontFamily = NhTheme.fontFamily,
         )
-        LazyColumn(
-            verticalArrangement = Arrangement.spacedBy(4.dp),
-        ) {
-            items(region.missions, key = { it.id }) { mission ->
+        // Plain Column rather than LazyColumn: the whole hub scrolls as one
+        // surface now, and a nested lazy list cannot measure inside it.
+        Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
+            region.missions.forEach { mission ->
                 RegionMissionRow(
                     mission = mission,
                     onOpenMission = onOpenMission,
@@ -212,6 +201,19 @@ private fun RegionMissionRow(
         )
     }
 }
+
+private fun ShipRegion.toSchematicRegion(): SchematicRegion = SchematicRegion(
+    id = id,
+    name = name,
+    accent = NhRegionAccent.forRegionId(id).accent,
+    status = when (status) {
+        ShipRegionStatus.Restored -> SchematicStatus.Restored
+        ShipRegionStatus.Degraded -> SchematicStatus.Degraded
+        ShipRegionStatus.Offline -> SchematicStatus.Offline
+    },
+    completedCount = completedCount,
+    missionCount = missionCount,
+)
 
 @Composable
 private fun statusLabel(status: ShipRegionStatus): String = when (status) {

@@ -5,6 +5,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.List
 import androidx.compose.material.icons.filled.AccountTree
 import androidx.compose.material.icons.filled.Place
+import androidx.compose.material.icons.filled.MenuBook
 import androidx.compose.material.icons.filled.Sensors
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -39,6 +40,12 @@ enum class TopLevelDestination(
         labelRes = R.string.nav_signals,
         contentDescriptionRes = R.string.nav_signals_a11y,
         icon = Icons.Filled.Sensors,
+    ),
+    Archive(
+        route = "archive",
+        labelRes = R.string.nav_archive,
+        contentDescriptionRes = R.string.nav_archive_a11y,
+        icon = Icons.Filled.MenuBook,
     ),
     Settings(
         route = "settings",

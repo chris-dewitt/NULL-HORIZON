@@ -23,6 +23,8 @@ import com.nullhorizon.app.ui.chrome.TuiNavItem
 import com.nullhorizon.app.progression.ProgressionSnapshot
 import com.nullhorizon.app.ui.theme.NhColors
 import com.nullhorizon.pc.di.PcAppContainer
+import com.nullhorizon.pc.feature.archive.ArchiveScreen
+import com.nullhorizon.pc.feature.archive.ArchiveViewModel
 import com.nullhorizon.pc.feature.mission.MissionListScreen
 import com.nullhorizon.pc.feature.mission.MissionListViewModel
 import com.nullhorizon.pc.feature.mission.MissionSessionScreen
@@ -123,7 +125,12 @@ private fun MainShell(
     onTabSelected: (TopLevelTab) -> Unit,
     onOpenMission: (String) -> Unit,
 ) {
-    val shipMapViewModel = rememberPcViewModel { ShipMapViewModel() }
+    val shipMapViewModel = rememberPcViewModel {
+        ShipMapViewModel(
+            contentRepository = appContainer.contentRepository,
+            progressRepository = appContainer.missionProgressRepository,
+        )
+    }
     val missionListViewModel = rememberPcViewModel {
         MissionListViewModel(
             contentRepository = appContainer.contentRepository,
@@ -142,6 +149,12 @@ private fun MainShell(
             settingsRepository = appContainer.settingsRepository,
             playerDataRepository = appContainer.playerDataRepository,
             crashReporter = appContainer.crashReporter,
+        )
+    }
+    val archiveViewModel = rememberPcViewModel {
+        ArchiveViewModel(
+            contentRepository = appContainer.contentRepository,
+            progressionRepository = appContainer.progressionRepository,
         )
     }
     val signalsViewModel = rememberPcViewModel {
@@ -174,13 +187,17 @@ private fun MainShell(
 
         Box(modifier = Modifier.fillMaxSize()) {
             when (currentTab) {
-                TopLevelTab.ShipMap -> ShipMapScreen(viewModel = shipMapViewModel)
+                TopLevelTab.ShipMap -> ShipMapScreen(
+                    viewModel = shipMapViewModel,
+                    onOpenMission = onOpenMission,
+                )
                 TopLevelTab.Missions -> MissionListScreen(
                     viewModel = missionListViewModel,
                     onMissionSelected = onOpenMission,
                 )
                 TopLevelTab.Skills -> SkillMapScreen(viewModel = skillMapViewModel)
                 TopLevelTab.Signals -> SignalsScreen(viewModel = signalsViewModel)
+                TopLevelTab.Archive -> ArchiveScreen(viewModel = archiveViewModel)
                 TopLevelTab.Settings -> SettingsScreen(
                     viewModel = settingsViewModel,
                     clearance = progression.clearancePoints,

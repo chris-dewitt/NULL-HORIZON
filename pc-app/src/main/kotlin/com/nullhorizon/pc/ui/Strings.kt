@@ -13,11 +13,13 @@ object Strings {
     const val nav_missions = "MISSIONS"
     const val nav_skills = "SKILLS"
     const val nav_signals = "SIGNALS"
+    const val nav_archive = "ARCHIVE"
     const val nav_settings = "SETTINGS"
     const val nav_ship_map_a11y = "Navigate to ship map"
     const val nav_missions_a11y = "Navigate to mission list"
     const val nav_skills_a11y = "Navigate to skill map"
     const val nav_signals_a11y = "Navigate to signals log"
+    const val nav_archive_a11y = "Navigate to archive records"
     const val nav_settings_a11y = "Navigate to settings"
     const val nav_keybind_hint = "1-5 SWITCH · ENTER SELECT"
 
