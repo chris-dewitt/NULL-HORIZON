@@ -1,6 +1,6 @@
 # NULL HORIZON Design System
 
-**Status:** Active redesign baseline (ADR-0021, amended by ADR-0022)
+**Status:** Active redesign baseline (ADR-0021, amended by ADR-0022 and ADR-0023)
 **Design canvas:** PC Compose Desktop first; Android distilled
 **North star:** Dense green phosphor operator terminal - **tmux x Palantir x
 Nostromo** mood, without kitsch or glow-heavy cyberpunk
@@ -17,7 +17,7 @@ accessibility. Implementation primitives live under
 |---|---|---|
 | 1 | Identity | **Modern TUI / tmux terminal** is the primary look: box-drawing panes, indexed tabs, status glyphs, dense operator copy. |
 | 2 | Region accents | §3.2 table **confirmed** |
-| 3 | CRT | **Scanlines + vignette only**. No glow, no curvature, no bloom, no global flicker. |
+| 3 | CRT | **Scanlines + vignette only** for the screen overlay. No curvature, no global flicker. Chrome may carry a **bounded static phosphor bloom** (ADR-0023); content never does. |
 | 4 | Boot | Every cold start; click/key skips (**current**) |
 | 5 | ALL-CAPS | **System chrome/status voice** is ALL-CAPS and dense. Long-form teaching/body text stays readable. |
 | 6 | Android CRT | **Lean CRT on phones** (lighter scanlines/vignette). Same tokens/TUI; stronger static overlay on PC. See §6.1. |
@@ -33,6 +33,7 @@ accessibility. Implementation primitives live under
    Material gallery or Alien cosplay kit.
 2. **Phosphor on black.** Colored text (white / green / amber / red / blue) on
    near-black; avoid purple neon, cream brochure, or glow-heavy cyberpunk.
+   Chrome glows within the ADR-0023 envelope; content stays crisp.
 3. **Region identity via accent + text.** Every region has an accent token
    *and* an ALL-CAPS name/status string.
 4. **TUI chrome.** Panels use box-drawing borders and monospace hierarchy.
@@ -109,15 +110,26 @@ for focus only; CRT overlays forced off.
 | `ShipSchematic` | Hull outline, power spine, conduits, region modules | Modules are real composables: own touch target, focus stop, and label; status is text + glyph, never hue alone |
 | `ShipVitalsStrip` | HULL / PWR / DATA block meters | Percentage spelled out beside every meter |
 | `ArchiveLog` | Recovered and sealed reward records | Sealed entries state why they are sealed in text |
+| `ObjectiveChecklist` | Mission directives with clear-flash, strike, and meter | Cleared row announces as a polite live region; flash respects animated chrome |
+| `failureAccent` | Panel accent that reacts to a failed operation | Error tone plays even with motion off; colour shift is the motion-gated half |
 
 ---
 
 ## 6. CRT profiles
 
-| Profile | Where | Scanlines | Vignette | Curvature / bloom / flicker |
+| Profile | Where | Scanlines | Vignette | Curvature / flicker |
 |---|---|---|---|---|
 | `Medium` | PC default | Medium density/alpha | Stronger edge falloff | Off |
 | `Lean` | Android phones | Lighter | Softer edge falloff | Off |
+
+### 6.2 Chrome bloom (ADR-0023)
+
+Static phosphor bloom is permitted on **chrome only** — panel borders and
+titles, status glyphs, meters, nav. It is prohibited on **content**: briefing
+and lesson prose, code, SQL, terminal and test output, dialogue, and learner
+errors. The envelope lives in code as `PhosphorBloom` (at most 2 halo passes,
+widest halo ≤7× the crisp stroke, halo alpha ≤0.30, title shadow blur ≤24px)
+and is asserted by `PhosphorBloomTest`. Bloom never animates.
 
 ### 6.1 What “Android CRT” meant
 
@@ -153,7 +165,10 @@ which can hurt readability and battery on small screens. **Decision:** phones us
 8. PC editor / service-map / pipeline / mlops TUI panels — done (this slice)
 9. Residual polish: Material buttons/text fields inside onboarding/settings/mission surfaces - done
 10. Ship map as drawn hull schematic + vitals strip; Archive record screen - done
-11. Optional later: Android bottom nav TUI density tuning
+11. Per-objective clear feedback + workspace failure feedback - done
+12. Optional later: Android bottom nav TUI density tuning; migrate the PC SQL
+    console to `TuiPanel` chrome (its failure signal currently lands on the
+    heading rather than a panel border)
 
 Do not rewrite mission engines or content YAML for cosmetics.
 
@@ -176,8 +191,8 @@ Do not rewrite mission engines or content YAML for cosmetics.
 - Visual regression screenshot tests (a headless path exists: `pc-app` renders
   Compose surfaces offscreen with `ImageComposeScene` under Xvfb)
 - Region accents keep their semantic hue under high contrast — confirm or change
-- Static phosphor bloom on chrome contradicts ADR-0022 §2; see
-  [GAME_FEEL.md](GAME_FEEL.md) §5
+- Bloom on chrome: **answered** by [ADR-0023](ADR/0023-bounded-phosphor-bloom-on-chrome.md)
+  (bounded, static, chrome only)
 
 ### Answered (see §1)
 Identity, region accents, CRT medium+real, boot every cold start, ALL-CAPS

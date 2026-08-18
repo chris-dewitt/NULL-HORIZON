@@ -61,7 +61,7 @@ fun TuiPanel(
         Text(
             text = "┌─ $normalizedTitle ─┐",
             style = MaterialTheme.typography.labelMedium.copy(
-                shadow = Shadow(color = accent, blurRadius = 22f),
+                shadow = Shadow(color = accent, blurRadius = PhosphorBloom.TITLE_SHADOW_BLUR),
             ),
             color = accent,
             fontFamily = NhTheme.fontFamily,
@@ -217,8 +217,10 @@ fun Modifier.drawTuiBorder(
         drawLine(c, Offset(right, bottom), Offset(right - 8f, bottom), sw, StrokeCap.Square)
     }
 
-    // Fat phosphor bloom: wide halo, inner bloom, then a bold crisp line on top.
-    frame(strokeWidth * 7f, color.copy(alpha = 0.12f))
-    frame(strokeWidth * 3.6f, color.copy(alpha = 0.30f))
+    // Static phosphor bloom within the ADR-0023 envelope: a wide wash, an
+    // inner halo, then the crisp line on top. Chrome only — body text, code,
+    // SQL, and terminal output are never bloomed.
+    frame(strokeWidth * PhosphorBloom.MAX_HALO_WIDTH_FACTOR, color.copy(alpha = PhosphorBloom.OUTER_HALO_ALPHA))
+    frame(strokeWidth * PhosphorBloom.INNER_HALO_WIDTH_FACTOR, color.copy(alpha = PhosphorBloom.INNER_HALO_ALPHA))
     frame(strokeWidth * 1.5f, color)
 }

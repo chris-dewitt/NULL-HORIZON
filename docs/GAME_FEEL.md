@@ -1,11 +1,12 @@
 # Game Feel: making NULL HORIZON fun and visually stimulating
 
-**Status:** Working plan, 2026-08-18
+**Status:** Living plan, updated 2026-08-18 (second pass)
 **Scope:** Player-facing feel — reward, feedback, stakes, spectacle. Curriculum
 correctness, mission engines, and content YAML are out of scope except where a
 feel change reads state they already produce.
 **Constraints:** Everything here stays inside the green-phosphor terminal lock
-([ADR-0022](ADR/0022-green-phosphor-terminal-visual-lock.md)) and the
+([ADR-0022](ADR/0022-green-phosphor-terminal-visual-lock.md), amended by
+[ADR-0023](ADR/0023-bounded-phosphor-bloom-on-chrome.md)) and the
 accessibility contract in [DESIGN_SYSTEM.md](DESIGN_SYSTEM.md) §7. No effect
 ships without its reduced-motion, high-contrast, and disable-CRT path.
 
@@ -34,11 +35,14 @@ Four specific gaps, all cheap to close relative to what is already built:
    objective flips `[ ]` to `[x]` and changes a colour. Completing a mission is
    the only place with sound, haptics, and ceremony.
 
-Items 1–3 are addressed by this change. Item 4 is the highest-value next step.
+Items 1–3 were closed in the first pass; item 4 in the second. §3 and §4 carry
+what is left.
 
 ---
 
-## 2. Shipped in this change
+## 2. Shipped so far
+
+### First pass — the hub, the rewards, and the readout
 
 | Change | Where | Why it matters |
 |---|---|---|
@@ -49,25 +53,36 @@ Items 1–3 are addressed by this change. Item 4 is the highest-value next step.
 | **PC ship map reads real progress** | `pc/feature/shipmap/ShipMapViewModel.kt` | It was fourteen hardcoded placeholder statuses. Now it loads the same content bundle and progression store as Android. |
 | **`TuiPanel` bottom-corner fix** | `ui/chrome/TuiPanel.kt` | The `└` `┘` glyphs were drawing on top of the last line of content in every panel in the app. |
 
+### Second pass — the mission loop, and the bloom decision
+
+| Change | Where | Why it matters |
+|---|---|---|
+| **`ObjectiveChecklist`** replaces the flat directive list | `ui/chrome/ObjectiveChecklist.kt`, both clients | The most frequent success in the game finally has a moment: the cleared row flashes, strikes through, ticks a progress meter, plays a tone, announces itself to screen readers, and buzzes on Android. Fires on the transition, not on every recomposition, and does not replay history when a finished mission is reopened. |
+| **`failureAccent`** on terminal, SQL, and test panels | `ui/chrome/FailureFlash.kt`, `WorkspaceFailure.kt` | A rejected command used to produce silent stderr with no change in the chrome. The panel now shifts toward critical and sounds an error tone, then settles back on its own. |
+| **ADR-0023** closes the bloom contradiction | `docs/ADR/0023-*`, `ui/chrome/PhosphorBloom.kt` | Bounded static bloom is permitted on chrome, prohibited on content, and the envelope is a tested constant rather than prose. |
+
 ---
 
 ## 3. Next — highest value per unit of work
 
-### 3.1 Feedback on every objective, not just every mission
+### 3.1 Feedback on every objective, not just every mission — **shipped**
 
-Right now a cleared objective is a colour change. This is the single biggest
-fun gap, and it is the cheapest to close because the state already exists
-(`MissionSessionState.isObjectiveComplete`).
+A cleared objective was a colour change and nothing else. `ObjectiveChecklist`
+(shared) now flashes the cleared row, strikes its text, ticks a progress meter,
+plays a confirm tone, announces itself as a polite live region, and pulses
+haptics on Android. `failureAccent` gives the terminal, SQL, and test panels a
+reaction to a failed operation — the border shifts toward critical and an error
+tone plays — so a typo no longer looks identical to a working command.
 
-- Flash the objective row on the transition to complete, strike the text, and
-  play a short confirm tone — reuse `GameSound.Click`/`Success` and
-  `HapticPulse`, both already wired on Android.
-- Give failed commands a distinct error tone and a one-frame red border on the
-  panel that rejected them, instead of silent stderr text.
-- Type terminal output rather than dumping it. `TypewriterText` exists and is
-  already gated on animated chrome; it is currently used only for dialogue.
-- Announce the transition to screen readers as a polite live region — the
-  existing `RankUpBanner` shows the pattern.
+Still open from this section:
+
+- A dedicated objective-cleared audio cue. The clear currently reuses
+  `GameSound.Click`; the sound set has no distinct confirm tick yet, and adding
+  one means adding an asset, not just an enum entry.
+- Terminal output reveal. The spec asks for typed output, but a character-by
+  character reveal delays reading and fights the selection container players
+  use to copy paths. If this is wanted, a short fade-in on the newest entry is
+  the safer form.
 
 **Effort:** small. **Impact:** every mission, every objective, every session.
 
@@ -140,14 +155,12 @@ Start with the cheapest two:
 
 ## 5. Decisions this raises
 
-1. **The CRT lock has already drifted.** ADR-0022 §2 says "do not add text
-   glow, geometric screen curvature, bloom, or global flicker", but
-   `drawTuiBorder` now paints a three-pass phosphor halo and `TuiPanel` draws a
-   22px text shadow on titles. The code is prettier than the ADR allows. Either
-   amend ADR-0022 to permit bounded static bloom on chrome (recommended — it is
-   what the product asked for and it does not touch body text), or back the
-   glow out. Leaving them contradictory means the next contributor gets
-   different answers from the docs and the code.
+1. **The CRT lock had already drifted — resolved.**
+   [ADR-0023](ADR/0023-bounded-phosphor-bloom-on-chrome.md) amends ADR-0022 to
+   permit a bounded static phosphor bloom on chrome and keeps the ban for
+   content, curvature, and global flicker. The envelope lives in code as
+   `PhosphorBloom` and is asserted by `PhosphorBloomTest`, so the rule is
+   enforced rather than described.
 2. **Region accents in high-contrast mode.** `NhRegionAccent` keeps its
    semantic hues even under high contrast, so the schematic stays coloured
    there. Status text and glyphs carry the meaning either way, but this should
