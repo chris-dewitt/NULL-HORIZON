@@ -4,6 +4,9 @@
 - Date: 2026-07-14
 - Deciders: Product request for NULL HORIZON visual overhaul
 - Supersedes: ADR-0021 decisions about CRT curvature, bloom, and idle flicker
+- Amended by: [ADR-0023](0023-bounded-phosphor-bloom-on-chrome.md) — decision 2
+  below now permits a bounded static phosphor bloom on chrome (never on
+  content); curvature and global flicker remain prohibited
 
 ## Context
 
@@ -23,6 +26,8 @@ effects.
    tab / warning accent; blue and red remain informational and critical accents.
 2. **CRT effects are scanlines plus vignette only.** Do not add text glow,
    geometric screen curvature, bloom, or global flicker.
+   *(Amended by ADR-0023: bounded static bloom on chrome is now permitted;
+   the ban stands for content, curvature, and global flicker.)*
 3. **Pane chrome remains shared.** `TuiPanel`, `TuiActionButton`,
    `TuiNavColumn`, `TuiTabLine`, `TerminalPromptField`, and related primitives
    under `shared/client-core/.../ui` are the source of truth for both Android

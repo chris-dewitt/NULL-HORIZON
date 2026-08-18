@@ -23,6 +23,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.runtime.collectAsState
 import com.nullhorizon.app.audio.GameSound
 import com.nullhorizon.app.audio.PlaySoundOnce
+import com.nullhorizon.app.ui.chrome.ObjectiveChecklist
+import com.nullhorizon.app.ui.chrome.ObjectiveRow
+import com.nullhorizon.app.ui.chrome.WorkspaceFailure
+import com.nullhorizon.app.ui.chrome.failureAccent
 import com.nullhorizon.app.ui.chrome.AuditorPanel
 import com.nullhorizon.app.ui.chrome.ConsequencePanel
 import com.nullhorizon.app.ui.chrome.DialogueLines
@@ -223,22 +227,17 @@ fun MissionSessionScreen(
                         )
                     }
 
-                    Text(
-                        text = Strings.mission_objectives.uppercase(),
-                        style = MaterialTheme.typography.titleMedium,
-                        color = NhColors.PhosphorAmber,
+                    ObjectiveChecklist(
+                        objectives = mission.objectives.filter { it.visible }.map { objective ->
+                            ObjectiveRow(
+                                id = objective.id,
+                                description = objective.description,
+                                complete = state.session.isObjectiveComplete(objective.id),
+                            )
+                        },
+                        title = Strings.mission_objectives,
+                        accent = NhRegionAccent.forRegionId(mission.chapterId).accent,
                     )
-                    mission.objectives.filter { it.visible }.forEach { objective ->
-                        val done = state.session.isObjectiveComplete(objective.id)
-                        Text(
-                            text = "${if (done) "[x]" else "[ ]"} ${objective.description}",
-                            color = if (done) NhColors.PhosphorGreen else NhColors.PhosphorWhite,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .drawTuiBorder(color = if (done) NhColors.PhosphorGreen else NhColors.PhosphorDim)
-                                .padding(8.dp),
-                        )
-                    }
 
                     TuiActionButton(
                         label = Strings.mission_request_hint,
@@ -430,10 +429,16 @@ private fun TerminalPanel(
 ) {
     var input by rememberSaveable { mutableStateOf("") }
     val fontFamily = NhTheme.fontFamily
+    // A rejected command shifts the panel border toward critical and sounds an
+    // error tone, so a typo no longer looks identical to a working command.
+    val accent = failureAccent(
+        failureKey = WorkspaceFailure.terminal(terminal),
+        restingAccent = NhColors.PhosphorGreen,
+    )
 
     TuiPanel(
         title = Strings.mission_terminal,
-        accent = NhColors.PhosphorGreen,
+        accent = accent,
     ) {
         Text(
             text = Strings.mission_terminal_cwd(terminal.cwd).uppercase(),
@@ -663,10 +668,17 @@ private fun SqlPanel(
     onSubmit: (String) -> Unit,
 ) {
     var input by rememberSaveable { mutableStateOf("") }
+    // This console still uses un-migrated chrome (DESIGN_SYSTEM §8), so the
+    // failure signal lands on the heading rather than a panel border.
+    val accent = failureAccent(
+        failureKey = WorkspaceFailure.sql(sql),
+        restingAccent = NhColors.PhosphorAmber,
+    )
 
     Text(
         text = Strings.mission_sql,
         style = MaterialTheme.typography.titleMedium,
+        color = accent,
     )
     Text(
         text = Strings.mission_sql_database(sql.databaseId, sql.policy),
@@ -816,10 +828,15 @@ private fun EditorPanel(
 ) {
     val active = editor.activeFile()
     val fontFamily = NhTheme.fontFamily
+    // Failing tests are the loudest failure in the loop; give them a body.
+    val accent = failureAccent(
+        failureKey = WorkspaceFailure.tests(editor),
+        restingAccent = NhColors.PhosphorBlue,
+    )
 
     TuiPanel(
         title = Strings.mission_editor,
-        accent = NhColors.PhosphorBlue,
+        accent = accent,
     ) {
     FlowRow(
         horizontalArrangement = Arrangement.spacedBy(8.dp),

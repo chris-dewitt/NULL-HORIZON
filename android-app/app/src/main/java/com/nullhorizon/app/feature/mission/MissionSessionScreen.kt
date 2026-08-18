@@ -15,6 +15,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
@@ -30,12 +31,17 @@ import com.nullhorizon.app.ui.theme.NhRegionAccent
 import com.nullhorizon.app.ui.theme.NhColors
 import com.nullhorizon.app.audio.GameSound
 import com.nullhorizon.app.audio.PlaySoundOnce
+import com.nullhorizon.app.ui.chrome.ObjectiveChecklist
+import com.nullhorizon.app.ui.chrome.ObjectiveRow
+import com.nullhorizon.app.ui.chrome.WorkspaceFailure
+import com.nullhorizon.app.ui.chrome.failureAccent
 import com.nullhorizon.app.ui.chrome.AuditorPanel
 import com.nullhorizon.app.ui.chrome.ConsequencePanel
 import com.nullhorizon.app.ui.chrome.DialogueLines
 import com.nullhorizon.app.ui.chrome.RankUpBanner
 import com.nullhorizon.app.ui.chrome.animatedCount
 import com.nullhorizon.app.ui.chrome.TerminalPromptField
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import com.nullhorizon.app.ui.feedback.HapticPulse
 import com.nullhorizon.app.ui.chrome.TuiActionButton
 import com.nullhorizon.app.ui.chrome.TuiPanel
@@ -141,10 +147,20 @@ fun MissionSessionScreen(
                     // Directions live above the workspace so the soft keyboard,
                     // which resizes the window when a prompt field is focused,
                     // never covers the objectives the player is working toward.
-                    ObjectivesList(
-                        objectives = mission.objectives.filter { it.visible }
-                            .map { it.id to it.description },
-                        isComplete = state.session::isObjectiveComplete,
+                    // Haptic companion to the shared checklist's flash + tone.
+                    var clearedObjectiveId by remember { mutableStateOf<String?>(null) }
+                    HapticPulse(key = clearedObjectiveId, type = HapticFeedbackType.TextHandleMove)
+                    ObjectiveChecklist(
+                        objectives = mission.objectives.filter { it.visible }.map { objective ->
+                            ObjectiveRow(
+                                id = objective.id,
+                                description = objective.description,
+                                complete = state.session.isObjectiveComplete(objective.id),
+                            )
+                        },
+                        title = stringResource(R.string.mission_objectives),
+                        accent = NhRegionAccent.forRegionId(mission.chapterId).accent,
+                        onObjectiveCleared = { clearedObjectiveId = it },
                     )
 
                     if (mission.tools.contains("systems_panel") &&
@@ -341,35 +357,6 @@ private fun MissionNarrative(
 }
 
 @Composable
-private fun ObjectivesList(
-    objectives: List<Pair<String, String>>,
-    isComplete: (String) -> Boolean,
-) {
-    Text(
-        text = stringResource(R.string.mission_objectives),
-        style = MaterialTheme.typography.titleMedium,
-        color = NhColors.PhosphorAmber,
-    )
-    // Selectable so players can long-press to copy a path or filename out of an
-    // objective and paste it straight into a terminal command (e.g. `cd <dir>`).
-    SelectionContainer {
-        Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
-            objectives.forEach { (id, description) ->
-                val done = isComplete(id)
-                Text(
-                    text = "${if (done) "[x]" else "[ ]"} $description",
-                    color = if (done) NhColors.PhosphorGreen else NhColors.PhosphorWhite,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .drawTuiBorder(color = if (done) NhColors.PhosphorGreen else NhColors.PhosphorDim)
-                        .padding(8.dp),
-                )
-            }
-        }
-    }
-}
-
-@Composable
 private fun MissionDebriefPanel(
     debrief: com.nullhorizon.app.progression.DebriefSummary,
     unlockedRewardNames: List<String>,
@@ -498,10 +485,16 @@ private fun TerminalPanel(
 ) {
     var input by rememberSaveable { mutableStateOf("") }
     val fontFamily = NhTheme.fontFamily
+    // A rejected command shifts the panel border toward critical and sounds an
+    // error tone, so a typo no longer looks identical to a working command.
+    val accent = failureAccent(
+        failureKey = WorkspaceFailure.terminal(terminal),
+        restingAccent = NhColors.PhosphorGreen,
+    )
 
     TuiPanel(
         title = stringResource(R.string.mission_terminal),
-        accent = NhColors.PhosphorGreen,
+        accent = accent,
     ) {
         Text(
             text = stringResource(R.string.mission_terminal_cwd, terminal.cwd).uppercase(),
@@ -739,10 +732,14 @@ private fun SqlPanel(
     onSubmit: (String) -> Unit,
 ) {
     var input by rememberSaveable { mutableStateOf("") }
+    val accent = failureAccent(
+        failureKey = WorkspaceFailure.sql(sql),
+        restingAccent = NhColors.PhosphorGreen,
+    )
 
     TuiPanel(
         title = stringResource(R.string.mission_sql),
-        accent = NhColors.PhosphorGreen,
+        accent = accent,
     ) {
     Text(
         text = stringResource(R.string.mission_sql_database, sql.databaseId, sql.policy),
@@ -896,10 +893,15 @@ private fun EditorPanel(
 ) {
     val active = editor.activeFile()
     val fontFamily = NhTheme.fontFamily
+    // Failing tests are the loudest failure in the loop; give them a body.
+    val accent = failureAccent(
+        failureKey = WorkspaceFailure.tests(editor),
+        restingAccent = NhColors.PhosphorBlue,
+    )
 
     TuiPanel(
         title = stringResource(R.string.mission_editor),
-        accent = NhColors.PhosphorBlue,
+        accent = accent,
     ) {
 
     FlowRow(
