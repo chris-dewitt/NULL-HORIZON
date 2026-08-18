@@ -106,6 +106,9 @@ for focus only; CRT overlays forced off.
 | `BlockCursor` | Blinking input caret | Static block if animated chrome is disabled |
 | `BootSequence` | Launch OS check theatre | Every cold start; skippable; instant if animated chrome is disabled |
 | `TuiRegionChip` | ALL-CAPS region + glyph status | Damaged blink respects animated chrome |
+| `ShipSchematic` | Hull outline, power spine, conduits, region modules | Modules are real composables: own touch target, focus stop, and label; status is text + glyph, never hue alone |
+| `ShipVitalsStrip` | HULL / PWR / DATA block meters | Percentage spelled out beside every meter |
+| `ArchiveLog` | Recovered and sealed reward records | Sealed entries state why they are sealed in text |
 
 ---
 
@@ -149,7 +152,8 @@ which can hurt readability and battery on small screens. **Decision:** phones us
 7. Android missions / skills / settings / profile / mission session — done (this slice)
 8. PC editor / service-map / pipeline / mlops TUI panels — done (this slice)
 9. Residual polish: Material buttons/text fields inside onboarding/settings/mission surfaces - done
-10. Optional later: Android bottom nav TUI density tuning
+10. Ship map as drawn hull schematic + vitals strip; Archive record screen - done
+11. Optional later: Android bottom nav TUI density tuning
 
 Do not rewrite mission engines or content YAML for cosmetics.
 
@@ -169,7 +173,11 @@ Do not rewrite mission engines or content YAML for cosmetics.
 - Seizure-safety Hz caps beyond reduced motion
 - Store screenshots CRT on/off
 - `designsystem` Gradle module vs `shared/client-core/ui`
-- Visual regression screenshot tests
+- Visual regression screenshot tests (a headless path exists: `pc-app` renders
+  Compose surfaces offscreen with `ImageComposeScene` under Xvfb)
+- Region accents keep their semantic hue under high contrast — confirm or change
+- Static phosphor bloom on chrome contradicts ADR-0022 §2; see
+  [GAME_FEEL.md](GAME_FEEL.md) §5
 
 ### Answered (see §1)
 Identity, region accents, CRT medium+real, boot every cold start, ALL-CAPS

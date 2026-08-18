@@ -12,7 +12,7 @@ class TopLevelDestinationTest {
             assertThat(destination.route).isNotEmpty()
         }
         assertThat(TopLevelDestination.entries.map { it.route })
-            .containsExactly("ship_map", "missions", "skills", "signals", "settings")
+            .containsExactly("ship_map", "missions", "skills", "signals", "archive", "settings")
             .inOrder()
     }
 }

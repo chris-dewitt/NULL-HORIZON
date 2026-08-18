@@ -87,7 +87,9 @@ fun TuiPanel(
         Column(
             modifier = Modifier
                 .padding(contentPadding)
-                .padding(top = 10.dp),
+                // Clear the title row above and the corner glyphs below, which
+                // otherwise draw on top of the first and last lines of content.
+                .padding(top = 10.dp, bottom = 8.dp),
         ) {
             content()
         }

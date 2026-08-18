@@ -290,7 +290,10 @@ fun MissionSessionScreen(
                                 newRank = debrief.rank,
                             )
                         }
-                        MissionDebriefPanel(debrief = debrief)
+                        MissionDebriefPanel(
+                            debrief = debrief,
+                            unlockedRewardNames = state.unlockedRewardNames,
+                        )
                     }
                     state.auditorFragment?.let { fragment ->
                         AuditorPanel(fragment = fragment)
@@ -367,7 +370,10 @@ private fun ObjectivesList(
 }
 
 @Composable
-private fun MissionDebriefPanel(debrief: com.nullhorizon.app.progression.DebriefSummary) {
+private fun MissionDebriefPanel(
+    debrief: com.nullhorizon.app.progression.DebriefSummary,
+    unlockedRewardNames: List<String>,
+) {
     TuiPanel(
         title = stringResource(R.string.debrief_title),
         accent = NhColors.PhosphorGreen,
@@ -421,7 +427,7 @@ private fun MissionDebriefPanel(debrief: com.nullhorizon.app.progression.Debrief
             Text(
                 text = stringResource(
                     R.string.debrief_rewards,
-                    debrief.unlockedRewards.joinToString(),
+                    unlockedRewardNames.ifEmpty { debrief.unlockedRewards }.joinToString(),
                 ),
                 style = MaterialTheme.typography.bodyMedium,
                 color = NhColors.PhosphorAmber,

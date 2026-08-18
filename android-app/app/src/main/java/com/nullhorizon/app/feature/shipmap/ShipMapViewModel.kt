@@ -11,6 +11,9 @@ import com.nullhorizon.app.content.ContentRepository
 import com.nullhorizon.app.content.MissionProgressRepository
 import com.nullhorizon.app.content.model.ChapterDefinition
 import com.nullhorizon.app.content.model.MissionDefinition
+import com.nullhorizon.app.progression.AuditorLog
+import com.nullhorizon.app.progression.RegionProgress
+import com.nullhorizon.app.progression.ShipVitals
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -45,6 +48,7 @@ data class ShipMapUiState(
     val isLoading: Boolean = true,
     val regions: List<ShipRegion> = emptyList(),
     val selectedRegionId: String? = null,
+    val vitals: ShipVitals = ShipVitals.from(emptyList(), signalsDecoded = 0, signalsTotal = 0),
     val errorMessage: String? = null,
 ) {
     val selectedRegion: ShipRegion?
@@ -71,13 +75,24 @@ class ShipMapViewModel(
                     .map { contentRepository.chapter(it) }
                 val missionsById = contentRepository.listMissions()
                     .associateBy { it.missionId }
+                val signalsTotal = runCatching {
+                    contentRepository.signal(AuditorLog.SIGNAL_ID).fragments.size
+                }.getOrDefault(0)
                 progressRepository.completedMissionIds.collect { completed ->
+                    val regions = chapters.map { chapter ->
+                        toRegion(chapter, missionsById, completed)
+                    }
                     _uiState.update {
                         it.copy(
                             isLoading = false,
-                            regions = chapters.map { chapter ->
-                                toRegion(chapter, missionsById, completed)
-                            },
+                            regions = regions,
+                            vitals = ShipVitals.from(
+                                regions = regions.map {
+                                    RegionProgress(it.completedCount, it.missionCount)
+                                },
+                                signalsDecoded = minOf(completed.size, signalsTotal),
+                                signalsTotal = signalsTotal,
+                            ),
                             errorMessage = null,
                         )
                     }

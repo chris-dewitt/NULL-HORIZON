@@ -20,6 +20,8 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.nullhorizon.app.di.AppContainer
+import com.nullhorizon.app.feature.archive.ArchiveScreen
+import com.nullhorizon.app.feature.archive.ArchiveViewModel
 import com.nullhorizon.app.feature.mission.MissionListScreen
 import com.nullhorizon.app.feature.mission.MissionListViewModel
 import com.nullhorizon.app.feature.mission.MissionSessionScreen
@@ -206,6 +208,15 @@ private fun MainShell(
                     ),
                 )
                 SignalsScreen(viewModel = viewModel)
+            }
+            composable(TopLevelDestination.Archive.route) {
+                val viewModel: ArchiveViewModel = viewModel(
+                    factory = ArchiveViewModel.factory(
+                        contentRepository = appContainer.contentRepository,
+                        progressionRepository = appContainer.progressionRepository,
+                    ),
+                )
+                ArchiveScreen(viewModel = viewModel)
             }
             composable(TopLevelDestination.Settings.route) {
                 val viewModel: SettingsViewModel = viewModel(
