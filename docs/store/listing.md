@@ -1,10 +1,12 @@
-# Store listing copy (draft)
+# Store listing copy (v1)
 
-Working title: **NULL HORIZON** (internal codename; not cleared for trademark).
+Title: **NULL HORIZON**  
+Package: `com.nullhorizon.app`  
+Posture: ADR-0024 (offline-first; human-approved Play publish)
 
 ## Short description
 
-Repair a fractured colony ship by practicing real backend skills—terminal, Git, SQL, Python, APIs, testing, and more—on your phone.
+Repair a fractured colony ship by practicing real backend skills—terminal, Git, SQL, Python, and more—on your phone.
 
 ## Full description
 
@@ -21,21 +23,24 @@ NULL HORIZON is a narrative systems game that teaches backend and data skills th
 **Accounts and privacy**
 
 - No account is required to start the opening campaign
-- Progress can stay on your device
+- Progress stays on your device
 - Analytics and crash reporting are off by default
 - You can export or delete local data from Settings
 
-**Online code execution**
+**How code runs in this version**
 
-Some advanced missions may send your mission source to a remote execution service when you choose to run them online. Offline fallbacks are provided when remote execution is unavailable. Learner code is isolated from the game API and is not sold or used for model training without separate consent.
+Missions use on-device simulators and guided exercises. This release does not send your code to a remote execution service. Future versions may offer optional online execution with clear consent; the store listing will be updated if that changes.
 
 **Not included**
 
 - Real-world attack tooling
 - Paywalls on foundational skills
+- Ads
 
 ## Data safety form notes
 
-- Collects: optional analytics/crash diagnostics only if enabled; optional cloud progress if sync is used; online execution source only for opted-in runs
-- Does not sell data
-- Deletion path available locally and for cloud profiles
+See `docs/store/data-safety.md`.
+
+## Contact / support
+
+Use the repository `SECURITY.md` channel for security reports. Add a public support email in Play Console when available.

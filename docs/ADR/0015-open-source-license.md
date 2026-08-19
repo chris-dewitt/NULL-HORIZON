@@ -20,8 +20,8 @@ Retain the existing MIT license in `LICENSE` as the provisional project license 
 ## Consequences
 
 - Contributions are accepted under MIT terms unless maintainers publish a change.
-- License choice remains listed among open questions in the product specification.
-- Any license change requires an ADR update and contributor notice.
+- License choice remains listed among open questions in the product specification until ADR-0024 confirmed **MIT for Play v1**.
+- Any later license change requires an ADR update and contributor notice.
 
 ## References
 

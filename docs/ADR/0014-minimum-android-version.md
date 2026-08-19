@@ -20,7 +20,7 @@ Set `minSdk = 26` (Android 8.0) provisionally for the Epic 0 Compose shell. Revi
 ## Consequences
 
 - Compose and modern Jetpack libraries are usable without extensive legacy shims.
-- Final minimum version must be confirmed in release readiness work.
+- Final minimum version confirmed for Play v1 as **minSdk 26** in ADR-0024.
 
 ## References
 

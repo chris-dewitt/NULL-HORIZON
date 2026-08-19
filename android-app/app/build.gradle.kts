@@ -1,3 +1,5 @@
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     // AGP 9+ ships built-in Kotlin; do not apply org.jetbrains.kotlin.android.
@@ -13,11 +15,38 @@ android {
         applicationId = "com.nullhorizon.app"
         minSdk = libs.versions.minSdk.get().toInt()
         targetSdk = libs.versions.targetSdk.get().toInt()
-        // Auto-increment on CI (GitHub run number) so each published debug APK
-        // installs as a real update; falls back to 1 for local builds.
-        versionCode = (System.getenv("GITHUB_RUN_NUMBER") ?: "1").toInt()
-        versionName = "0.1.0-epic1"
+        // Prefer PLAY_VERSION_CODE for store builds; else CI run number; else 1.
+        versionCode = (
+            System.getenv("PLAY_VERSION_CODE")
+                ?: System.getenv("GITHUB_RUN_NUMBER")
+                ?: "1"
+            ).toInt()
+        versionName = System.getenv("PLAY_VERSION_NAME") ?: "1.0.0"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    signingConfigs {
+        create("release") {
+            val keystorePropertiesFile = rootProject.file("keystore.properties")
+            val envStoreFile = System.getenv("PLAY_STORE_FILE")
+            when {
+                keystorePropertiesFile.exists() -> {
+                    val props = Properties().apply {
+                        keystorePropertiesFile.inputStream().use { load(it) }
+                    }
+                    storeFile = rootProject.file(props.getProperty("storeFile"))
+                    storePassword = props.getProperty("storePassword")
+                    keyAlias = props.getProperty("keyAlias")
+                    keyPassword = props.getProperty("keyPassword")
+                }
+                envStoreFile != null -> {
+                    storeFile = file(envStoreFile)
+                    storePassword = System.getenv("PLAY_STORE_PASSWORD")
+                    keyAlias = System.getenv("PLAY_KEY_ALIAS")
+                    keyPassword = System.getenv("PLAY_KEY_PASSWORD")
+                }
+            }
+        }
     }
 
     buildTypes {
@@ -27,6 +56,10 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro",
             )
+            val releaseSigning = signingConfigs.getByName("release")
+            if (releaseSigning.storeFile != null) {
+                signingConfig = releaseSigning
+            }
         }
     }
 

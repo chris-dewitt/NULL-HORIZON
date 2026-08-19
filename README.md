@@ -2,11 +2,11 @@
 
 Narrative-driven game that teaches backend software development by making code the player's primary tool for surviving aboard a damaged interstellar colony ship. Primary client: Android. Separate PC client: Compose Desktop (`pc-app/`).
 
-> Working title only. Not cleared for trademark, store-name, or domain availability.
+> Ship title for Play v1: **NULL HORIZON** (ADR-0024). Trademark risk accepted by the publisher; rename if a conflict appears.
 
 ## Status
 
-Epics 0–13 are implemented in-repo: playable curriculum through the public campaign, plus release-readiness privacy/deletion controls and ops docs. Store publish and production sandbox enablement still require explicit human approval.
+Epics 0–13 are implemented in-repo. Play Store publish prep is in `docs/release/PLAY_PUBLISH.md` (human uploads the AAB). Public hardened remote sandbox remains blocked (ADR-0011).
 
 ## Repository layout
 
@@ -83,7 +83,9 @@ python scripts/build_bundle.py --channel dev --sync-android-assets --sync-pc-res
 | [docs/THREAT_MODEL.md](docs/THREAT_MODEL.md) | Security threat model skeleton |
 | [docs/API.md](docs/API.md) | API notes |
 | [docs/legal/privacy-policy.md](docs/legal/privacy-policy.md) | Privacy policy ([summary](PRIVACY.md)) |
-| [docs/store/listing.md](docs/store/listing.md) | Store listing draft and online-execution disclosure |
+| [docs/release/PLAY_PUBLISH.md](docs/release/PLAY_PUBLISH.md) | Google Play upload runbook |
+| [docs/store/listing.md](docs/store/listing.md) | Store listing copy and disclosures |
+| [docs/ADR/0024-play-store-publish-posture.md](docs/ADR/0024-play-store-publish-posture.md) | Play v1 product decisions |
 | [docs/CONTENT_AUTHORING.md](docs/CONTENT_AUTHORING.md) | Mission authoring workflow |
 | [docs/CURRICULUM.md](docs/CURRICULUM.md) | Curriculum map |
 | [docs/ADR/](docs/ADR/) | Architecture decision records |

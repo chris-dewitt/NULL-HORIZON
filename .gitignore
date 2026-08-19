@@ -57,8 +57,10 @@ android-app/.gradle/
 android-app/build/
 android-app/**/build/
 android-app/local.properties
+android-app/keystore.properties
 android-app/*.iml
 android-app/.idea/
+dist/
 pc-app/.gradle/
 pc-app/.kotlin/
 pc-app/build/
