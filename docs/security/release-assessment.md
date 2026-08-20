@@ -26,4 +26,4 @@
 
 ## Verdict
 
-**Pass for closed testing.** Production store publish still requires human approval.
+**Pass for closed testing.** Human approval for Play publish is recorded in ADR-0024 with an offline-first posture (public hardened sandbox remains blocked).

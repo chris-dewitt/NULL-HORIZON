@@ -1,6 +1,6 @@
 {
   "bundle_id": "null-horizon-starter",
-  "channel": "dev",
+  "channel": "prod",
   "chapters": [
     "archive_core",
     "automation_lab",

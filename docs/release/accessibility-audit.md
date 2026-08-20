@@ -19,4 +19,7 @@
 
 ## Verdict
 
-Accessibility basics pass for closed testing. Terminal-console redesign must keep CRT/motion gated and status text alongside region accents. Dense simulator panels and Android back-port need a follow-up pass before production.
+Accessibility basics pass for closed testing and the offline-first Play v1
+posture (ADR-0024). Dense simulator panels and Android TUI density remain a
+follow-up polish item, not a store-upload blocker.
+

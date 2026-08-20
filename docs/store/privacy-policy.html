@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>NULL HORIZON Privacy Policy</title>
+  <style>
+    :root {
+      --bg: #000703;
+      --fg: #dfffe3;
+      --accent: #35ff6b;
+      --dim: #6fa67a;
+    }
+    body {
+      margin: 0;
+      font-family: ui-monospace, "Cascadia Code", "SF Mono", Menlo, Consolas, monospace;
+      background: var(--bg);
+      color: var(--fg);
+      line-height: 1.55;
+    }
+    main {
+      max-width: 42rem;
+      margin: 0 auto;
+      padding: 2.5rem 1.25rem 4rem;
+    }
+    h1 { color: var(--accent); font-size: 1.6rem; letter-spacing: 0.04em; }
+    h2 { color: var(--accent); font-size: 1.1rem; margin-top: 2rem; }
+    p, li { color: var(--fg); }
+    .meta { color: var(--dim); font-size: 0.9rem; }
+    a { color: var(--accent); }
+    ul { padding-left: 1.2rem; }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>NULL HORIZON Privacy Policy</h1>
+    <p class="meta">Effective date: 2026-08-19 · Version for Google Play listing</p>
+
+    <h2>Summary</h2>
+    <p>NULL HORIZON defaults to <strong>local play</strong>. You do not need an email or real name to start the opening campaign. Progress is stored on your device unless a future version lets you opt into cloud sync.</p>
+
+    <h2>Data we may store on device</h2>
+    <ul>
+      <li>Operator callsign (local profile display name)</li>
+      <li>Mission progress, skill evidence, rewards, and rank</li>
+      <li>Accessibility and privacy preferences</li>
+    </ul>
+
+    <h2>Data we do not collect by default</h2>
+    <ul>
+      <li>Analytics events (off unless you enable them; no collector ships in v1)</li>
+      <li>Crash reports (off unless you enable them; v1 uses a local stub that does not upload)</li>
+      <li>Raw learner source code off-device (this build does not enable remote execution)</li>
+      <li>Terminal history, SQL text, or secrets in telemetry</li>
+    </ul>
+
+    <h2>Online code execution</h2>
+    <p>This Play release does not transmit mission source to a remote execution service. If a later version enables optional online execution, that version’s listing and this policy will describe what is sent, retention, and consent.</p>
+
+    <h2>Cloud sync (optional, future)</h2>
+    <p>Cloud sync is not enabled in the v1 client UI. If enabled later, cloud progress deletion will be available through authenticated API endpoints described in the app documentation.</p>
+
+    <h2>Your controls</h2>
+    <p>In Settings you can:</p>
+    <ul>
+      <li>Export local player data as JSON</li>
+      <li>Delete local profile, progress, and privacy settings</li>
+      <li>Enable/disable analytics and crash reporting preferences (both default off)</li>
+    </ul>
+
+    <h2>Sale of data</h2>
+    <p>We do not sell personal data.</p>
+
+    <h2>Contact</h2>
+    <p>Security and privacy reports: see the project <code>SECURITY.md</code> in the NULL HORIZON repository, or the support email configured in the Google Play listing.</p>
+  </main>
+</body>
+</html>

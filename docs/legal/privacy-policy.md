@@ -1,11 +1,11 @@
 # NULL HORIZON Privacy Policy
 
-Effective date: 2026-07-11  
-Status: Draft for closed testing (not a store-published legal final)
+Effective date: 2026-08-19  
+Status: Ready to host for Google Play (see `docs/store/privacy-policy.html` and ADR-0024)
 
 ## Summary
 
-NULL HORIZON defaults to **local play**. You do not need an email or real name to start the opening campaign. Progress is stored on your device unless you later opt into cloud sync.
+NULL HORIZON defaults to **local play**. You do not need an email or real name to start the opening campaign. Progress is stored on your device unless a future version lets you opt into cloud sync.
 
 ## Data we may store on device
 
@@ -15,31 +15,18 @@ NULL HORIZON defaults to **local play**. You do not need an email or real name t
 
 ## Data we do not collect by default
 
-- Analytics events (off unless you enable them)
-- Crash reports (off unless you enable them)
-- Raw learner source code, except when you explicitly run an **online** mission execution
+- Analytics events (off unless you enable them; no collector ships in v1)
+- Crash reports (off unless you enable them; v1 uses a local stub that does not upload)
+- Raw learner source code off-device (this Play build does not enable remote execution)
 - Terminal history, SQL text, or secrets in telemetry
 
 ## Online code execution
 
-Some missions may offer online execution. When you run those missions online:
+This Play release does not transmit mission source to a remote execution service. Missions use on-device simulators and guided exercises. If a later version enables optional online execution, that version’s store listing and this policy will describe what is sent, retention, and consent. Learner code is never executed inside the API process.
 
-- Source required for that run may be transmitted to the execution service
-- Results (tests, diagnostics, coarse metrics) may be returned to the app
-- Retention is short by default; learner code is not used for model training without separate explicit consent
-- Learner code is never executed inside the API process
+## Cloud sync (optional, future)
 
-Offline fallbacks exist for online-marked missions when remote execution is unavailable.
-
-## Cloud sync (optional)
-
-If you create/use an anonymous cloud profile:
-
-- Account identifier (opaque token)
-- Progress, rewards, skill evidence
-- Device sync metadata
-
-You can delete cloud progress (`DELETE /v1/progress`) or the entire cloud profile (`DELETE /v1/profiles/me`).
+Cloud sync is not enabled in the v1 Android client UI. Backend deletion endpoints (`DELETE /v1/progress`, `DELETE /v1/profiles/me`) exist for a future sync client.
 
 ## Your controls
 
@@ -47,7 +34,7 @@ In Settings you can:
 
 - Export local player data as JSON
 - Delete local profile, progress, and privacy settings
-- Enable/disable analytics and crash reporting (both default off)
+- Enable/disable analytics and crash reporting preferences (both default off)
 
 ## Sale of data
 
@@ -55,4 +42,4 @@ We do not sell personal data.
 
 ## Contact
 
-Security and privacy reports: see `SECURITY.md`.
+Security and privacy reports: see `SECURITY.md`. Add the Play Console support email when the listing is created.
